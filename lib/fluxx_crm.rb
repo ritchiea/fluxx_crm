@@ -1,0 +1,2 @@
+module FluxxCrm
+end
