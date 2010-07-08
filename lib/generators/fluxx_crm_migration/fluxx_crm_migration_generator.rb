@@ -35,9 +35,9 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_notes.rb', 'db/migrate/fluxx_crm_create_notes.rb'
     sleep 1
+    handle_migration 'create_favorites.rb', 'db/migrate/fluxx_crm_create_favorites.rb'
+    sleep 1
   end
-  
-  
   
   private
   def handle_migration name, filename
