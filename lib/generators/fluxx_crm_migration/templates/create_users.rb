@@ -18,7 +18,7 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
       t.string :personal_street_address2,    :limit => 400, :null => true
       t.string :personal_city,               :limit => 400, :null => true
       t.integer :personal_geo_state_id,      :limit => 12, :null => true
-      t.integer :personal_country_id,        :limit => 12, :null => true
+      t.integer :personal_geo_country_id,        :limit => 12, :null => true
       t.string :personal_postal_code,        :limit => 400, :null => true
       t.string :work_phone,                  :limit => 400, :null => true
       t.string :work_fax,                    :limit => 400, :null => true
@@ -39,9 +39,16 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
     end
     add_index :users, :login, :unique => true
     add_index :users, :email
-    add_foreign_key 'users', 'personal_country_id', 'geo_countries', 'id', 'users_personal_country_id' unless connection.adapter_name =~ /SQLite/i
-    add_foreign_key 'users', 'personal_geo_state_id', 'geo_states', 'id', 'users_personal_geo_state_id' unless connection.adapter_name =~ /SQLite/i
-    add_foreign_key 'users', 'primary_user_organization_id', 'user_organizations', 'id', 'users_primary_user_org_id' unless connection.adapter_name =~ /SQLite/i
+    execute "alter table users add constraint users_personal_country_id foreign key (personal_geo_country_id) references geo_countries(id)" unless connection.adapter_name =~ /SQLite/i
+    execute "alter table users add constraint users_personal_geo_state_id foreign key (personal_geo_state_id) references geo_states(id)" unless connection.adapter_name =~ /SQLite/i
+    execute "alter table users add constraint users_primary_user_org_id foreign key (primary_user_organization_id) references user_organizations(id)" unless connection.adapter_name =~ /SQLite/i
+
+    execute "alter table user_organizations add constraint user_org_user_id foreign key (user_id) references users(id)" unless connection.adapter_name =~ /SQLite/i
+    execute "alter table user_organizations add constraint user_organizations_created_by_id foreign key (created_by_id) references users(id)" unless connection.adapter_name =~ /SQLite/i
+    execute "alter table user_organizations add constraint user_organizations_updated_by_id foreign key (updated_by_id) references users(id)" unless connection.adapter_name =~ /SQLite/i
+
+    execute "alter table organizations add constraint organizations_created_by_id foreign key (created_by_id) references users(id)" unless connection.adapter_name =~ /SQLite/i
+    execute "alter table organizations add constraint organizations_updated_by_id foreign key (updated_by_id) references users(id)" unless connection.adapter_name =~ /SQLite/i
   end
 
   def self.down

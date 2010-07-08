@@ -8,7 +8,7 @@ class FluxxCrmCreateOrganizations < ActiveRecord::Migration
       t.string :street_address2,            :limit => 255, :null => true
       t.string :city,                       :limit => 100, :null => true
       t.integer :geo_state_id,              :limit => 12, :null => true
-      t.integer :country_id,                :limit => 12, :null => true
+      t.integer :geo_country_id,                :limit => 12, :null => true
       t.string :postal_code,                :limit => 100, :null => true
       t.string :phone,                      :limit => 100, :null => true
       t.string :other_contact,              :limit => 100, :null => true
@@ -25,9 +25,9 @@ class FluxxCrmCreateOrganizations < ActiveRecord::Migration
     end
     add_index :organizations, :name, :unique => false
     add_index :organizations, :parent_org_id, :unique => false
-    add_foreign_key 'organizations', 'country_id', 'geo_countries', 'id', 'organizations_country_id' unless connection.adapter_name =~ /SQLite/i
-    add_foreign_key 'organizations', 'geo_state_id', 'geo_states', 'id', 'organizations_geo_state_id' unless connection.adapter_name =~ /SQLite/i
-    add_foreign_key 'organizations', 'parent_org_id', 'organizations', 'id', 'organizations_parent_org_id' unless connection.adapter_name =~ /SQLite/i
+    execute "alter table organizations add constraint organizations_geo_country_id foreign key (geo_country_id) references geo_countries(id)" unless connection.adapter_name =~ /SQLite/i
+    execute "alter table organizations add constraint organizations_geo_state_id foreign key (geo_state_id) references geo_states(id)" unless connection.adapter_name =~ /SQLite/i
+    execute "alter table organizations add constraint organizations_parent_org_id foreign key (parent_org_id) references organizations(id)" unless connection.adapter_name =~ /SQLite/i
   end
 
   def self.down

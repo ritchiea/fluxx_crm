@@ -9,8 +9,8 @@ class FluxxCrmCreateNotes < ActiveRecord::Migration
       t.boolean :delta,                      :null => :false, :default => true
       t.datetime :deleted_at,                :null => true
     end
-    add_foreign_key 'notes', 'created_by_id', 'users', 'id', 'notes_created_by_id' unless connection.adapter_name =~ /SQLite/i
-    add_foreign_key 'notes', 'updated_by_id', 'users', 'id', 'notes_updated_by_id' unless connection.adapter_name =~ /SQLite/i
+    execute "alter table notes add constraint notes_created_by_id foreign key (created_by_id) references users(id)" unless connection.adapter_name =~ /SQLite/i
+    execute "alter table notes add constraint notes_updated_by_id foreign key (updated_by_id) references users(id)" unless connection.adapter_name =~ /SQLite/i
   end
 
   def self.down

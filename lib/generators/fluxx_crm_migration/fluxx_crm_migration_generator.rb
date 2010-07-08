@@ -27,13 +27,13 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_documents.rb', 'db/migrate/fluxx_crm_create_model_documents.rb'
     sleep 1
-    handle_migration 'create_notes.rb', 'db/migrate/fluxx_crm_create_notes.rb'
-    sleep 1
-    handle_migration 'create_users.rb', 'db/migrate/fluxx_crm_create_users.rb'
-    sleep 1
     handle_migration 'create_organizations.rb', 'db/migrate/fluxx_crm_create_organizations.rb'
     sleep 1
     handle_migration 'create_user_organizations.rb', 'db/migrate/fluxx_crm_create_user_organizations.rb'
+    sleep 1
+    handle_migration 'create_users.rb', 'db/migrate/fluxx_crm_create_users.rb'
+    sleep 1
+    handle_migration 'create_notes.rb', 'db/migrate/fluxx_crm_create_notes.rb'
     sleep 1
   end
   
