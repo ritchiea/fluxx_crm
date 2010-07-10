@@ -18,7 +18,7 @@ class Organization < ActiveRecord::Base
 
   insta_realtime do |insta|
     insta.delta_attributes = SEARCH_ATTRIBUTES
-    insta.updated_by_id = :updated_by_id
+    insta.updated_by_field = :updated_by_id
   end
   insta_multi
   
