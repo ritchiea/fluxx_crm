@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100712164113) do
+ActiveRecord::Schema.define(:version => 20100712185242) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -41,12 +41,20 @@ ActiveRecord::Schema.define(:version => 20100712164113) do
 
   add_index "client_stores", ["user_id"], :name => "index_client_stores_on_user_id"
 
+  create_table "favorites", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id",        :limit => 12
+    t.string   "favorable_type",               :null => false
+    t.integer  "favorable_id",   :limit => 12, :null => false
+  end
+
   create_table "geo_cities", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name",           :limit => 150, :null => false
     t.integer  "geo_state_id",   :limit => 12
-    t.integer  "country_id",     :limit => 12
+    t.integer  "geo_country_id", :limit => 12
     t.string   "postalCode",     :limit => 150
     t.string   "latitude",       :limit => 150
     t.string   "longitude",      :limit => 150
@@ -91,6 +99,30 @@ ActiveRecord::Schema.define(:version => 20100712164113) do
 
   add_index "geo_states", ["abbreviation"], :name => "geo_states_abbrv_index"
   add_index "geo_states", ["name"], :name => "geo_states_name_index"
+
+  create_table "group_members", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.integer  "group_id"
+    t.integer  "groupable_id"
+    t.string   "groupable_type"
+  end
+
+  add_index "group_members", ["group_id"], :name => "index_group_members_on_group_id"
+  add_index "group_members", ["groupable_id", "groupable_type"], :name => "index_group_members_on_groupable_id_and_groupable_type"
+
+  create_table "groups", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.string   "name"
+    t.boolean  "deprecrated",   :default => false
+  end
+
+  add_index "groups", ["name"], :name => "index_groups_on_name", :unique => true
 
   create_table "model_documents", :force => true do |t|
     t.datetime "created_at"
