@@ -2991,3 +2991,650 @@ state: active
 ', '2010-07-12 18:54:54.552690', NULL, NULL, NULL, 1)
   [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "realtime_updates" ("action", "created_at", "delta_attributes", "model_class", "model_id", "type_name", "updated_at", "user_id") VALUES ('create', '2010-07-12 18:54:54.560571', '{"updated_at":"2010-07-12T18:54:54Z","state":"active"}', 'User', 1, 'User', '2010-07-12 18:54:54.560571', NULL)[0m
   [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE ("users"."id" = 1) LIMIT 1
+  [1m[36mSQL (0.7ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mMultiElementGroup Load (0.2ms)[0m  SELECT "multi_element_groups"."id" FROM "multi_element_groups" LIMIT 1
+  [1m[36mMultiElementGroup Load (0.2ms)[0m  [1mSELECT "multi_element_groups"."id" FROM "multi_element_groups" LIMIT 1[0m
+  [1m[35mSQL (0.8ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.5ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to FluxxCrmCreateGeoCountries (20100708173516)
+Migrating to FluxxCrmCreateGeoStates (20100708173517)
+Migrating to FluxxCrmCreateModelDocuments (20100708173519)
+Migrating to FluxxCrmCreateNotes (20100708173520)
+Migrating to FluxxCrmCreateUsers (20100708173521)
+Migrating to FluxxCrmCreateOrganizations (20100708173522)
+Migrating to FluxxCrmCreateUserOrganizations (20100708173523)
+Migrating to ActsAsAuditedMigration (20100712163807)
+Migrating to FluxxEngineCreateRealtimeUpdatesTable (20100712164109)
+Migrating to FluxxEngineCreateMultiElementGroups (20100712164110)
+Migrating to FluxxEngineCreateMultiElementValues (20100712164111)
+Migrating to FluxxEngineCreateMultiElementChoices (20100712164112)
+Migrating to FluxxEngineCreateClientStores (20100712164113)
+Migrating to FluxxCrmCreateFavorites (20100712182238)
+Migrating to FluxxCrmCreateGroups (20100712182239)
+Migrating to FluxxCrmCreateGroupMembers (20100712182240)
+Migrating to FluxxCrmCreateGeoCities (20100712185242)
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "favorites" ("created_at", "favorable_id", "favorable_type", "updated_at", "user_id") VALUES ('2010-07-13 19:47:41.535384', 1, 'User', '2010-07-13 19:47:41.535384', NULL)
+  [1m[36mFavorite Load (0.2ms)[0m  [1mSELECT "favorites".* FROM "favorites" WHERE ("favorites"."id" = 1) LIMIT 1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "geo_countries" ("capital", "comment", "created_at", "currency", "currency_code", "fips104", "internet", "iso2", "iso3", "ison", "map_reference", "name", "nationality_plural", "nationality_singular", "population", "title", "updated_at") VALUES (NULL, NULL, '2010-07-13 19:47:41.598730', NULL, NULL, 'molestiaevelit', NULL, NULL, 'iustonihil', NULL, NULL, 'reiciendismolestiae', NULL, NULL, NULL, NULL, '2010-07-13 19:47:41.598730')
+  [1m[36mSQL (0.4ms)[0m  [1mSELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'GeoCountry')[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+comment: 
+ison: 
+name: reiciendismolestiae
+map_reference: 
+title: 
+internet: 
+fips104: molestiaevelit
+iso2: 
+population: 
+iso3: iustonihil
+currency: 
+nationality_singular: 
+currency_code: 
+nationality_plural: 
+capital: 
+', 1, 'GeoCountry', NULL, '2010-07-13 19:47:41.658229', NULL, '2010-07-13 19:47:41.658229', NULL, NULL, NULL, 1)
+  [1m[36mGeoCountry Load (0.3ms)[0m  [1mSELECT "geo_countries".* FROM "geo_countries" WHERE ("geo_countries"."id" = 1) LIMIT 1[0m
+  [1m[35mGeoCountry Load (0.3ms)[0m  SELECT "geo_countries".* FROM "geo_countries" WHERE ("geo_countries"."id" = 1) LIMIT 1
+  [1m[36mSQL (13.4ms)[0m  [1mINSERT INTO "geo_states" ("abbreviation", "created_at", "fips_10_4", "geo_country_id", "name", "updated_at") VALUES ('estquisquam', '2010-07-13 19:47:41.673640', 'aliquamarchitecto', 1, 'consequaturdolor', '2010-07-13 19:47:41.673640')[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'GeoState')
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+name: consequaturdolor
+abbreviation: estquisquam
+fips_10_4: aliquamarchitecto
+geo_country_id: 1
+', 1, 'GeoState', NULL, '2010-07-13 19:47:41.700338', NULL, '2010-07-13 19:47:41.700338', NULL, NULL, NULL, 1)[0m
+  [1m[35mGeoState Load (0.2ms)[0m  SELECT "geo_states".* FROM "geo_states" WHERE ("geo_states"."id" = 1) LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "geo_countries" ("capital", "comment", "created_at", "currency", "currency_code", "fips104", "internet", "iso2", "iso3", "ison", "map_reference", "name", "nationality_plural", "nationality_singular", "population", "title", "updated_at") VALUES (NULL, NULL, '2010-07-13 19:47:41.708927', NULL, NULL, 'etfugit', NULL, NULL, 'errorhic', NULL, NULL, 'quiaaliquam', NULL, NULL, NULL, NULL, '2010-07-13 19:47:41.708927')[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 2) AND ("audits"."auditable_type" = 'GeoCountry')
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+comment: 
+ison: 
+name: quiaaliquam
+map_reference: 
+title: 
+internet: 
+fips104: etfugit
+iso2: 
+population: 
+iso3: errorhic
+currency: 
+nationality_singular: 
+currency_code: 
+nationality_plural: 
+capital: 
+', 2, 'GeoCountry', NULL, '2010-07-13 19:47:41.716569', NULL, '2010-07-13 19:47:41.716569', NULL, NULL, NULL, 1)[0m
+  [1m[35mGeoCountry Load (0.3ms)[0m  SELECT "geo_countries".* FROM "geo_countries" WHERE ("geo_countries"."id" = 2) LIMIT 1
+  [1m[36mGeoState Load (0.2ms)[0m  [1mSELECT "geo_states".* FROM "geo_states" WHERE ("geo_states"."id" = 1) LIMIT 1[0m
+  [1m[35mGeoCountry Load (0.3ms)[0m  SELECT "geo_countries".* FROM "geo_countries" WHERE ("geo_countries"."id" = 2) LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "geo_cities" ("area_code", "created_at", "geo_country_id", "geo_state_id", "latitude", "longitude", "metro_code", "name", "orginal_loc_id", "postalCode", "updated_at") VALUES (NULL, '2010-07-13 19:47:41.731025', 2, 1, NULL, NULL, NULL, 'autqui', 1, NULL, '2010-07-13 19:47:41.731025')[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'GeoCity')
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+name: autqui
+geo_state_id: 1
+latitude: 
+area_code: 
+postalCode: 
+orginal_loc_id: 1
+longitude: 
+metro_code: 
+geo_country_id: 2
+', 1, 'GeoCity', NULL, '2010-07-13 19:47:41.741651', NULL, '2010-07-13 19:47:41.741651', NULL, NULL, NULL, 1)[0m
+  [1m[35mGeoCity Load (0.2ms)[0m  SELECT "geo_cities".* FROM "geo_cities" WHERE ("geo_cities"."id" = 1) LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "geo_countries" ("capital", "comment", "created_at", "currency", "currency_code", "fips104", "internet", "iso2", "iso3", "ison", "map_reference", "name", "nationality_plural", "nationality_singular", "population", "title", "updated_at") VALUES (NULL, NULL, '2010-07-13 19:47:41.765003', NULL, NULL, 'magniculpa', NULL, NULL, 'eligendiomnis', NULL, NULL, 'odioqui', NULL, NULL, NULL, NULL, '2010-07-13 19:47:41.765003')[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'GeoCountry')
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+comment: 
+ison: 
+name: odioqui
+map_reference: 
+title: 
+internet: 
+fips104: magniculpa
+iso2: 
+population: 
+iso3: eligendiomnis
+currency: 
+nationality_singular: 
+currency_code: 
+nationality_plural: 
+capital: 
+', 1, 'GeoCountry', NULL, '2010-07-13 19:47:41.773364', NULL, '2010-07-13 19:47:41.773364', NULL, NULL, NULL, 1)[0m
+  [1m[35mGeoCountry Load (0.3ms)[0m  SELECT "geo_countries".* FROM "geo_countries" WHERE ("geo_countries"."id" = 1) LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "geo_countries" ("capital", "comment", "created_at", "currency", "currency_code", "fips104", "internet", "iso2", "iso3", "ison", "map_reference", "name", "nationality_plural", "nationality_singular", "population", "title", "updated_at") VALUES (NULL, NULL, '2010-07-13 19:47:41.783528', NULL, NULL, 'quasioccaecati', NULL, NULL, 'temporaamet', NULL, NULL, 'nostrumet', NULL, NULL, NULL, NULL, '2010-07-13 19:47:41.783528')[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'GeoCountry')
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+comment: 
+ison: 
+name: nostrumet
+map_reference: 
+title: 
+internet: 
+fips104: quasioccaecati
+iso2: 
+population: 
+iso3: temporaamet
+currency: 
+nationality_singular: 
+currency_code: 
+nationality_plural: 
+capital: 
+', 1, 'GeoCountry', NULL, '2010-07-13 19:47:41.792298', NULL, '2010-07-13 19:47:41.792298', NULL, NULL, NULL, 1)[0m
+  [1m[35mGeoCountry Load (0.3ms)[0m  SELECT "geo_countries".* FROM "geo_countries" WHERE ("geo_countries"."id" = 1) LIMIT 1
+  [1m[36mGeoCountry Load (0.3ms)[0m  [1mSELECT "geo_countries".* FROM "geo_countries" WHERE ("geo_countries"."id" = 1) LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "geo_states" ("abbreviation", "created_at", "fips_10_4", "geo_country_id", "name", "updated_at") VALUES ('blanditiisfacilis', '2010-07-13 19:47:41.802663', 'repudiandaein', 1, 'etut', '2010-07-13 19:47:41.802663')
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'GeoState')[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+name: etut
+abbreviation: blanditiisfacilis
+fips_10_4: repudiandaein
+geo_country_id: 1
+', 1, 'GeoState', NULL, '2010-07-13 19:47:41.808564', NULL, '2010-07-13 19:47:41.808564', NULL, NULL, NULL, 1)
+  [1m[36mGeoState Load (0.2ms)[0m  [1mSELECT "geo_states".* FROM "geo_states" WHERE ("geo_states"."id" = 1) LIMIT 1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "users" ("assistant_email", "assistant_name", "assistant_phone", "birth_at", "blog_url", "created_at", "created_by_id", "deleted_at", "delta", "email", "first_name", "last_logged_in_at", "last_name", "login", "middle_initial", "other_contact", "personal_city", "personal_country_id", "personal_email", "personal_fax", "personal_geo_state_id", "personal_mobile", "personal_phone", "personal_postal_code", "personal_street_address", "personal_street_address2", "prefix", "primary_user_organization_id", "salutation", "state", "time_zone", "twitter_url", "updated_at", "updated_by_id", "user_salutation", "work_fax", "work_phone") VALUES (NULL, NULL, NULL, NULL, NULL, '2010-07-08 19:47:41.000000', NULL, NULL, 't', 'aric.smith@kautzergoyette.name', 'Fern', NULL, 'Block', 'aric.smith', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'Pacific Time (US & Canada)', NULL, '2010-07-13 19:47:41.878636', NULL, NULL, NULL, NULL)
+  [1m[36mAudit Load (0.3ms)[0m  [1mSELECT "audits".* FROM "audits" WHERE ("audits".auditable_id = 1 AND "audits".auditable_type = 'User') ORDER BY "audits".version[0m
+  [1m[35mOrganization Load (0.2ms)[0m  SELECT "organizations".* FROM "organizations" INNER JOIN "user_organizations" ON "organizations".id = "user_organizations".organization_id WHERE (("user_organizations".user_id = 1) AND ((user_organizations.deleted_at IS NULL)))
+  [1m[36mUserOrganization Load (0.2ms)[0m  [1mSELECT "user_organizations".* FROM "user_organizations" WHERE ("user_organizations".user_id = 1 AND (user_organizations.deleted_at IS NULL))[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'User')
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+updated_by_id: 
+work_phone: 
+personal_geo_state_id: 
+personal_postal_code: 
+prefix: 
+deleted_at: 
+personal_mobile: 
+personal_street_address: 
+user_salutation: 
+salutation: 
+assistant_name: 
+personal_city: 
+primary_user_organization_id: 
+assistant_phone: 
+personal_phone: 
+work_fax: 
+blog_url: 
+last_name: Block
+personal_country_id: 
+twitter_url: 
+birth_at: 
+middle_initial: 
+other_contact: 
+time_zone: Pacific Time (US & Canada)
+assistant_email: 
+login: aric.smith
+personal_email: 
+personal_street_address2: 
+email: aric.smith@kautzergoyette.name
+first_name: Fern
+personal_fax: 
+state: active
+', 1, 'User', NULL, '2010-07-13 19:47:41.921551', '--- 
+:attributes: 
+ updated_by_id: 
+ work_phone: 
+ personal_geo_state_id: 
+ personal_postal_code: 
+ prefix: 
+ deleted_at: 
+ personal_mobile: 
+ personal_street_address: 
+ user_salutation: 
+ salutation: 
+ assistant_name: 
+ personal_city: 
+ primary_user_organization_id: 
+ assistant_phone: 
+ personal_phone: 
+ work_fax: 
+ blog_url: 
+ last_name: Block
+ personal_country_id: 
+ twitter_url: 
+ birth_at: 
+ middle_initial: 
+ other_contact: 
+ time_zone: Pacific Time (US & Canada)
+ assistant_email: 
+ login: aric.smith
+ personal_email: 
+ personal_street_address2: 
+ email: aric.smith@kautzergoyette.name
+ first_name: Fern
+ personal_fax: 
+ state: active
+:changed_attributes: 
+ created_at: 
+ updated_at: 
+ id: 
+ last_name: ""
+ login: 
+ state: passive
+ email: 
+ first_name: ""
+', '2010-07-13 19:47:41.921551', NULL, NULL, NULL, 1)[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "realtime_updates" ("action", "created_at", "delta_attributes", "model_class", "model_id", "type_name", "updated_at", "user_id") VALUES ('create', '2010-07-13 19:47:41.935516', '{"updated_at":"2010-07-13T19:47:41Z","state":"active"}', 'User', 1, 'User', '2010-07-13 19:47:41.935516', NULL)
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE ("users"."id" = 1) LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "notes" ("created_at", "created_by_id", "deleted_at", "delta", "notable_id", "notable_type", "note", "updated_at", "updated_by_id") VALUES ('2010-07-13 19:47:41.943882', NULL, NULL, 't', 1, 'User', 'Vel voluptate aliquid et doloribus sint eum ad sequi.', '2010-07-13 19:47:41.943882', NULL)
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'Note')[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+deleted_at: 
+notable_id: 1
+notable_type: User
+note: Vel voluptate aliquid et doloribus sint eum ad sequi.
+', 1, 'Note', NULL, '2010-07-13 19:47:41.954195', NULL, '2010-07-13 19:47:41.954195', NULL, NULL, NULL, 1)
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "realtime_updates" ("action", "created_at", "delta_attributes", "model_class", "model_id", "type_name", "updated_at", "user_id") VALUES ('create', '2010-07-13 19:47:41.959610', '{"updated_at":"2010-07-13T19:47:41Z","notable_id":1,"notable_type":"User"}', 'Note', 1, 'Note', '2010-07-13 19:47:41.959610', NULL)[0m
+  [1m[35mNote Load (0.2ms)[0m  SELECT "notes".* FROM "notes" WHERE ("notes"."id" = 1) LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "organizations" ("acronym", "blog_url", "city", "country_id", "created_at", "created_by_id", "deleted_at", "delta", "email", "fax", "geo_state_id", "name", "other_contact", "parent_org_id", "phone", "postal_code", "state", "street_address", "street_address2", "twitter_url", "updated_at", "updated_by_id", "url") VALUES (NULL, NULL, 'aut qui animi', NULL, '2010-07-13 19:47:41.980013', NULL, NULL, 't', NULL, NULL, NULL, 'Kunde-Smith', NULL, NULL, NULL, NULL, 'new', 'consequatur dolor a', 'est quisquam quis', NULL, '2010-07-13 19:47:41.980013', NULL, 'http://kundesmith.co.uk/alias')[0m
+  [1m[35mAudit Load (0.3ms)[0m  SELECT "audits".* FROM "audits" WHERE ("audits".auditable_id = 1 AND "audits".auditable_type = 'Organization') ORDER BY "audits".version
+  [1m[36mOrganization Load (0.2ms)[0m  [1mSELECT "organizations".* FROM "organizations" WHERE ("organizations".parent_org_id = 1 AND ("organizations"."deleted_at" IS NULL))[0m
+  [1m[35mUserOrganization Load (0.1ms)[0m  SELECT "user_organizations".* FROM "user_organizations" WHERE ("user_organizations".organization_id = 1)
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users".* FROM "users" INNER JOIN "user_organizations" ON "users".id = "user_organizations".user_id WHERE (("user_organizations".organization_id = 1))[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'Organization')
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+city: aut qui animi
+name: Kunde-Smith
+updated_by_id: 
+geo_state_id: 
+deleted_at: 
+postal_code: 
+country_id: 
+parent_org_id: 
+url: http://kundesmith.co.uk/alias
+acronym: 
+street_address: consequatur dolor a
+street_address2: est quisquam quis
+blog_url: 
+fax: 
+phone: 
+twitter_url: 
+other_contact: 
+email: 
+state: new
+', 1, 'Organization', NULL, '2010-07-13 19:47:42.168559', '--- 
+:attributes: 
+ city: aut qui animi
+ name: Kunde-Smith
+ updated_by_id: 
+ geo_state_id: 
+ deleted_at: 
+ postal_code: 
+ country_id: 
+ parent_org_id: 
+ url: http://kundesmith.co.uk/alias
+ acronym: 
+ street_address: consequatur dolor a
+ street_address2: est quisquam quis
+ blog_url: 
+ fax: 
+ phone: 
+ twitter_url: 
+ other_contact: 
+ email: 
+ state: new
+:changed_attributes: 
+ city: 
+ name: 
+ created_at: 
+ updated_at: 
+ url: 
+ id: 
+ street_address2: 
+ street_address: 
+', '2010-07-13 19:47:42.168559', NULL, NULL, NULL, 1)[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "realtime_updates" ("action", "created_at", "delta_attributes", "model_class", "model_id", "type_name", "updated_at", "user_id") VALUES ('create', '2010-07-13 19:47:42.175477', '{"updated_at":"2010-07-13T19:47:41Z","state":"new"}', 'Organization', 1, 'Organization', '2010-07-13 19:47:42.175477', NULL)
+  [1m[36mOrganization Load (0.3ms)[0m  [1mSELECT "organizations".* FROM "organizations" WHERE ("organizations"."id" = 1) LIMIT 1[0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "users" ("assistant_email", "assistant_name", "assistant_phone", "birth_at", "blog_url", "created_at", "created_by_id", "deleted_at", "delta", "email", "first_name", "last_logged_in_at", "last_name", "login", "middle_initial", "other_contact", "personal_city", "personal_country_id", "personal_email", "personal_fax", "personal_geo_state_id", "personal_mobile", "personal_phone", "personal_postal_code", "personal_street_address", "personal_street_address2", "prefix", "primary_user_organization_id", "salutation", "state", "time_zone", "twitter_url", "updated_at", "updated_by_id", "user_salutation", "work_fax", "work_phone") VALUES (NULL, NULL, NULL, NULL, NULL, '2010-07-08 19:47:42.000000', NULL, NULL, 't', 'alysson@wittingcorwin.biz', 'Aric', NULL, 'Kunde', 'eliseo_kautzer', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'Pacific Time (US & Canada)', NULL, '2010-07-13 19:47:42.191300', NULL, NULL, NULL, NULL)
+  [1m[36mAudit Load (0.2ms)[0m  [1mSELECT "audits".* FROM "audits" WHERE ("audits".auditable_id = 1 AND "audits".auditable_type = 'User') ORDER BY "audits".version[0m
+  [1m[35mOrganization Load (0.2ms)[0m  SELECT "organizations".* FROM "organizations" INNER JOIN "user_organizations" ON "organizations".id = "user_organizations".organization_id WHERE (("user_organizations".user_id = 1) AND ((user_organizations.deleted_at IS NULL)))
+  [1m[36mUserOrganization Load (0.2ms)[0m  [1mSELECT "user_organizations".* FROM "user_organizations" WHERE ("user_organizations".user_id = 1 AND (user_organizations.deleted_at IS NULL))[0m
+  [1m[35mSQL (0.3ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'User')
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+updated_by_id: 
+work_phone: 
+personal_geo_state_id: 
+personal_postal_code: 
+prefix: 
+deleted_at: 
+personal_mobile: 
+personal_street_address: 
+user_salutation: 
+salutation: 
+assistant_name: 
+personal_city: 
+primary_user_organization_id: 
+assistant_phone: 
+personal_phone: 
+work_fax: 
+blog_url: 
+last_name: Kunde
+personal_country_id: 
+twitter_url: 
+birth_at: 
+middle_initial: 
+other_contact: 
+time_zone: Pacific Time (US & Canada)
+assistant_email: 
+login: eliseo_kautzer
+personal_email: 
+personal_street_address2: 
+email: alysson@wittingcorwin.biz
+first_name: Aric
+personal_fax: 
+state: active
+', 1, 'User', NULL, '2010-07-13 19:47:42.217629', '--- 
+:attributes: 
+ updated_by_id: 
+ work_phone: 
+ personal_geo_state_id: 
+ personal_postal_code: 
+ prefix: 
+ deleted_at: 
+ personal_mobile: 
+ personal_street_address: 
+ user_salutation: 
+ salutation: 
+ assistant_name: 
+ personal_city: 
+ primary_user_organization_id: 
+ assistant_phone: 
+ personal_phone: 
+ work_fax: 
+ blog_url: 
+ last_name: Kunde
+ personal_country_id: 
+ twitter_url: 
+ birth_at: 
+ middle_initial: 
+ other_contact: 
+ time_zone: Pacific Time (US & Canada)
+ assistant_email: 
+ login: eliseo_kautzer
+ personal_email: 
+ personal_street_address2: 
+ email: alysson@wittingcorwin.biz
+ first_name: Aric
+ personal_fax: 
+ state: active
+:changed_attributes: 
+ created_at: 
+ updated_at: 
+ id: 
+ last_name: ""
+ login: 
+ state: passive
+ email: 
+ first_name: ""
+', '2010-07-13 19:47:42.217629', NULL, NULL, NULL, 1)[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "realtime_updates" ("action", "created_at", "delta_attributes", "model_class", "model_id", "type_name", "updated_at", "user_id") VALUES ('create', '2010-07-13 19:47:42.226211', '{"updated_at":"2010-07-13T19:47:42Z","state":"active"}', 'User', 1, 'User', '2010-07-13 19:47:42.226211', NULL)
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE ("users"."id" = 1) LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "organizations" ("acronym", "blog_url", "city", "country_id", "created_at", "created_by_id", "deleted_at", "delta", "email", "fax", "geo_state_id", "name", "other_contact", "parent_org_id", "phone", "postal_code", "state", "street_address", "street_address2", "twitter_url", "updated_at", "updated_by_id", "url") VALUES (NULL, NULL, 'reiciendis molestiae dolores', NULL, '2010-07-13 19:47:42.232781', NULL, NULL, 't', NULL, NULL, NULL, 'Leuschke and Sons', NULL, NULL, NULL, NULL, 'new', 'iusto nihil sequi', 'molestiae velit dolores', NULL, '2010-07-13 19:47:42.232781', NULL, 'http://rathlittel.biz/ut')
+  [1m[36mAudit Load (0.2ms)[0m  [1mSELECT "audits".* FROM "audits" WHERE ("audits".auditable_id = 1 AND "audits".auditable_type = 'Organization') ORDER BY "audits".version[0m
+  [1m[35mOrganization Load (0.2ms)[0m  SELECT "organizations".* FROM "organizations" WHERE ("organizations".parent_org_id = 1 AND ("organizations"."deleted_at" IS NULL))
+  [1m[36mUserOrganization Load (0.1ms)[0m  [1mSELECT "user_organizations".* FROM "user_organizations" WHERE ("user_organizations".organization_id = 1)[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users".* FROM "users" INNER JOIN "user_organizations" ON "users".id = "user_organizations".user_id WHERE (("user_organizations".organization_id = 1))
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'Organization')[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+city: reiciendis molestiae dolores
+name: Leuschke and Sons
+updated_by_id: 
+geo_state_id: 
+deleted_at: 
+postal_code: 
+country_id: 
+parent_org_id: 
+url: http://rathlittel.biz/ut
+acronym: 
+street_address: iusto nihil sequi
+street_address2: molestiae velit dolores
+blog_url: 
+fax: 
+phone: 
+twitter_url: 
+other_contact: 
+email: 
+state: new
+', 1, 'Organization', NULL, '2010-07-13 19:47:42.254819', '--- 
+:attributes: 
+ city: reiciendis molestiae dolores
+ name: Leuschke and Sons
+ updated_by_id: 
+ geo_state_id: 
+ deleted_at: 
+ postal_code: 
+ country_id: 
+ parent_org_id: 
+ url: http://rathlittel.biz/ut
+ acronym: 
+ street_address: iusto nihil sequi
+ street_address2: molestiae velit dolores
+ blog_url: 
+ fax: 
+ phone: 
+ twitter_url: 
+ other_contact: 
+ email: 
+ state: new
+:changed_attributes: 
+ city: 
+ name: 
+ created_at: 
+ updated_at: 
+ url: 
+ id: 
+ street_address2: 
+ street_address: 
+', '2010-07-13 19:47:42.254819', NULL, NULL, NULL, 1)
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "realtime_updates" ("action", "created_at", "delta_attributes", "model_class", "model_id", "type_name", "updated_at", "user_id") VALUES ('create', '2010-07-13 19:47:42.261302', '{"updated_at":"2010-07-13T19:47:42Z","state":"new"}', 'Organization', 1, 'Organization', '2010-07-13 19:47:42.261302', NULL)[0m
+  [1m[35mOrganization Load (0.3ms)[0m  SELECT "organizations".* FROM "organizations" WHERE ("organizations"."id" = 1) LIMIT 1
+  [1m[36mUserOrganization Load (0.1ms)[0m  [1mSELECT "user_organizations"."id" FROM "user_organizations" WHERE ("user_organizations"."organization_id" = 1) AND ("user_organizations"."user_id" = 1) LIMIT 1[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "user_organizations" ("created_at", "deleted_at", "department", "email", "organization_id", "phone", "title", "updated_at", "user_id") VALUES ('2010-07-13 19:47:42.268826', NULL, NULL, NULL, 1, NULL, 'aliquam architecto fugiat', '2010-07-13 19:47:42.268826', 1)
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT "users".* FROM "users" WHERE ("users"."id" = 1) LIMIT 1[0m
+  [1m[35mOrganization Load (0.3ms)[0m  SELECT "organizations".* FROM "organizations" WHERE ("organizations"."id" = 1) LIMIT 1
+  [1m[36mAudit Load (0.2ms)[0m  [1mSELECT "audits".* FROM "audits" WHERE ("audits".auditable_id = 1 AND "audits".auditable_type = 'UserOrganization') ORDER BY "audits".version[0m
+  [1m[35mSQL (0.2ms)[0m  SELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'UserOrganization')
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+title: aliquam architecto fugiat
+deleted_at: 
+user_id: 1
+phone: 
+department: 
+organization_id: 1
+email: 
+', 1, 'UserOrganization', NULL, '2010-07-13 19:47:42.296636', '--- 
+:user: !ruby/object:User 
+ _initialized_find_callbacks: true
+ _initialized_initialize_callbacks: true
+ attributes: 
+ updated_by_id: 
+ work_phone: 
+ created_at: 2010-07-08 19:47:42.000000
+ delta: t
+ personal_postal_code: 
+ prefix: 
+ personal_geo_state_id: 
+ personal_street_address: 
+ user_salutation: 
+ deleted_at: 
+ updated_at: 2010-07-13 19:47:42.191300
+ personal_mobile: 
+ created_by_id: 
+ salutation: 
+ id: 1
+ assistant_name: 
+ personal_city: 
+ last_logged_in_at: 
+ primary_user_organization_id: 
+ personal_phone: 
+ assistant_phone: 
+ work_fax: 
+ twitter_url: 
+ blog_url: 
+ personal_country_id: 
+ last_name: Kunde
+ birth_at: 
+ middle_initial: 
+ other_contact: 
+ time_zone: Pacific Time (US & Canada)
+ personal_street_address2: 
+ personal_email: 
+ assistant_email: 
+ login: eliseo_kautzer
+ state: active
+ first_name: Aric
+ personal_fax: 
+ email: alysson@wittingcorwin.biz
+ attributes_cache: {}
+
+ changed_attributes: {}
+
+ destroyed: false
+ marked_for_destruction: false
+ new_record: false
+ previously_changed: {}
+
+ readonly: false
+:attributes: 
+ title: aliquam architecto fugiat
+ deleted_at: 
+ user_id: 1
+ phone: 
+ department: 
+ organization_id: 1
+ email: 
+:organization: !ruby/object:Organization 
+ _initialized_find_callbacks: true
+ _initialized_initialize_callbacks: true
+ attributes: 
+ updated_by_id: 
+ name: Leuschke and Sons
+ city: reiciendis molestiae dolores
+ created_at: 2010-07-13 19:47:42.232781
+ geo_state_id: 
+ delta: t
+ updated_at: 2010-07-13 19:47:42.232781
+ created_by_id: 
+ postal_code: 
+ deleted_at: 
+ country_id: 
+ url: http://rathlittel.biz/ut
+ parent_org_id: 
+ id: 1
+ acronym: 
+ street_address: iusto nihil sequi
+ street_address2: molestiae velit dolores
+ phone: 
+ fax: 
+ blog_url: 
+ twitter_url: 
+ other_contact: 
+ email: 
+ state: new
+ attributes_cache: {}
+
+ changed_attributes: {}
+
+ destroyed: false
+ marked_for_destruction: false
+ new_record: false
+ previously_changed: {}
+
+ readonly: false
+:changed_attributes: 
+ created_at: 
+ title: 
+ updated_at: 
+ id: 
+ user_id: 
+ organization_id: 
+', '2010-07-13 19:47:42.296636', NULL, NULL, NULL, 1)[0m
+  [1m[35mUserOrganization Load (0.2ms)[0m  SELECT "user_organizations".* FROM "user_organizations" WHERE ("user_organizations"."id" = 1) LIMIT 1
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "users" ("assistant_email", "assistant_name", "assistant_phone", "birth_at", "blog_url", "created_at", "created_by_id", "deleted_at", "delta", "email", "first_name", "last_logged_in_at", "last_name", "login", "middle_initial", "other_contact", "personal_city", "personal_country_id", "personal_email", "personal_fax", "personal_geo_state_id", "personal_mobile", "personal_phone", "personal_postal_code", "personal_street_address", "personal_street_address2", "prefix", "primary_user_organization_id", "salutation", "state", "time_zone", "twitter_url", "updated_at", "updated_by_id", "user_salutation", "work_fax", "work_phone") VALUES (NULL, NULL, NULL, NULL, NULL, '2010-07-08 19:47:42.000000', NULL, NULL, 't', 'greg@lesch.us', 'Fred', NULL, 'Smith', 'emmanuel_gutmann', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'active', 'Pacific Time (US & Canada)', NULL, '2010-07-13 19:47:42.307402', NULL, NULL, NULL, NULL)[0m
+  [1m[35mAudit Load (0.3ms)[0m  SELECT "audits".* FROM "audits" WHERE ("audits".auditable_id = 1 AND "audits".auditable_type = 'User') ORDER BY "audits".version
+  [1m[36mOrganization Load (0.2ms)[0m  [1mSELECT "organizations".* FROM "organizations" INNER JOIN "user_organizations" ON "organizations".id = "user_organizations".organization_id WHERE (("user_organizations".user_id = 1) AND ((user_organizations.deleted_at IS NULL)))[0m
+  [1m[35mUserOrganization Load (0.1ms)[0m  SELECT "user_organizations".* FROM "user_organizations" WHERE ("user_organizations".user_id = 1 AND (user_organizations.deleted_at IS NULL))
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT MAX("audits"."version") AS max_id FROM "audits" WHERE ("audits"."auditable_id" = 1) AND ("audits"."auditable_type" = 'User')[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "audits" ("action", "audit_changes", "auditable_id", "auditable_type", "comment", "created_at", "full_model", "updated_at", "user_id", "user_type", "username", "version") VALUES ('create', '--- 
+updated_by_id: 
+work_phone: 
+personal_geo_state_id: 
+personal_postal_code: 
+prefix: 
+deleted_at: 
+personal_mobile: 
+personal_street_address: 
+user_salutation: 
+salutation: 
+assistant_name: 
+personal_city: 
+primary_user_organization_id: 
+assistant_phone: 
+personal_phone: 
+work_fax: 
+blog_url: 
+last_name: Smith
+personal_country_id: 
+twitter_url: 
+birth_at: 
+middle_initial: 
+other_contact: 
+time_zone: Pacific Time (US & Canada)
+assistant_email: 
+login: emmanuel_gutmann
+personal_email: 
+personal_street_address2: 
+email: greg@lesch.us
+first_name: Fred
+personal_fax: 
+state: active
+', 1, 'User', NULL, '2010-07-13 19:47:42.335930', '--- 
+:attributes: 
+ updated_by_id: 
+ work_phone: 
+ personal_geo_state_id: 
+ personal_postal_code: 
+ prefix: 
+ deleted_at: 
+ personal_mobile: 
+ personal_street_address: 
+ user_salutation: 
+ salutation: 
+ assistant_name: 
+ personal_city: 
+ primary_user_organization_id: 
+ assistant_phone: 
+ personal_phone: 
+ work_fax: 
+ blog_url: 
+ last_name: Smith
+ personal_country_id: 
+ twitter_url: 
+ birth_at: 
+ middle_initial: 
+ other_contact: 
+ time_zone: Pacific Time (US & Canada)
+ assistant_email: 
+ login: emmanuel_gutmann
+ personal_email: 
+ personal_street_address2: 
+ email: greg@lesch.us
+ first_name: Fred
+ personal_fax: 
+ state: active
+:changed_attributes: 
+ created_at: 
+ updated_at: 
+ id: 
+ last_name: ""
+ login: 
+ state: passive
+ email: 
+ first_name: ""
+', '2010-07-13 19:47:42.335930', NULL, NULL, NULL, 1)
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "realtime_updates" ("action", "created_at", "delta_attributes", "model_class", "model_id", "type_name", "updated_at", "user_id") VALUES ('create', '2010-07-13 19:47:42.344304', '{"updated_at":"2010-07-13T19:47:42Z","state":"active"}', 'User', 1, 'User', '2010-07-13 19:47:42.344304', NULL)[0m
+  [1m[35mUser Load (0.4ms)[0m  SELECT "users".* FROM "users" WHERE ("users"."id" = 1) LIMIT 1

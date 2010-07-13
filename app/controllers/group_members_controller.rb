@@ -1,0 +1,3 @@
+class GroupMembersController < ApplicationController
+  include FLuxxGroupMembersController
+end
