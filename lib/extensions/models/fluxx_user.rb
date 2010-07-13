@@ -56,7 +56,7 @@ module FLuxxUser
 
     # In the implementation, you can override this method or alias_method_chain to put it aside and call it as well 
     def merge_associations
-      [Audit, Dashboard, Favorite, ModelDelta, RolesUser].each do |aclass|
+      [Audit, Dashboard, Favorite, RealtimeUpdate].each do |aclass|
         aclass.update_all ['user_id = ?', self.id], ['user_id = ?', dup.id]
       end
 
@@ -94,7 +94,13 @@ module FLuxxUser
       RequestUser.update_all ['user_id = ?', self.id], ['user_id = ?', dup.id]
 
       Favorite.update_all ['favorable_id = ?', self.id], ['favorable_type = ? AND favorable_id = ?', 'User', dup.id]
-      Role.update_all ['authorizable_id = ?', self.id], ['authorizable_type = ? AND authorizable_id = ?', 'User', dup.id]
+    end
+    
+    def full_name
+      [first_name, last_name].join ' '
+    end
+    
+    def to_s
     end
   end
 end

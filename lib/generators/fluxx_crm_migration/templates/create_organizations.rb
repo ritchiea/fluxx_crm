@@ -22,6 +22,8 @@ class FluxxCrmCreateOrganizations < ActiveRecord::Migration
       t.boolean :delta,                      :null => :false, :default => true
       t.datetime :deleted_at,                :null => true
       t.integer :parent_org_id,                :limit => 12, :null => true
+      t.datetime :locked_until,              :null => true
+      t.integer :locked_by_id,               :null => true
     end
     add_index :organizations, :name, :unique => false
     add_index :organizations, :parent_org_id, :unique => false

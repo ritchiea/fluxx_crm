@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100712185242) do
+ActiveRecord::Schema.define(:version => 20100713221842) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -135,6 +135,8 @@ ActiveRecord::Schema.define(:version => 20100712185242) do
     t.datetime "document_updated_at"
     t.string   "documentable_type",                   :null => false
     t.integer  "documentable_id",       :limit => 12, :null => false
+    t.datetime "locked_until"
+    t.integer  "locked_by_id"
   end
 
   create_table "multi_element_choices", :force => true do |t|
@@ -174,6 +176,8 @@ ActiveRecord::Schema.define(:version => 20100712185242) do
     t.integer  "notable_id",    :limit => 12,                   :null => false
     t.boolean  "delta",                       :default => true
     t.datetime "deleted_at"
+    t.datetime "locked_until"
+    t.integer  "locked_by_id"
   end
 
   create_table "organizations", :force => true do |t|
@@ -186,7 +190,7 @@ ActiveRecord::Schema.define(:version => 20100712185242) do
     t.string   "street_address2"
     t.string   "city",            :limit => 100
     t.integer  "geo_state_id",    :limit => 12
-    t.integer  "country_id",      :limit => 12
+    t.integer  "geo_country_id",  :limit => 12
     t.string   "postal_code",     :limit => 100
     t.string   "phone",           :limit => 100
     t.string   "other_contact",   :limit => 100
@@ -200,6 +204,8 @@ ActiveRecord::Schema.define(:version => 20100712185242) do
     t.boolean  "delta",                           :default => true
     t.datetime "deleted_at"
     t.integer  "parent_org_id",   :limit => 12
+    t.datetime "locked_until"
+    t.integer  "locked_by_id"
   end
 
   add_index "organizations", ["name"], :name => "index_organizations_on_name"
@@ -219,6 +225,8 @@ ActiveRecord::Schema.define(:version => 20100712185242) do
   create_table "user_organizations", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "created_by_id",   :limit => 12
+    t.integer  "updated_by_id",   :limit => 12
     t.integer  "user_id",         :limit => 12
     t.integer  "organization_id", :limit => 12
     t.string   "title",           :limit => 400
@@ -226,6 +234,8 @@ ActiveRecord::Schema.define(:version => 20100712185242) do
     t.string   "email",           :limit => 400
     t.string   "phone",           :limit => 400
     t.datetime "deleted_at"
+    t.datetime "locked_until"
+    t.integer  "locked_by_id"
   end
 
   create_table "users", :force => true do |t|
@@ -248,7 +258,7 @@ ActiveRecord::Schema.define(:version => 20100712185242) do
     t.string   "personal_street_address2",     :limit => 400
     t.string   "personal_city",                :limit => 400
     t.integer  "personal_geo_state_id",        :limit => 12
-    t.integer  "personal_country_id",          :limit => 12
+    t.integer  "personal_geo_country_id",      :limit => 12
     t.string   "personal_postal_code",         :limit => 400
     t.string   "work_phone",                   :limit => 400
     t.string   "work_fax",                     :limit => 400
@@ -266,6 +276,8 @@ ActiveRecord::Schema.define(:version => 20100712185242) do
     t.integer  "primary_user_organization_id", :limit => 12
     t.datetime "last_logged_in_at"
     t.string   "time_zone",                    :limit => 40,   :default => "Pacific Time (US & Canada)"
+    t.datetime "locked_until"
+    t.integer  "locked_by_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"

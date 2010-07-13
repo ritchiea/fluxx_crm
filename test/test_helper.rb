@@ -23,5 +23,9 @@ ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 def login_as user
-  # No-op for now
+  @controller.current_user = user
+end
+
+class ActionController::Base
+  attr_accessor :current_user
 end

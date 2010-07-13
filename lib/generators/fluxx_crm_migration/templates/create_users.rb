@@ -36,6 +36,8 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
       t.integer :primary_user_organization_id, :limit => 12, :null => true
       t.datetime :last_logged_in_at,         :null => true
       t.string :time_zone,                   :limit => 40, :null => :false, :default => (ActiveSupport::TimeZone.us_zones.select{|tz| tz.utc_offset == -28800}).first.name
+      t.datetime :locked_until,              :null => true
+      t.integer :locked_by_id,               :null => true
     end
     add_index :users, :login, :unique => true
     add_index :users, :email

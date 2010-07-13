@@ -1,6 +1,6 @@
 module FLuxxOrganization
   include ::URLCleaner
-  SEARCH_ATTRIBUTES = [:state, :updated_at]
+  SEARCH_ATTRIBUTES = [:state, :updated_at, :name]
   
   def self.included(base)
     base.has_many :user_organizations
@@ -24,6 +24,8 @@ module FLuxxOrganization
       insta.updated_by_field = :updated_by_id
     end
     base.insta_multi
+    base.insta_export
+    base.insta_lock
 
     base.validates_presence_of     :name
     base.validates_length_of       :name,    :within => 3..100

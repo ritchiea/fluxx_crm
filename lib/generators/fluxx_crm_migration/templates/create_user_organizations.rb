@@ -10,6 +10,8 @@ class FluxxCrmCreateUserOrganizations < ActiveRecord::Migration
       t.string  :email,             :limit => 400, :null => true
       t.string  :phone,             :limit => 400, :null => true
       t.datetime :deleted_at,       :null => true
+      t.datetime :locked_until,              :null => true
+      t.integer :locked_by_id,               :null => true
     end
 
     execute "alter table user_organizations add constraint user_org_org_id foreign key (organization_id) references organizations(id)" unless connection.adapter_name =~ /SQLite/i

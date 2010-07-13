@@ -11,6 +11,7 @@ end
 
 # For faker formats see http://faker.rubyforge.org/rdoc/
 
+Sham.document { Tempfile.new('the attached document') }
 Sham.word { Faker::Lorem.words(2).join '' }
 Sham.words { Faker::Lorem.words(3).join ' ' }
 Sham.sentence { Faker::Lorem.sentence }
@@ -68,9 +69,16 @@ GeoCity.blueprint do
 end
 
 ModelDocument.blueprint do
-  documentable_type 'User'
-  documentable_id 1
+  documentable User.make
+  document Sham.document
 end
+
+# this helper class creates classes so your blueprint is happy
+class Documentable
+  def self.make(attrs = {})
+  end
+end
+
 
 Note.blueprint do
   note Sham.sentence

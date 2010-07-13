@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ModelDocumentTest < ActiveSupport::TestCase
   def setup
-    # @model_document = ModelDocument.make
+    @model_document = ModelDocument.make(:documentable => User.make)
   end
   
   test "truth" do
