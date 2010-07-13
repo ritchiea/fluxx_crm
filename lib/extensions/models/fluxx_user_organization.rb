@@ -9,6 +9,8 @@ module FLuxxUserOrganization
     base.validates_presence_of :organization_id
     base.validates_uniqueness_of :organization_id, :scope => :user_id
     
+    base.insta_search
+    
     # If the userorganization was connected as a primary organization, nil out the primary_organization of the use
     
     base.extend(ModelClassMethods)

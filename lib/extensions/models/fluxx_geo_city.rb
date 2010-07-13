@@ -6,6 +6,8 @@ module FLuxxGeoCity
 
     base.validates_presence_of :geo_state
     base.validates_presence_of :geo_country
+    
+    base.insta_search
 
     base.extend(ModelClassMethods)
     base.class_eval do

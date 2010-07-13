@@ -5,6 +5,8 @@ module FLuxxModelDocument
     base.belongs_to :documentable, :polymorphic => true
 
     base.has_attached_file :document
+    
+    base.insta_search
 
     base.validates_presence_of :documentable
     base.validates_attachment_presence :document

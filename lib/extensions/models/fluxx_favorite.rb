@@ -4,6 +4,7 @@ module FLuxxFavorite
     base.belongs_to :user
 
     base.after_commit :update_related_data
+    base.insta_search
     
     base.extend(ModelClassMethods)
     base.class_eval do
