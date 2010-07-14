@@ -1,3 +1,3 @@
-= form.input :name, :label => "Name"
+= form.input :organization, :label => "Organization", :as => :autocomplete, :autocomplete_url => organizations_path(:format => :json)
 
 = form.commit_button
