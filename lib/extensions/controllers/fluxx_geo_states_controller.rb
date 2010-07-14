@@ -1,6 +1,8 @@
 module FLuxxGeoStatesController
   def self.included(base)
-    # None for now
+    base.insta_index GeoState do |insta|
+      insta.template = 'geo_state_list'
+    end
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods

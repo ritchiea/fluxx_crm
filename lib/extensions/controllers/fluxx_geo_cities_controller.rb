@@ -1,6 +1,8 @@
 module FLuxxGeoCitiesController
   def self.included(base)
-    # None for now
+    base.insta_index GeoCity do |insta|
+      insta.template = 'geo_city_list'
+    end
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods

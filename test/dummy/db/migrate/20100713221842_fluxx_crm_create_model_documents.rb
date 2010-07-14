@@ -9,6 +9,7 @@ class FluxxCrmCreateModelDocuments < ActiveRecord::Migration
       t.datetime :document_updated_at
       t.string :documentable_type, :null => false
       t.integer :documentable_id, :null => false, :limit => 12
+      t.datetime :deleted_at,                :null => true
       t.datetime :locked_until,              :null => true
       t.integer :locked_by_id,               :null => true
     end

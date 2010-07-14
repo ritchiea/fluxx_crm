@@ -6,6 +6,9 @@ module FLuxxGeoState
 
     base.validates_presence_of :geo_country
 
+    base.insta_search
+    base.insta_export
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods

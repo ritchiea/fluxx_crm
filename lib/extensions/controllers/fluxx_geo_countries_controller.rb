@@ -1,11 +1,7 @@
 module FLuxxGeoCountriesController
   def self.included(base)
     base.insta_index GeoCountry do |insta|
-      insta.format do |format|
-        format.json do |controller_dsl, controller, outcome|
-          controller.render :inline => @models.to_json
-        end
-      end
+      insta.template = 'geo_country_list'
     end
     base.extend(ModelClassMethods)
     base.class_eval do

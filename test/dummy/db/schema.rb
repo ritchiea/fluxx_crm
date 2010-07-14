@@ -135,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20100713221842) do
     t.datetime "document_updated_at"
     t.string   "documentable_type",                   :null => false
     t.integer  "documentable_id",       :limit => 12, :null => false
+    t.datetime "deleted_at"
     t.datetime "locked_until"
     t.integer  "locked_by_id"
   end

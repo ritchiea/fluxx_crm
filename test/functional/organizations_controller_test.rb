@@ -6,10 +6,6 @@ class OrganizationsControllerTest < ActionController::TestCase
     @user1 = User.make
     login_as @user1
     @org1 = Organization.make
-    @org2 = Organization.make
-    @org3 = Organization.make(:parent_org => @org2)
-    @org4 = Organization.make(:parent_org => @org2)
-    @user_org = UserOrganization.make(:user => @user1, :organization => @org4)
   end
   
   test "should get index" do
@@ -22,6 +18,21 @@ class OrganizationsControllerTest < ActionController::TestCase
     get :index, :format => 'csv'
     assert_response :success
     assert_not_nil assigns(:organizations)
+  end
+
+  test "autocomplete" do
+    Organization.make
+    lookup_org = Organization.make
+    get :index, :name => lookup_org.name, :format => :json
+    a = @response.body.de_json # try to deserialize the JSON to an array
+    assert_equal lookup_org.name, a.first['label']
+    assert_equal lookup_org.id, a.first['value']
+  end
+
+  test "should confirm that name_exists" do
+    get :index, :name => @org1.name, :format => :json
+    a = @response.body.de_json # try to deserialize the JSON to an array
+    assert_equal @org1.id, a.first['value']
   end
 
   test "should get new" do
@@ -47,14 +58,6 @@ class OrganizationsControllerTest < ActionController::TestCase
     get :show, :id => @org1.to_param, :audit_id => @org1.audits.first.to_param
     assert_response :success
   end
-  
-  # TODO ESH: fix; currently show organizations doesn't do too much
-  # test "should show organization with satellites" do
-  #   get :show, :id => @org2.to_param
-  #   assert @response.body.index @org3.id.to_s
-  #   assert @response.body.index @org4.id.to_s
-  #   assert_response :success
-  # end
   
   test "should get edit" do
     get :edit, :id => @org1.to_param
@@ -85,24 +88,17 @@ class OrganizationsControllerTest < ActionController::TestCase
     assert_not_nil @org1.reload().deleted_at 
   end
   
-  test "should confirm that name_exists" do
-    get :index, :name => @org1.name, :format => :json
-    a = @response.body.de_json # try to deserialize the JSON to an array
-    assert_equal @org1.id, a.first['value']
-  end
+  # TODO ESH: fix; currently show organizations doesn't do too much
+  # test "should show organization with satellites" do
+  #   get :show, :id => @org2.to_param
+  # @org2 = Organization.make
+  # @org3 = Organization.make(:parent_org => @org2)
+  # @org4 = Organization.make(:parent_org => @org2)
+  #   assert @response.body.index @org3.id.to_s
+  #   assert @response.body.index @org4.id.to_s
+  #   assert_response :success
+  # end
   
-  test "autocomplete" do
-    @user_org.destroy
-    Organization.delete_all 'parent_org_id is not null'
-    Organization.delete_all
-    @org1 = Organization.make
-    
-    get :index, :organization => {:name => @org1.name}, :format => :json
-    a = @response.body.de_json # try to deserialize the JSON to an array
-    assert_equal @org1.name, a.first['label']
-    assert_equal @org1.id, a.first['value']
-  end
-
   # TODO ESH: add a way in insta's rest interface to merge dupes
   # test "Check that we can merge two orgs" do
   #   login_as_user_with_role Role.data_cleanup_role_name, User
@@ -114,6 +110,7 @@ class OrganizationsControllerTest < ActionController::TestCase
   # 
   # test "Check that we can merge two HQ orgs that have satellites" do
   #   login_as_user_with_role Role.data_cleanup_role_name, User
+  #   @user_org = UserOrganization.make(:user => @user1, :organization => @org4)
   #   good_org = Organization.make
   #   good_org_sat = Organization.make :parent_org => good_org
   #   dupe_org = Organization.make
