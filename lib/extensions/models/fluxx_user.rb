@@ -1,6 +1,6 @@
 module FLuxxUser
   include ::URLCleaner
-  SEARCH_ATTRIBUTES = [:state, :updated_at]
+  SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name]
 
   def self.included(base)
     base.has_many :user_organizations, :conditions => 'user_organizations.deleted_at IS NULL'
@@ -22,6 +22,8 @@ module FLuxxUser
       insta.updated_by_field = :updated_by_id
     end
     base.insta_multi
+    base.insta_export
+    base.insta_lock
     # TODO ESH: add authentication validation (login/email/password etc)
     base.insta_utc do |insta|
       insta.time_attributes = [:birth_at]
