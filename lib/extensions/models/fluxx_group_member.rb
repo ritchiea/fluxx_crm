@@ -6,6 +6,10 @@ module FLuxxGroupMember
     base.belongs_to :modified_by, :class_name => 'User', :foreign_key => 'modified_by_id'
     
     base.insta_search
+    base.insta_multi
+    base.insta_export
+    base.insta_lock
+    base.acts_as_audited
     
     base.extend(ModelClassMethods)
     base.class_eval do
