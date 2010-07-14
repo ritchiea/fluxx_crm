@@ -8,11 +8,12 @@ class ModelDocumentsControllerTest < ActionController::TestCase
     @model_doc = ModelDocument.make(:documentable => User.make)
   end
   
-  # test "should create model document" do
-  #   assert_difference('ModelDocument.count') do
-  #     post :create, :model_document => {:document => Sham.document}
-  #   end
-  # end
+  test "should create model document" do
+    org = Organization.make
+    assert_difference('ModelDocument.count') do
+      post :create, :model_document => {:document => Sham.document, :documentable_id => org.id, :documentable_type => org.class.name}
+    end
+  end
   
   test "should destroy model_document" do
     delete :destroy, :id => @model_doc.to_param
