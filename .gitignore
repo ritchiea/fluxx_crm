@@ -4,3 +4,4 @@ log/*.log
 tmp/**/*
 test/dummy/public/system/documents/**/*
 coverage/
+test/dummy/log
