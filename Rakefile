@@ -66,4 +66,3 @@ Rcov::RcovTask.new do |t|
   t.test_files = FileList['test/**/*_test.rb']
   t.rcov_opts << "--exclude \"test/*,gems/*,/Library/Ruby/*,config/*\" --rails" 
 end
-

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100713221842) do
+ActiveRecord::Schema.define(:version => 20100715163024) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(:version => 20100713221842) do
     t.string   "longitude",      :limit => 150
     t.string   "metro_code",     :limit => 150
     t.string   "area_code",      :limit => 150
-    t.integer  "orginal_loc_id", :limit => 12,  :null => false
+    t.integer  "original_id",    :limit => 12,  :null => false
   end
 
   add_index "geo_cities", ["name"], :name => "geo_cities_name_index"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(:version => 20100713221842) do
     t.text     "comment"
   end
 
+  add_index "geo_countries", ["fips104"], :name => "country_fips104_index"
   add_index "geo_countries", ["iso2"], :name => "country_iso2_index"
   add_index "geo_countries", ["name"], :name => "country_name_index"
 

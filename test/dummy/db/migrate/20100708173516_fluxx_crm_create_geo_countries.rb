@@ -8,6 +8,7 @@ class FluxxCrmCreateGeoCountries < ActiveRecord::Migration
     end
     add_index :geo_countries, :name, :name => 'country_name_index'
     add_index :geo_countries, :iso2, :name => 'country_iso2_index'
+    add_index :geo_countries, :fips104, :name => 'country_fips104_index'
   end
 
   def self.down
