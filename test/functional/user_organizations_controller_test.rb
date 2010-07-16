@@ -71,7 +71,7 @@ class UserOrganizationsControllerTest < ActionController::TestCase
     delete :destroy, :id => @user_org2.to_param
     assert_not_nil @user_org2.reload().deleted_at 
     assert_redirected_to user_organization_url(@user_org2)
-    assert_nil @user1.reload.primary_user_organization_id
+    assert_equal @user_org1.id, @user1.reload.primary_user_organization_id
   end
 
   test "should not be allowed to edit if somebody else is editing" do

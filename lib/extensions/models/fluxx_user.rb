@@ -10,8 +10,12 @@ module FLuxxUser
     base.belongs_to :primary_user_organization, :class_name => 'UserOrganization', :foreign_key => :primary_user_organization_id
     base.belongs_to :primary_organization, :class_name => 'Organization', :include => :primary_user_organization, :foreign_key => 'organization_id'
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
-    base.belongs_to :modified_by, :class_name => 'User', :foreign_key => 'modified_by_id'
-    base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :modified_by_id, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
+    base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
+    base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
+    base.has_many :group_members, :as => :groupable
+    base.has_many :groups, :through => :group_members
+    base.has_many :favorites, :as => :favorable
+    base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
 
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
@@ -47,18 +51,16 @@ module FLuxxUser
     end
     def merge dup
       unless dup.nil? || self == dup
-        User.suspended_delta do # Turn off sphinx indexing throughout this process
-          User.transaction do
-
-            dup.destroy
-          end
+        User.transaction do
+          merge_associations dup
+          dup.destroy
         end
       end
     end
 
     # In the implementation, you can override this method or alias_method_chain to put it aside and call it as well 
-    def merge_associations
-      [Audit, Dashboard, Favorite, RealtimeUpdate].each do |aclass|
+    def merge_associations dup
+      [Audit, ClientStore, Favorite, RealtimeUpdate].each do |aclass|
         aclass.update_all ['user_id = ?', self.id], ['user_id = ?', dup.id]
       end
 
@@ -69,33 +71,26 @@ module FLuxxUser
       # Kill the primary_user_organization_id for this user
       dup.update_attribute :primary_user_organization_id, nil
 
-      # Delete out duplicate user orgs
-      User.connection.execute 'DROP TEMPORARY TABLE IF EXISTS dupe_user_orgs'
-      User.connection.execute User.send(:sanitize_sql, ['CREATE TEMPORARY TABLE dupe_user_orgs SELECT organization_id, COUNT(*) tot 
+      User.connection.execute 'DROP TABLE IF EXISTS dupe_user_orgs'
+      User.connection.execute User.send(:sanitize_sql, ['CREATE TEMPORARY TABLE dupe_user_orgs AS SELECT organization_id, COUNT(*) tot 
           FROM user_organizations WHERE user_id IN (?) GROUP BY organization_id', [self.id]])
-      User.connection.execute User.send(:sanitize_sql, ['DELETE user_organizations.* FROM user_organizations, dupe_user_orgs 
-          WHERE user_id = ? AND dupe_user_orgs.organization_id = user_organizations.organization_id', dup.id])
+      User.connection.execute User.send(:sanitize_sql, ['DELETE FROM user_organizations 
+          WHERE user_id = ? AND user_organizations.organization_id IN (select organization_id from dupe_user_orgs)', dup.id])
+      UserOrganization.update_all ['user_id = ?', self.id], ['user_id = ?', dup.id] # Now take care of the rest of the user orgs
 
-      [Note, OrganizationDocument, Organization, RequestDocument, RequestFundingSource, RequestReport, 
-          RequestLetter, RequestTransaction, WorkflowEvent, Request, User].each do |aclass|
+      [UserOrganization, Note, Organization, User, ModelDocument, Group].each do |aclass|
         aclass.update_all ['created_by_id = ?', self.id], ['created_by_id = ?', dup.id]
-        aclass.update_all ['modified_by_id = ?', self.id], ['modified_by_id = ?', dup.id]
-        unless aclass == Note || aclass == WorkflowEvent || aclass == RequestDocument || aclass == GroupMember # notes and workflow_events are not lockable
+        aclass.update_all ['updated_by_id = ?', self.id], ['updated_by_id = ?', dup.id]
+        unless aclass == Note || aclass == GroupMember || aclass == Group # not lockable
           aclass.update_all 'locked_by_id = null, locked_until = null', ['locked_by_id = ?', dup.id]
         end
       end
 
-      # UserOrganization is a bit of an outlier as it has locked_by_id but not created_by_id/modified_by_id
-      UserOrganization.update_all 'locked_by_id = null, locked_until = null', ['locked_by_id = ?', dup.id]
-      UserOrganization.update_all ['user_id = ?', self.id], ['user_id = ?', dup.id]
-
-
-
       # Need to be sure for our polymorphic relations that we're covered
       Note.update_all ['notable_id = ?', self.id], ['notable_type = ? AND notable_id = ?', 'User', dup.id]
-      RequestUser.update_all ['user_id = ?', self.id], ['user_id = ?', dup.id]
 
       Favorite.update_all ['favorable_id = ?', self.id], ['favorable_type = ? AND favorable_id = ?', 'User', dup.id]
+      self.roles = self.roles | dup.roles
     end
     
     def roles= roles_array
@@ -108,26 +103,32 @@ module FLuxxUser
     end
     
     # The role names may be very descriptive and thus may relate to specific model objects
+    # make sure you reload the user to prevent somebody else from overwriting a role
     def add_role new_role
       User.transaction do
-        roles_array = self.roles
+        up_to_date_user = User.find self.id
+        roles_array = up_to_date_user.roles
         unless roles_array.include? new_role
           roles_array << new_role
-          self.roles = roles_array
-          self.save
-        else
-          false
+          up_to_date_user.roles = roles_array
+          if up_to_date_user.save
+            self.roles = roles_array
+          end
         end
       end
     end
     
+    # remove a role; make sure you reload the user to prevent somebody else from overwriting a role
     def remove_role old_role
       User.transaction do
-        roles_array = self.roles
+        up_to_date_user = User.find self.id
+        roles_array = up_to_date_user.roles
         if roles_array.include? old_role
           roles_array.delete old_role
-          self.roles = roles_array
-          self.save
+          up_to_date_user.roles = roles_array
+          if up_to_date_user.save
+            self.roles = roles_array
+          end
         else
           true
         end

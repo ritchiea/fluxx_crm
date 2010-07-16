@@ -65,7 +65,7 @@ GeoCity.blueprint do
   name Sham.word
   geo_state_id GeoState.make.id
   geo_country_id GeoCountry.make.id
-  orginal_loc_id 1
+  original_id 1
 end
 
 ModelDocument.blueprint do

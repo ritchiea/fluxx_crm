@@ -114,7 +114,7 @@ module FLuxxOrganization
     def merge dup
       unless dup.nil? || self == dup
         Organization.transaction do
-          merge_associations
+          merge_associations dup
         
           # finally remove duplicate
           dup.destroy
@@ -123,23 +123,14 @@ module FLuxxOrganization
     end
   
     # In the implementation, you can override this method or alias_method_chain to put it aside and call it as well 
-    def merge_associations
-      # move org documents to representant
-      dup.documents.update_all ['organization_id = ?', id]
-      # move users to corresponendt org
-      dup.user_organizations.each do |user_org_assoc|
-        user_of_dup = user_org_assoc.user
-        if users.include?(user_of_dup)
-          # this user already relates to this org.  If the user uses this as their primary org, need to point to the new user org
-          if user_org_assoc == user_of_dup.primary_user_organization && user_of_dup.primary_user_organization.organization.id == dup.id
-            related_user_org = user_of_dup.user_organizations.find :first, :conditions => {:organization_id => id}
-            user_of_dup.update_attribute(:primary_user_organization_id, related_user_org.id) 
-          end
-          user_org_assoc.destroy
-        else
-          user_org_assoc.update_attribute(:organization_id, id) 
-        end
-      end
+    def merge_associations dup
+      User.connection.execute 'DROP TABLE IF EXISTS dupe_user_orgs'
+      User.connection.execute User.send(:sanitize_sql, ['CREATE TEMPORARY TABLE dupe_user_orgs AS SELECT organization_id, COUNT(*) tot 
+          FROM user_organizations WHERE organization_id IN (?) GROUP BY user_id', [self.id]])
+      User.connection.execute User.send(:sanitize_sql, ['DELETE FROM user_organizations 
+          WHERE organization_id = ? AND user_organizations.organization_id IN (select organization_id from dupe_user_orgs)', dup.id])
+      UserOrganization.update_all ['organization_id = ?', self.id], ['organization_id = ?', dup.id] # Now take care of the rest of the user orgs
+      
       Organization.update_all ['parent_org_id = ?', id], ['parent_org_id = ?', dup.id]
     
       # Need to be sure for our polymorphic relations that we're covered

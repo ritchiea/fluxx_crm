@@ -29,7 +29,12 @@ module FLuxxUserOrganization
   module ModelInstanceMethods
     def clear_out_related_primary_organizations
       primary_user_organizations_users.each do |user|
-        user.update_attributes :primary_user_organization => nil
+        other_user_orgs = user.user_organizations.select {|uo| uo.id != self.id}
+        if other_user_orgs
+          user.update_attributes :primary_user_organization => other_user_orgs.first
+        else
+          user.update_attributes :primary_user_organization => nil
+        end
       end
     end
   end
