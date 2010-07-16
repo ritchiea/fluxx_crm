@@ -245,6 +245,7 @@ ActiveRecord::Schema.define(:version => 20100715163024) do
     t.datetime "updated_at"
     t.integer  "created_by_id",                :limit => 12
     t.integer  "updated_by_id",                :limit => 12
+    t.text     "roles_text"
     t.string   "login",                        :limit => 40
     t.string   "first_name",                   :limit => 400,  :default => ""
     t.string   "last_name",                    :limit => 400,  :default => ""

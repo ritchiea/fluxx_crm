@@ -1,3 +1,22 @@
 = form.input :name, :label => "Name"
+= form.input :street_address, :label => "Street Address"
+= form.input :street_address2, :label => "Street Address 2"
+= form.input :city, :label => "City"
+# = form.input :city, :label => "Country"
+t.integer :geo_country_id,                :limit => 12, :null => true
+t.integer :geo_state_id,              :limit => 12, :null => true
+t.string :postal_code,                :limit => 100, :null => true
+t.string :phone,                      :limit => 100, :null => true
+t.string :other_contact,              :limit => 100, :null => true
+t.string :fax,                        :limit => 100, :null => true
+t.string :email,                      :limit => 100, :null => true
+t.string :url,                        :limit => 2048, :null => true
+t.string :blog_url,                   :limit => 2048, :null => true
+t.string :twitter_url,                :limit => 2048, :null => true
+t.string :acronym,                    :limit => 100, :null => true
+t.string :state, :null => :no, :default => 'new'
+t.boolean :delta,                      :null => :false, :default => true
+t.datetime :deleted_at,                :null => true
+t.integer :parent_org_id,                :limit => 12, :null => true
 
 = form.commit_button

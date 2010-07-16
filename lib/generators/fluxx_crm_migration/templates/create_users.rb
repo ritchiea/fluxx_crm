@@ -3,6 +3,7 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
     create_table "users", :force => true do |t|
       t.timestamps
       t.integer :created_by_id, :updated_by_id, :null => true, :limit => 12
+      t.text   :roles_text
       t.string :login,                       :limit => 40, :null => true
       t.string :first_name,                  :limit => 400, :null => true, :default => ''
       t.string :last_name,                   :limit => 400, :null => true, :default => ''

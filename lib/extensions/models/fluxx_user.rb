@@ -98,6 +98,48 @@ module FLuxxUser
       Favorite.update_all ['favorable_id = ?', self.id], ['favorable_type = ? AND favorable_id = ?', 'User', dup.id]
     end
     
+    def roles= roles_array
+      return false unless roles_array && roles_array.is_a?(Array)
+      self.roles_text = roles_array.to_yaml 
+    end
+
+    def roles
+      (roles_text ? roles_text.de_yaml : nil) || []
+    end
+    
+    # The role names may be very descriptive and thus may relate to specific model objects
+    def add_role new_role
+      User.transaction do
+        roles_array = self.roles
+        unless roles_array.include? new_role
+          roles_array << new_role
+          self.roles = roles_array
+          self.save
+        else
+          false
+        end
+      end
+    end
+    
+    def remove_role old_role
+      User.transaction do
+        roles_array = self.roles
+        if roles_array.include? old_role
+          roles_array.delete old_role
+          self.roles = roles_array
+          self.save
+        else
+          true
+        end
+      end
+    end
+    
+    def has_role? expected_roles
+      return false unless expected_roles
+      expected_roles = [expected_roles] unless expected_roles.is_a?(Array)
+      !(expected_roles.select {|r| self.roles.include? r }).empty?
+    end
+    
     def full_name
       [first_name, last_name].join ' '
     end

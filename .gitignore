@@ -5,3 +5,4 @@ tmp/**/*
 test/dummy/public/system/documents/**/*
 coverage/
 test/dummy/log
+test/dummy/db/development.sqlite3
