@@ -1,1 +1,16 @@
-= model.name
+- model = model.parent_org if model.parent_org # Dont display a satellite as a HQ
+%h1.organization-name= model.name
+%span.organization-id{:style => "display: none"} = model.id
+
+%h2 HeadQuarters
+
+= render :partial => "organization_location", :locals => { :location => model, :detailed => true}
+  
+
+-#<%= render :partial => "satellites", :locals => { :model => model} %>
+
+-#<%= render :partial => "documents", :locals => { :model => model} %>
+
+-#<%= render :partial => "groups/list_groups", :locals => { :model => @model, :class_type => Organization.name} %>
+-#<%= render :partial => "notes/list_notes", :locals => { :model => @model, :class_type => Organization.name} %>
+-#<%= render :partial => "audits/list_audits", :locals => { :model => @model} %>
