@@ -20,6 +20,10 @@ module FLuxxGeoCountry
   end
 
   module ModelInstanceMethods
+    def find_related_geo_states
+      GeoState.where(:geo_country_id => self.id).all
+    end
+    
     def to_s
       name.blank? ? nil : name
     end
