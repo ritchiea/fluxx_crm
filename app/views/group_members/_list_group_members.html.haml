@@ -1,3 +1,4 @@
+ESH 11111:
 %div.fluxx-card-show-wide-list.fluxx-card-show-group-members
   %ol.fluxx-card-show-wide-list-elements
     %li.fluxx-card-show-wide-list-title
@@ -22,5 +23,5 @@
               - else
                 no timestamp
           - if can_current_user_edit_create_users?
-            %span.delete-button= link_to_delete image_tag("/images/icons/delete.png"), group_member, {:class => 'fluxx-card-form-on-complete-refresh', :style => 'display: none'}
+            %span.delete-button= link_to_delete image_tag("/images/icons/delete.png"), group_member, self, {:class => 'fluxx-card-form-on-complete-refresh', :style => 'display: none'}
     %li.footer

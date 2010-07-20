@@ -7,9 +7,10 @@
       - load_audits(model).each do |audit|
         %li
           - audit_summary, audit_table = build_audit_table_and_summary model, audit
+          ESH:
           - if audit.full_model.blank?
-            %span= audit_summary + audit_table
+            %span= raw(audit_summary + audit_table)
           - else
             %span
-              = link_to(audit_summary, url_for(:id => model.to_param, :audit_id => audit.id), :class => 'fluxx-card-link-to-new-card', :title => "History")
+              = link_to(raw(audit_summary), url_for(:id => model.to_param, :audit_id => audit.id), :class => 'fluxx-card-link-to-new-card', :title => "History")
               = audit_table

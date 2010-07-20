@@ -1,11 +1,12 @@
 jQuery(function($){
   $.extend($.fluxx.stage.decorators, {
-    'input[name=grape[id]]': [
+    '.geo_country_select': [
       'change', function(e) {
-        var $id   = $(this),
-            $drop = $id.siblings('.grape-id-drop');
-        $.fluxx.log("changing picker...");
-        $drop.text('Picked: ' + $id.val());
+        var country_id  = $(this).val(),
+            $state      = $('.geo_state_select', $(this).parents('form')),
+            state_cache = $.fluxx.cache('geo_state_select');
+        var states_data = _.select(state_cache, function(i){ if (i.country_id = country_id) return true; });
+        $('<option ....></option>').appendTo($state);
       }
     ]
   });

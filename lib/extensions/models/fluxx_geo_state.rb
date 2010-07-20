@@ -6,7 +6,9 @@ module FLuxxGeoState
 
     base.validates_presence_of :geo_country
 
-    base.insta_search
+    base.insta_search do |insta|
+      insta.filter_fields = [:geo_country_id]
+    end
     base.insta_export
 
     base.extend(ModelClassMethods)
