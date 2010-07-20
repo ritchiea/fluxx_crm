@@ -1,0 +1,16 @@
+%h1
+  %span.edit_link
+  - if can_current_user_edit_create_organizations?
+    = link_to 'add a satellite', new_organization_path(:organization => {:parent_org_id => model.id}), :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]'
+  - if model.satellite_orgs.empty?
+    %p No satellite offices available
+  - model.satellite_orgs.each do |satellite|
+  
+    %div.item
+      - if can_current_user_edit_create_organizations?
+        %span.delete_link= link_to_delete 'delete', satellite, {:class => 'fluxx-card-form-on-complete-refresh', :style => 'display: none'}
+        %span.edit_link= link_to 'edit', edit_organization_url(satellite), :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]'
+
+      - if !respond_to?(:detailed) || (respond_to?(:detailed) && !detailed)
+        %span.details_link= link_to 'show details', organization_url(satellite), :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]'
+      = render :partial => "organization_location", :locals => { :location => satellite, :detailed => false}

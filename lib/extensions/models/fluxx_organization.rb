@@ -9,6 +9,10 @@ module FLuxxOrganization
     base.has_many :satellite_orgs, :class_name => 'Organization',  :foreign_key => :parent_org_id, :conditions => {:deleted_at => nil}
     base.belongs_to :geo_country
     base.belongs_to :geo_state
+    base.has_many :favorites, :as => :favorable
+    base.has_many :model_documents, :as => :documentable
+    base.has_many :notes, :as => :notable
+    base.has_many :group_members, :as => :groupable
 
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :modified_by, :class_name => 'User', :foreign_key => 'modified_by_id'

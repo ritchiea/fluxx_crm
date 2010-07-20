@@ -53,6 +53,28 @@ class OrganizationsControllerTest < ActionController::TestCase
     get :show, :id => @org1.to_param
     assert_response :success
   end
+
+  test "should show organization with documents" do
+    model_doc1 = ModelDocument.make(:documentable => @org1)
+    model_doc2 = ModelDocument.make(:documentable => @org1)
+    get :show, :id => @org1.to_param
+    assert_response :success
+  end
+  
+  test "should show organization with groups" do
+    group = Group.make
+    group_member1 = GroupMember.make :groupable => @org1, :group => group
+    group_member2 = GroupMember.make :groupable => @org1, :group => group
+    get :show, :id => @org1.to_param
+    assert_response :success
+  end
+  
+  test "should show organization with notes" do
+    note1 = Note.make(:notable => @org1)
+    note2 = Note.make(:notable => @org1)
+    get :show, :id => @org1.to_param
+    assert_response :success
+  end
   
   test "should show organization audit" do
     get :show, :id => @org1.to_param, :audit_id => @org1.audits.first.to_param

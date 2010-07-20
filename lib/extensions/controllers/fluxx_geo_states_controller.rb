@@ -2,6 +2,7 @@ module FLuxxGeoStatesController
   def self.included(base)
     base.insta_index GeoState do |insta|
       insta.template = 'geo_state_list'
+      insta.results_per_page = 5000
     end
     base.extend(ModelClassMethods)
     base.class_eval do

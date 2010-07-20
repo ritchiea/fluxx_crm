@@ -1,0 +1,26 @@
+%div.fluxx-card-show-wide-list.fluxx-card-show-notes
+  %ol.fluxx-card-show-wide-list-elements
+    %li.fluxx-card-show-wide-list-title
+      -if can_current_user_edit_create_users?
+        %div.fluxx-card-show-wide-list-add= link_to image_tag('/images/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => model.id, :notable_type => model.class.name}), :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]', :title => "Add Note"
+      Notes
+      - if (model.respond_to?(:notes) ? model.notes.empty? : true)
+        %li= "No Notes"
+      - else
+        - model.notes.sort_by{|note| (-1 * note.created_at.to_i) if note.created_at}.each do |note|
+          %li.fluxx-card-show-note-item
+            = link_to 'note', note
+            %span
+              - if note.created_by
+                By
+                = note.created_by.full_name 
+              - if note.created_at
+                Added at
+                = note.created_at.ampm_time
+                on
+                = note.created_at.full
+              - else
+                no timestamp
+          - if can_current_user_edit_create_users?
+            %span.delete-button= link_to_delete image_tag("/images/icons/delete.png"), note, {:class => 'fluxx-card-form-on-complete-refresh', :style => 'display: none'}
+    %li.footer

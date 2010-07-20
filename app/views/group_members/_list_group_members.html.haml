@@ -1,0 +1,26 @@
+%div.fluxx-card-show-wide-list.fluxx-card-show-group-members
+  %ol.fluxx-card-show-wide-list-elements
+    %li.fluxx-card-show-wide-list-title
+      -if can_current_user_edit_create_users?
+        %div.fluxx-card-show-wide-list-add= link_to image_tag('/images/icons/add.png', :class=> 'add-button'), new_group_member_path(:group_member => {:groupable_id => model.id, :groupable_type => model.class.name}), :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]', :title => "Add Group"
+      Groups
+      - if (model.respond_to?(:group_members) ? model.group_members.empty? : true)
+        %li= "No Groups"
+      - else
+        - model.group_members.sort_by{|group_member| group_member.group.name if group_member.group}.each do |group_member|
+          %li.fluxx-card-show-group-members-item
+            = truncate(group_member.group.name, :length => 25) if group_member.group
+            %span
+              - if group_member.created_by
+                By
+                = group_member.created_by.full_name 
+              - if group_member.created_at
+                Added at
+                = group_member.created_at.ampm_time
+                on
+                = group_member.created_at.full
+              - else
+                no timestamp
+          - if can_current_user_edit_create_users?
+            %span.delete-button= link_to_delete image_tag("/images/icons/delete.png"), group_member, {:class => 'fluxx-card-form-on-complete-refresh', :style => 'display: none'}
+    %li.footer

@@ -7,10 +7,9 @@
 = render :partial => "organization_location", :locals => { :location => model, :detailed => true}
   
 
--#<%= render :partial => "satellites", :locals => { :model => model} %>
+= render :partial => "organization_satellites", :locals => { :model => model}
 
--#<%= render :partial => "documents", :locals => { :model => model} %>
-
--#<%= render :partial => "groups/list_groups", :locals => { :model => @model, :class_type => Organization.name} %>
--#<%= render :partial => "notes/list_notes", :locals => { :model => @model, :class_type => Organization.name} %>
+= render :partial => "model_documents/list_model_documents", :locals => { :model => model}
+= render :partial => "group_members/list_group_members", :locals => { :model => @model, :class_type => Organization.name}
+= render :partial => "notes/list_notes", :locals => { :model => @model, :class_type => Organization.name}
 -#<%= render :partial => "audits/list_audits", :locals => { :model => @model} %>

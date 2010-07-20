@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100715163024) do
+ActiveRecord::Schema.define(:version => 20100720033741) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(:version => 20100715163024) do
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.string   "name"
-    t.boolean  "deprecrated",   :default => false
+    t.boolean  "deprecated",    :default => false
   end
 
   add_index "groups", ["name"], :name => "index_groups_on_name", :unique => true

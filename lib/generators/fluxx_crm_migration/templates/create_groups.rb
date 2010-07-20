@@ -5,7 +5,7 @@ class FluxxCrmCreateGroups < ActiveRecord::Migration
       t.integer :created_by_id
       t.integer :updated_by_id
       t.string :name
-      t.boolean :deprecrated, :default => 0
+      t.boolean :deprecated, :default => 0
     end
     add_index :groups, :name, :unique => true
   end

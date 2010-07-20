@@ -6,3 +6,8 @@ test/dummy/public/system/documents/**/*
 coverage/
 test/dummy/log
 test/dummy/db/development.sqlite3
+db/geo/GeoLiteCity-Location.csv
+db/geo/GeoLiteCity-Location.original.csv
+db/geo/countries.csv
+db/geo/states.csv
+tmtags
