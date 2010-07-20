@@ -103,3 +103,7 @@ Note.blueprint do
   notable_type 'User'
   notable_id User.make.id
 end
+
+Audit.blueprint do
+  action 'create'
+end

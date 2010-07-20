@@ -1,0 +1,15 @@
+%div.fluxx-card-show-wide-list.fluxx-card-show-audits
+  %ol.fluxx-card-show-wide-list-elements
+    %li.fluxx-card-show-wide-list-title= link_to image_tag('icons/report_magnify.png'), '#', :onclick => 'var $t=$(this).parents(".fluxx-card-show-wide-list").find("table");$t.is(":visible") ? $t.fadeOut() : $t.fadeIn()', :class => 'fluxx-card-show-wide-list-actions', :title => "Show/Hide History Details" + "History"
+    - if !model.respond_to?(:audits) || model.audits.empty?
+      %li No history available
+    - else  # Make sure that the audits are ordered in descending order by id and filtered by request_tracking_id
+      - load_audits(model).each do |audit|
+        %li
+          - audit_summary, audit_table = build_audit_table_and_summary model, audit
+          - if audit.full_model.blank?
+            %span= audit_summary + audit_table
+          - else
+            %span
+              = link_to(audit_summary, url_for(:id => model.to_param, :audit_id => audit.id), :class => 'fluxx-card-link-to-new-card', :title => "History")
+              = audit_table

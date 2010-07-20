@@ -76,6 +76,12 @@ class OrganizationsControllerTest < ActionController::TestCase
     assert_response :success
   end
   
+  test "should show organization with audits" do
+    Audit.make :auditable_id => @org1.to_param, :auditable_type => @org1.class.name
+    get :show, :id => @org1.to_param
+    assert_response :success
+  end
+  
   test "should show organization audit" do
     get :show, :id => @org1.to_param, :audit_id => @org1.audits.first.to_param
     assert_response :success
