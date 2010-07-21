@@ -1,2 +1,75 @@
-= model.first_name
-= model.last_name
+%h1.minimize-detail-pull= [model.first_name, model.last_name].join ' '
+
+- primary_user_org = model.primary_user_organization
+- if primary_user_org
+  %div.subhead
+    = primary_user_org.title
+    - unless primary_user_org.title.blank?
+      ,
+      = primary_user_org.organization.name
+
+%h2
+  Work Contact Details
+
+- if primary_user_org
+  %p.address
+  - if primary_user_org.organization
+    - if primary_user_org.organization.street_address
+      %span.address1= primary_user_org.organization.street_address
+    - if primary_user_org.organization.street_address2
+      %span.address2= primary_user_org.organization.street_address2
+    - if primary_user_org.organization.city
+      %span.city= primary_user_org.organization.city
+    - if primary_user_org.organization.country_state && primary_user_org.organization.country_state.name
+      %abbr{:title => primary_user_org.organization.country_state.name}
+        - if primary_user_org.organization.country_state && primary_user_org.organization.country_state.abbreviation  
+          = primary_user_org.organization.country_state.abbreviation
+      - if primary_user_org.organization.postal_code
+        %span.zipcode= primary_user_org.organization.postal_code
+
+- build_user_work_contact_details(primary_user_org, model).each do |name, value|
+  - unless value.blank?
+    %dl
+      %dt= name
+      %dd= value
+  <br clear="all" />
+
+%h2
+  Home Contact Details
+  %p.address
+  - if model.personal_street_address
+    %span.address1= model.personal_street_address
+  - if model.personal_street_address2
+    %span.address2= model.personal_street_address2
+  - if model.personal_city
+    %span.city= model.personal_city
+  - if model.personal_geo_state && model.personal_geo_state.name
+    %abbr{:title => model.personal_geo_state.name}
+      = model.personal_geo_state.abbreviation
+  - if model.personal_postal_code
+    %span.zipcode= model.personal_postal_code
+
+- unless model.personal_phone.blank?
+  %dl
+    %dt
+      Home Phone
+    %dd= model.personal_phone
+
+<br clear="all" />
+
+- unless model.birth_at.blank?
+  %dl
+    %dt
+      Birthday
+    %dd= model.birth_at.mdy
+
+<br clear="all" />
+
+
+= render :partial => "user_organizations/list_user_organizations", :locals => { :model => @model}
+-# TODO ESH: admin  <%= render :partial => "user_roles", :locals => { :model => @model} %>
+
+= render :partial => "model_documents/list_model_documents", :locals => { :model => model}
+= render :partial => "group_members/list_group_members", :locals => { :model => @model, :class_type => User.name}
+= render :partial => "notes/list_notes", :locals => { :model => @model, :class_type => User.name}
+= render :partial => "audits/list_audits", :locals => { :model => @model}

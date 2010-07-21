@@ -7,7 +7,6 @@
       - load_audits(model).each do |audit|
         %li
           - audit_summary, audit_table = build_audit_table_and_summary model, audit
-          ESH:
           - if audit.full_model.blank?
             %span= raw(audit_summary + audit_table)
           - else

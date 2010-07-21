@@ -9,19 +9,18 @@ module ApplicationHelper
       true
     end
   
-  def link_to_delete label, model, controller, options = {}, use_onclick=true
+  def link_to_delete label, model, options = {}, use_onclick=true
     options[:method] = :delete
     link_class = options.delete(:link_class)
     refresh_function = (options[:refresh] == :partial ? 'onCompleteRefreshPartial' : 'onCompleteRefresh')
     append_to = (options[:refresh] == :partial ? 'fluxxCardPartial' : 'fluxxCardArea')
 
     form = raw(form_for(model, :html => options){|f| })
-    p "ESH: form=#{form.to_s}"
     form = "$('#{raw form}').submit(#{refresh_function}).appendTo($(this).#{append_to}()).submit();return false;"
 
     raw link_to(label, model, :onclick => (
         use_onclick ? raw("if(confirm('This record will be deleted. Are you sure?')) {#{raw form}}; return false;") : "#{raw form}"), :class => link_class)
-  end
+  end  
   
   def link_to_update label, model, options = {}
     options[:method] = :put
@@ -96,5 +95,23 @@ module ApplicationHelper
       audit_table += "</table>"
     end
     [audit_summary, audit_table]
+  end
+  
+  def build_user_work_contact_details primary_user_org, model
+    [
+      ['Office Phone:', primary_user_org && primary_user_org.organization ? primary_user_org.organization.phone : nil ],
+      ['Office Fax:', primary_user_org && primary_user_org.organization ? primary_user_org.organization.fax : nil ],
+      ['Direct Phone:', model.work_phone],
+      ['Direct Fax:', model.work_fax],
+      ['Email Address:', model.email ],
+      ['Personal Phone:', model.personal_phone ],
+      ['Personal Mobile:', model.personal_mobile ],
+      ['Personal Fax:', model.personal_fax ],
+      ['Personal Blog:', model.blog_url ],
+      ['Personal Twitter:', model.twitter_url ],
+      ['Assistant Name:', model.assistant_name ],
+      ['Assistant Phone:', model.assistant_phone ],
+      ['Assisant Email:', model.assistant_email ],
+    ]
   end
 end

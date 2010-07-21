@@ -37,5 +37,10 @@ module FLuxxUserOrganization
         end
       end
     end
+    
+    def organization_name
+      organization.name if organization
+    end
+    
   end
 end
