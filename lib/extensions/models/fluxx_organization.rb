@@ -102,7 +102,7 @@ module FLuxxOrganization
     def state_name
       country_state.name if country_state
     end
-  
+    
     def state_abbreviation
       country_state.abbreviation if country_state
     end

@@ -27,5 +27,9 @@ module FLuxxGeoCountry
     def to_s
       name.blank? ? nil : name
     end
+    
+    def abbreviation
+      fips104
+    end
   end
 end

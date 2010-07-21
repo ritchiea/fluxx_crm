@@ -1,7 +1,8 @@
 %h2
   - if can_current_user_edit_create_users? 
+    -# TODO ESH: switch new-detail to open a modal instead
     = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}),
-      :class => 'edit_link fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]'
+      :class => 'edit_link new-detail fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]'
   Relationships
 
 %div.org_row
