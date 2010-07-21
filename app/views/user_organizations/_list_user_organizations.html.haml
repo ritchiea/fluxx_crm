@@ -16,11 +16,11 @@
           = link_to_delete 'delete', user_org, {:class => 'fluxx-card-form-on-complete-refresh', :method => :delete}
       
       - if model.primary_user_organization == user_org
-         <br />Primary Org
-       - else
-         <br />
-         - if can_current_user_edit_create_organizations?
-           - link_to_update 'make primary', @model, {:class => 'fluxx-card-form-to-self'} do |form|
+        <br />Primary Org
+      - else
+        <br />
+        - if can_current_user_edit_create_organizations?
+          - link_to_update 'make primary', @model, {:class => 'fluxx-card-form-to-self'} do |form|
             = form.hidden_field :primary_user_organization_id, :value => user_org.id
   
     = user_org.title
@@ -28,7 +28,7 @@
     - if user_org.department
       = user_org.department
       ,
-    = user_org.organization.name %> 
+    = user_org.organization.name
        
   <br clear="all"/>
       
