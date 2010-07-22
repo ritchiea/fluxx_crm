@@ -26,9 +26,9 @@ module ApplicationHelper
     options[:method] = :put
     link_class = options.delete(:link_class)
     concat link_to(label, model, :onclick => "$(this).next().submit();return false;", :class => link_class)
-    raw form_for model, :html => options do |form| 
+    raw(form_for(model, :html => options) do |form| 
       yield form
-    end
+    end)
   end
 
   def link_to_post label, model, url, options = {}
@@ -36,9 +36,9 @@ module ApplicationHelper
     options[:style] = 'display: none'
     link_class = options.delete(:link_class)
     concat link_to(label, url, :onclick => "$(this).next().submit();return false;", :class => link_class)
-    raw form_for model, :url => url, :html => options do |form| 
+    raw(form_for(model, :url => url, :html => options) do |form| 
       yield form
-    end
+    end)
   end
   
   def load_audits model
