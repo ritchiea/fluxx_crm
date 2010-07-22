@@ -2,7 +2,7 @@
   %ol.fluxx-card-show-wide-list-elements
     %li.fluxx-card-show-wide-list-title
       -if can_current_user_edit_create_users?
-        %div.fluxx-card-show-wide-list-add= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_model_document_path(:model_document => {:documentable_id => model.id, :documentable_type => model.class.name}), :class => 'to-upload', 'data-extensions'.to_sym=>"zip,gz,pdf", :title => "Add Document"
+        %div.fluxx-card-show-wide-list-add= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), model_documents_path(:model_document => {:documentable_id => model.id, :documentable_type => model.class.name}), :class => 'to-upload', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif", :title => "Add Document"
       Documents
       - if (model.respond_to?(:model_documents) ? model.model_documents.empty? : true)
         %li= "No Documents"
