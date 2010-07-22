@@ -1,4 +1,4 @@
-module FLuxxGeoState
+module FluxxGeoState
   def self.included(base)
     base.belongs_to :geo_country
     base.has_many :geo_cities

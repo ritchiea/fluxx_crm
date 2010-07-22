@@ -1,4 +1,4 @@
-module FLuxxGeoCountry
+module FluxxGeoCountry
   SEARCH_ATTRIBUTES = [:created_at, :updated_at, :name]
 
   def self.included(base)

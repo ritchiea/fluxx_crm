@@ -1,3 +1,3 @@
 class User < ActiveRecord::Base
-  include FLuxxUser
+  include FluxxUser
 end

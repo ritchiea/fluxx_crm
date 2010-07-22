@@ -1,4 +1,4 @@
-module FLuxxNote
+module FluxxNote
   def self.included(base)
     base.validates_presence_of     :note
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'

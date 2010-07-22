@@ -1,4 +1,4 @@
-module FLuxxFavorite
+module FluxxFavorite
   def self.included(base)
     base.belongs_to :favorable, :polymorphic => true
     base.belongs_to :user

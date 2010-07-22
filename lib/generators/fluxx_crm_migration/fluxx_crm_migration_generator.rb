@@ -41,6 +41,8 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_group_members.rb', 'db/migrate/fluxx_crm_create_group_members.rb'
     sleep 1
+    handle_migration 'create_workflow_events.rb', 'db/migrate/fluxx_crm_create_workflow_events.rb'
+    sleep 1
   end
   
   private

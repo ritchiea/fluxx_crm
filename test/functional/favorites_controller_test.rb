@@ -13,8 +13,8 @@ class FavoritesControllerTest < ActionController::TestCase
       post :create, :favorite => {:favorable_type => @org1.class.name, :favorable_id => @org1.id, :user_id => @user1.id}
     end
 
-    # Figure out how to determine a 201 and the options therein; some HTTP header in the @response object
-    # assert_redirected_to favorite_path(assigns(:model))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{favorite_path(assigns(:model))}$/
     
     assert_equal @org1, assigns(:model).favorable
   end

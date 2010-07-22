@@ -1,3 +1,3 @@
 class Favorite < ActiveRecord::Base
-  include FLuxxFavorite
+  include FluxxFavorite
 end

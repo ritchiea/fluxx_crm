@@ -31,8 +31,8 @@ class NotesControllerTest < ActionController::TestCase
       post :create, :note => { :note => 'some random note for you', :notable_id => org.id, :notable_type => org.class.name}
     end
 
-    # Figure out how to determine a 201 and the options therein; some HTTP header in the @response object
-    # assert_redirected_to note_path(assigns(:note))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{note_path(assigns(:note))}$/
   end
 
   test "should show note" do

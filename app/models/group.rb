@@ -1,3 +1,3 @@
 class Group < ActiveRecord::Base
-  include FLuxxGroup
+  include FluxxGroup
 end

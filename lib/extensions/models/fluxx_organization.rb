@@ -1,4 +1,4 @@
-module FLuxxOrganization
+module FluxxOrganization
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :updated_at, :name, :id]
   
@@ -15,9 +15,9 @@ module FLuxxOrganization
     base.has_many :group_members, :as => :groupable
 
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
-    base.belongs_to :modified_by, :class_name => 'User', :foreign_key => 'modified_by_id'
+    base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.scope :hq, :conditions => 'organizations.parent_org_id IS NULL'
-    base.acts_as_audited({:full_model_enabled => true, :except => [:created_by_id, :modified_by_id, :locked_until, :locked_by_id, :delta]})
+    base.acts_as_audited({:full_model_enabled => true, :except => [:created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta]})
 
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES

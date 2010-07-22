@@ -1,3 +1,3 @@
 class GeoState < ActiveRecord::Base
-  include FLuxxGeoState
+  include FluxxGeoState
 end

@@ -20,8 +20,8 @@ class UserOrganizationsControllerTest < ActionController::TestCase
       post :create, :user_organization => {:organization_id => @org1.id, :user_id => @user1}
     end
 
-    # Figure out how to determine a 201 and the options therein; some HTTP header in the @response object
-    # assert_redirected_to user_organization_path(assigns(:user_organization))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{user_organization_path(assigns(:user_organization))}$/
     
     assert_equal @org1, assigns(:user_organization).organization
     assert_equal @user1, assigns(:user_organization).user

@@ -1,3 +1,3 @@
 class Organization < ActiveRecord::Base
-  include FLuxxOrganization
+  include FluxxOrganization
 end

@@ -1,3 +1,3 @@
 class GeoCity < ActiveRecord::Base
-  include FLuxxGeoCity
+  include FluxxGeoCity
 end

@@ -45,8 +45,8 @@ class OrganizationsControllerTest < ActionController::TestCase
       post :create, :organization => { :name => 'some random name for you' }
     end
 
-    # Figure out how to determine a 201 and the options therein; some HTTP header in the @response object
-    # assert_redirected_to organization_path(assigns(:organization))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{organization_path(assigns(:organization))}$/
   end
 
   test "should show organization" do

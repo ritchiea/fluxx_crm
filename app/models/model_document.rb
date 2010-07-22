@@ -1,3 +1,3 @@
 class ModelDocument < ActiveRecord::Base
-  include FLuxxModelDocument
+  include FluxxModelDocument
 end

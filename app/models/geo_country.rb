@@ -1,3 +1,3 @@
 class GeoCountry < ActiveRecord::Base
-  include FLuxxGeoCountry
+  include FluxxGeoCountry
 end

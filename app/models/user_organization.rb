@@ -1,3 +1,3 @@
 class UserOrganization < ActiveRecord::Base
-  include FLuxxUserOrganization
+  include FluxxUserOrganization
 end

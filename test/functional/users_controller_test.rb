@@ -44,8 +44,8 @@ class UsersControllerTest < ActionController::TestCase
       post :create, :user => { :first_name => 'some random name for you' }
     end
 
-    # Figure out how to determine a 201 and the options therein; some HTTP header in the @response object
-    # assert_redirected_to user_path(assigns(:user))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{user_path(assigns(:user))}$/
   end
 
   test "should show user" do

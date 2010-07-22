@@ -20,8 +20,8 @@ class GroupMembersControllerTest < ActionController::TestCase
       post :create, :group_member => { :group_id => group.id, :groupable_id => org.id, :groupable_type => group.class.name }
     end
 
-    # Figure out how to determine a 201 and the options therein; some HTTP header in the @response object
-    # assert_redirected_to group_member_path(assigns(:group_member))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{group_member_path(assigns(:group_member))}$/
   end
 
   test "should show group_member" do
