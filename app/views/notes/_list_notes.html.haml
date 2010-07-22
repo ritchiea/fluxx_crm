@@ -2,7 +2,7 @@
   %ol.fluxx-card-show-wide-list-elements
     %li.fluxx-card-show-wide-list-title
       -if can_current_user_edit_create_users?
-        %div.fluxx-card-show-wide-list-add= link_to image_tag('/images/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => model.id, :notable_type => model.class.name}), :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]', :title => "Add Note"
+        %div.fluxx-card-show-wide-list-add= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => model.id, :notable_type => model.class.name}), :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]', :title => "Add Note"
       Notes
       - if (model.respond_to?(:notes) ? model.notes.empty? : true)
         %li= "No Notes"
@@ -22,5 +22,5 @@
               - else
                 no timestamp
           - if can_current_user_edit_create_users?
-            %span.delete-button= link_to_delete image_tag("/images/icons/delete.png"), note, {:class => 'fluxx-card-form-on-complete-refresh', :style => 'display: none'}
+            %span.delete-button= link_to_delete image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), note, {:class => 'fluxx-card-form-on-complete-refresh', :style => 'display: none'}
     %li.footer
