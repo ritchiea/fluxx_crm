@@ -7,7 +7,7 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
       t.string :login,                       :limit => 40, :null => true
       t.string :first_name,                  :limit => 400, :null => true, :default => ''
       t.string :last_name,                   :limit => 400, :null => true, :default => ''
-      t.string :email,                       :limit => 400, :null => true
+      t.string :email,                       :limit => 250, :null => true
       t.string :personal_email,              :limit => 400, :null => true
       t.string :salutation,                  :limit => 400, :null => true
       t.string :prefix,                      :limit => 400, :null => true
