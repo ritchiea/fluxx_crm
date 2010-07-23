@@ -8,6 +8,8 @@ module FLuxxModelDocumentsController
         f = Tempfile.new controller.params[:name]
         f.write controller.request.body.read
         controller.pre_model.document = f
+        f.close
+        controller.pre_model.document_file_name = controller.params[:name]
       end
       
       insta.format do |format|
