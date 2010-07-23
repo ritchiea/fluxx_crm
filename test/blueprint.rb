@@ -107,3 +107,10 @@ end
 Audit.blueprint do
   action 'create'
 end
+
+WorkflowEvent.blueprint do
+  ip_address '127.0.0.1'
+  old_state 'old_state'
+  new_state 'new_state'
+  comment 'comment'
+end

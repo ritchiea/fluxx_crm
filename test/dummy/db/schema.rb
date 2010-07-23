@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100720033741) do
+ActiveRecord::Schema.define(:version => 20100723040020) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -285,5 +285,20 @@ ActiveRecord::Schema.define(:version => 20100720033741) do
 
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
+
+  create_table "workflow_events", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.string   "workflowable_type"
+    t.integer  "workflowable_id"
+    t.string   "ip_address"
+    t.string   "old_state"
+    t.string   "new_state"
+    t.text     "comment"
+  end
+
+  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "index_workflow_events_on_workflowable_id_and_workflowable_type"
 
 end

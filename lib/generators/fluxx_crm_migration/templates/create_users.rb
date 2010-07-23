@@ -41,7 +41,8 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
       t.integer :locked_by_id,               :null => true
     end
     add_index :users, :login, :unique => true
-    add_index :users, :email
+    add_index :users, :email, :unique => true
+    
     execute "alter table users add constraint users_personal_country_id foreign key (personal_geo_country_id) references geo_countries(id)" unless connection.adapter_name =~ /SQLite/i
     execute "alter table users add constraint users_personal_geo_state_id foreign key (personal_geo_state_id) references geo_states(id)" unless connection.adapter_name =~ /SQLite/i
     execute "alter table users add constraint users_primary_user_org_id foreign key (primary_user_organization_id) references user_organizations(id)" unless connection.adapter_name =~ /SQLite/i

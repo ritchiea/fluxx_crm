@@ -146,6 +146,7 @@ module FluxxUser
     end
     
     def to_s
+      full_name
     end
   end
 end
