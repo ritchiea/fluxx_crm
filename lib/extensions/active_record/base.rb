@@ -16,5 +16,17 @@ class ActiveRecord::Base
           :workflowable_id => self.id, :old_state   => changed_attributes['state'], :new_state   => self.state, :created_by  => self.updated_by, :updated_by => self.updated_by
       end
     end
+    
+    define_method :state_to_english do |state_name|
+      local_workflow_object.state_to_english state_name
+    end
+    
+    define_method :event_to_english do |event_name|
+      local_workflow_object.event_to_english event_name
+    end
+
+    define_method :current_allowed_events do
+      self.aasm_events_for_current_state
+    end
   end
 end
