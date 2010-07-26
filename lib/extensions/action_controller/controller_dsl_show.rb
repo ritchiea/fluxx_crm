@@ -7,7 +7,7 @@ class ActionController::ControllerDslShow < ActionController::ControllerDsl
         controller.send :instance_variable_set, "@action_buttons", action_buttons
       end
     else
-      logger.warn "For class #{model_class}, you may want to call insta_workflow so that current_allowed_events is defined"
+      p "For class #{model_class}, you may want to call insta_workflow so that current_allowed_events is defined"
     end
   end
 end

@@ -2,7 +2,7 @@
   - if can_current_user_edit_create_users? 
     -# TODO ESH: switch new-detail to open a modal instead
     = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}),
-      :class => 'edit_link new-detail fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]'
+      :class => 'to-modal'
   Relationships
 
 %div.org_row
@@ -23,9 +23,10 @@
         - if can_current_user_edit_create_organizations?
           - link_to_update('make primary', @model, {:class => 'fluxx-card-form-to-self'}) do |form|
             = form.hidden_field :primary_user_organization_id, :value => user_org.id
-    = user_org.title
-    ,
-    - if user_org.department
+    - unless user_org.department.blank?
+      = user_org.title
+      ,
+    - unless user_org.department.blank?
       = user_org.department
       ,
     = user_org.organization.name
