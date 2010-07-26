@@ -1,4 +1,5 @@
 %ul.buttons
+  %li= link_to 'Edit', send("edit_#{@model_name}_path", @model), :class => 'to-self', :link_class => 'btn' 
   - @action_buttons.each do |button_clause|
     - event_name, english_event_name = button_clause
     %li= link_to english_event_name, self.send("#{model.class.name.underscore.downcase}_path", {:event_action => event_name}), :class => 'to-self', :link_class => 'btn'
