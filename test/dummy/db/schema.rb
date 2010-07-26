@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100723040020) do
+ActiveRecord::Schema.define(:version => 20100725015340) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -212,6 +212,15 @@ ActiveRecord::Schema.define(:version => 20100723040020) do
 
   add_index "organizations", ["name"], :name => "index_organizations_on_name"
   add_index "organizations", ["parent_org_id"], :name => "index_organizations_on_parent_org_id"
+
+  create_table "races", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+    t.string   "state"
+    t.integer  "created_by_id", :limit => 12
+    t.integer  "updated_by_id", :limit => 12
+  end
 
   create_table "realtime_updates", :force => true do |t|
     t.datetime "created_at"

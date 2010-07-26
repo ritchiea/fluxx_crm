@@ -17,6 +17,12 @@ module FluxxUser
     base.has_many :favorites, :as => :favorable
     base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
 
+    # prevents a user from submitting a crafted form that bypasses activation
+    # anything else you want your user to change should be added here.
+    # attr_accessible :login, :email, :name, :password, :password_confirmation, :reset_code, :work_phone, :personal_postal_code, :title, :prefix, :personal_street_address, :url, :salutation, :assistant_name, :personal_country, :personal_city, :assistant_phone, :work_fax, :personal_phone, :last_name, :other_contact, :middle_initial, :assistant_email, :personal_country_state, :department, :personal_fax, :first_name
+    # WARNING: Can't mass-assign these protected attributes: 
+    # :personal_postal_code, :personal_geo_state_id, :personal_mobile, :salutation, :assistant_name, :personal_city, :assistant_phone, :work_fax, :personal_phone, :twitter_url, :blog_url, :last_name, :birth_at, :middle_initial, :assistant_email, :personal_email, :first_name
+
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
     end

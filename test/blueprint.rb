@@ -114,3 +114,7 @@ WorkflowEvent.blueprint do
   new_state 'new_state'
   comment 'comment'
 end
+
+Race.blueprint do
+  name Sham.word
+end
