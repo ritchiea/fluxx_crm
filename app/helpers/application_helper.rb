@@ -47,7 +47,6 @@ module ApplicationHelper
   
   def build_audit_table_and_summary model, audit
     reflections_by_fk = model.class.reflect_on_all_associations.inject({}) do |acc, ref|
-      p "ESH: have ref=#{ref.inspect}"
       acc[ref.association_foreign_key] = ref if ref
       acc
     end
