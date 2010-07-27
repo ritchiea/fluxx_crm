@@ -1,4 +1,5 @@
-= model.name
-= model.geo_country.iso3 if model.geo_country
-= model.geo_state.abbreviation if model.geo_state
-= model.url
+%ul.lines
+  %li= model.name
+  %li= model.geo_country.iso3 if model.geo_country
+  %li= model.geo_state.abbreviation if model.geo_state
+  %li= model.url
