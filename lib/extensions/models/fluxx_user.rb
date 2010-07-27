@@ -20,7 +20,7 @@ module FluxxUser
     # Allow users to update fields in user
     User.column_names.reject {|name| name.to_s == 'id'}.each do |name|
       base.attr_accessible name.to_sym
-    end
+    end rescue nil
 
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
