@@ -3,7 +3,7 @@ module FluxxUserOrganization
     base.belongs_to :user
     base.belongs_to :organization
     base.belongs_to :locked_by, :class_name => 'User', :foreign_key => 'locked_by_id'
-    base.acts_as_audited({:full_model_enabled => true, :except => [:created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta]})
+    base.acts_as_audited({:full_model_enabled => true, :except => [:created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta], :protect => true})
 
     base.validates_presence_of :user_id
     base.validates_presence_of :organization_id
@@ -31,7 +31,8 @@ module FluxxUserOrganization
       primary_user_organizations_users.each do |user|
         other_user_orgs = user.user_organizations.select {|uo| uo.id != self.id}
         if other_user_orgs
-          user.update_attributes :primary_user_organization => other_user_orgs.first
+          user.primary_user_organization = other_user_orgs.first
+          user.save
         else
           user.update_attributes :primary_user_organization => nil
         end

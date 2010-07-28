@@ -23,7 +23,7 @@ Dir.glob("#{File.dirname(__FILE__).to_s}/fluxx_crm/**/*.rb").each do |fluxx_crm|
   require fluxx_crm.gsub /\.rb$/, ''
 end
 
-ActiveSupport::Dependencies.load_paths << File.dirname(__FILE__) + 
+ActiveSupport::Dependencies.autoload_paths << File.dirname(__FILE__) + 
 "/../app/helpers"
   Dir[File.dirname(__FILE__) + "/../app/helpers/**/*_helper.rb"].each do 
 |file|

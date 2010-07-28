@@ -11,3 +11,5 @@ db/geo/GeoLiteCity-Location.original.csv
 db/geo/countries.csv
 db/geo/states.csv
 tmtags
+Gemfile.lock
+pkg/fluxx_crm-0.0.3.gem

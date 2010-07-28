@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fluxx_crm}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hansen"]
-  s.date = %q{2010-07-22}
+  s.date = %q{2010-07-27}
   s.email = %q{fluxx@acesfconsulting.com}
   s.extra_rdoc_files = [
     "README.textile"
@@ -57,6 +57,7 @@ Gem::Specification.new do |s|
      "app/views/group_members/_group_member_list.html.haml",
      "app/views/group_members/_group_member_show.html.haml",
      "app/views/group_members/_list_group_members.html.haml",
+     "app/views/insta/_show_buttons.html.haml",
      "app/views/model_documents/_list_model_documents.html.haml",
      "app/views/notes/_list_notes.html.haml",
      "app/views/notes/_note_form.html.haml",
@@ -76,6 +77,8 @@ Gem::Specification.new do |s|
      "app/views/users/_user_list.html.haml",
      "app/views/users/_user_show.html.haml",
      "config/routes.rb",
+     "lib/extensions/action_controller/controller_dsl_show.rb",
+     "lib/extensions/action_controller/controller_dsl_update.rb",
      "lib/extensions/active_record/base.rb",
      "lib/extensions/active_record/model_dsl_workflow.rb",
      "lib/extensions/controllers/fluxx_favorites_controller.rb",
@@ -126,7 +129,10 @@ Gem::Specification.new do |s|
   s.test_files = [
     "test/blueprint.rb",
      "test/dummy/app/controllers/application_controller.rb",
+     "test/dummy/app/controllers/races_controller.rb",
      "test/dummy/app/helpers/application_helper.rb",
+     "test/dummy/app/helpers/race_helper.rb",
+     "test/dummy/app/models/race.rb",
      "test/dummy/config/application.rb",
      "test/dummy/config/boot.rb",
      "test/dummy/config/environment.rb",
@@ -156,6 +162,8 @@ Gem::Specification.new do |s|
      "test/dummy/db/migrate/20100713221842_fluxx_crm_create_model_documents.rb",
      "test/dummy/db/migrate/20100715163024_fluxx_crm_create_geo_cities.rb",
      "test/dummy/db/migrate/20100720033741_fluxx_crm_create_groups.rb",
+     "test/dummy/db/migrate/20100723040020_fluxx_crm_create_workflow_events.rb",
+     "test/dummy/db/migrate/20100725015340_create_races.rb",
      "test/dummy/db/schema.rb",
      "test/fluxx_crm_test.rb",
      "test/functional/favorites_controller_test.rb",
@@ -167,6 +175,7 @@ Gem::Specification.new do |s|
      "test/functional/model_documents_controller_test.rb",
      "test/functional/notes_controller_test.rb",
      "test/functional/organizations_controller_test.rb",
+     "test/functional/races_controller_test.rb",
      "test/functional/user_organizations_controller_test.rb",
      "test/functional/users_controller_test.rb",
      "test/integration/navigation_test.rb",
@@ -181,7 +190,8 @@ Gem::Specification.new do |s|
      "test/unit/models/note_test.rb",
      "test/unit/models/organization_test.rb",
      "test/unit/models/user_organization_test.rb",
-     "test/unit/models/user_test.rb"
+     "test/unit/models/user_test.rb",
+     "test/unit/models/workflow_event_test.rb"
   ]
 
   if s.respond_to? :specification_version then

@@ -15,13 +15,8 @@ module FluxxUser
     base.has_many :group_members, :as => :groupable
     base.has_many :groups, :through => :group_members
     base.has_many :favorites, :as => :favorable
-    base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
+    base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at], :protect => true})
     
-    # Allow users to update fields in user
-    User.column_names.reject {|name| name.to_s == 'id'}.each do |name|
-      base.attr_accessible name.to_sym
-    end rescue nil
-
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
     end

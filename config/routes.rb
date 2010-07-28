@@ -1,14 +1,14 @@
-Rails.application.routes.draw do |map|
-  resources :favorite
-  resources :geo_country
-  resources :group
-  resources :model_document
-  resources :organization
-  resources :user_organization
-  resources :geo_city
-  resources :geo_state
-  resources :group_member
-  resources :note
-  resources :user
+Rails.application.routes.draw do
+  resources :favorites
+  resources :geo_countries
+  resources :groups
+  resources :model_documents
+  resources :organizations
+  resources :user_organizations
+  resources :geo_cities
+  resources :geo_states
+  resources :group_members
+  resources :notes
+  resources :users
 end
 

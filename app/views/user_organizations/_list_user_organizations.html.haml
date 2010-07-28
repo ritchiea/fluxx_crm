@@ -14,7 +14,7 @@
           = link_to 'edit', edit_user_organization_path(user_org),
            :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]'
           &nbsp;&nbsp;
-          = link_to_delete 'delete', user_org, {:class => 'fluxx-card-form-on-complete-refresh', :method => :delete}
+          = link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), user_organization_path(user_org), {:class => 'as-delete'}
       
       - if model.primary_user_organization == user_org
         <br />Primary Org
