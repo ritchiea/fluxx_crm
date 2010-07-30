@@ -1,3 +1,3 @@
 class OrganizationsController < ApplicationController
-  include FLuxxOrganizationsController
+  include FluxxOrganizationsController
 end

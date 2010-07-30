@@ -1,4 +1,4 @@
-module FLuxxGroupMembersController
+module FluxxGroupMembersController
   def self.included(base)
     base.insta_show GroupMember do |insta|
       insta.template = 'group_member_show'

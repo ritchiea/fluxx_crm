@@ -1,4 +1,4 @@
-module FLuxxNotesController
+module FluxxNotesController
   def self.included(base)
     base.insta_index Note do |insta|
       insta.template = 'note_list'

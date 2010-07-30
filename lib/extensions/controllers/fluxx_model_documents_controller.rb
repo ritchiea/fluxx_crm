@@ -1,4 +1,4 @@
-module FLuxxModelDocumentsController
+module FluxxModelDocumentsController
   def self.included(base)
     # The view page will want to pass in the documentable ID and Class
     base.insta_post ModelDocument do |insta|

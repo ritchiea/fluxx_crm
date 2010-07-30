@@ -1,4 +1,4 @@
-module FLuxxGeoCountriesController
+module FluxxGeoCountriesController
   def self.included(base)
     base.insta_index GeoCountry do |insta|
       insta.template = 'geo_country_list'

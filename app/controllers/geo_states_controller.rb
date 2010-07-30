@@ -1,3 +1,3 @@
 class GeoStatesController < ApplicationController
-  include FLuxxGeoStatesController
+  include FluxxGeoStatesController
 end

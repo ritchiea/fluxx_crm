@@ -1,3 +1,3 @@
 class NotesController < ApplicationController
-  include FLuxxNotesController
+  include FluxxNotesController
 end

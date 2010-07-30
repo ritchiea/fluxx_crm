@@ -1,4 +1,4 @@
-module FLuxxGeoStatesController
+module FluxxGeoStatesController
   def self.included(base)
     base.insta_index GeoState do |insta|
       insta.template = 'geo_state_list'

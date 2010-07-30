@@ -1,4 +1,4 @@
-module FLuxxUserOrganizationsController
+module FluxxUserOrganizationsController
   def self.included(base)
     base.insta_index UserOrganization do |insta|
       insta.template = 'user_organization_list'

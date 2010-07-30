@@ -1,4 +1,4 @@
-module FLuxxGroupsController
+module FluxxGroupsController
   def self.included(base)
     # None for now
     base.extend(ModelClassMethods)

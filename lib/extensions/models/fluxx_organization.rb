@@ -1,6 +1,6 @@
 module FluxxOrganization
   include ::URLCleaner
-  SEARCH_ATTRIBUTES = [:state, :updated_at, :name, :id]
+  SEARCH_ATTRIBUTES = [:state, :created_at, :updated_at, :name, :id]
   
   def self.included(base)
     base.has_many :user_organizations

@@ -1,3 +1,3 @@
 class FavoritesController < ApplicationController
-  include FLuxxFavoritesController
+  include FluxxFavoritesController
 end

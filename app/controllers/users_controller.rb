@@ -1,3 +1,3 @@
 class UsersController < ApplicationController
-  include FLuxxUsersController
+  include FluxxUsersController
 end

@@ -1,4 +1,4 @@
-module FLuxxFavoritesController
+module FluxxFavoritesController
   def self.included(base)
     base.insta_show Favorite do |insta|
       insta.template = 'favorite_show'
