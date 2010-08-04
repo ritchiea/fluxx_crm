@@ -15,6 +15,7 @@ module FluxxUser
     base.has_many :group_members, :as => :groupable
     base.has_many :groups, :through => :group_members
     base.has_many :favorites, :as => :favorable
+    base.has_many :role_users
     base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at], :protect => true})
     
     base.insta_search do |insta|
@@ -60,7 +61,13 @@ module FluxxUser
 
     # In the implementation, you can override this method or alias_method_chain to put it aside and call it as well 
     def merge_associations dup
-      [Audit, ClientStore, Favorite, RealtimeUpdate].each do |aclass|
+      my_role_users = RoleUser.where(:user_id => self.id).all
+      RoleUser.where(:user_id => dup.id).all.each do |ru|
+        existing_ru = my_role_users.select {|mru| mru.name == ru.name && mru.roleable == ru.roleable}
+        ru.destroy unless existing_ru.empty?
+      end
+      
+      [Audit, ClientStore, Favorite, RealtimeUpdate, RoleUser].each do |aclass|
         aclass.update_all ['user_id = ?', self.id], ['user_id = ?', dup.id]
       end
 
@@ -90,55 +97,23 @@ module FluxxUser
       Note.update_all ['notable_id = ?', self.id], ['notable_type = ? AND notable_id = ?', 'User', dup.id]
 
       Favorite.update_all ['favorable_id = ?', self.id], ['favorable_type = ? AND favorable_id = ?', 'User', dup.id]
-      self.roles = self.roles | dup.roles
     end
     
-    def roles= roles_array
-      return false unless roles_array && roles_array.is_a?(Array)
-      self.roles_text = roles_array.to_yaml 
-    end
-
-    def roles
-      (roles_text ? roles_text.de_yaml : nil) || []
+    def add_role role_name, related_object = nil
+      role_users.create :name => role_name, :roleable => related_object
     end
     
-    # The role names may be very descriptive and thus may relate to specific model objects
-    # make sure you reload the user to prevent somebody else from overwriting a role
-    def add_role new_role
-      User.transaction do
-        up_to_date_user = User.find self.id
-        roles_array = up_to_date_user.roles
-        unless roles_array.include? new_role
-          roles_array << new_role
-          up_to_date_user.roles = roles_array
-          if up_to_date_user.save
-            self.roles = roles_array
-          end
-        end
-      end
+    def remove_role role_name, related_object = nil
+      role_user = has_role? role_name, related_object
+      role_user.destroy if role_user
     end
     
-    # remove a role; make sure you reload the user to prevent somebody else from overwriting a role
-    def remove_role old_role
-      User.transaction do
-        up_to_date_user = User.find self.id
-        roles_array = up_to_date_user.roles
-        if roles_array.include? old_role
-          roles_array.delete old_role
-          up_to_date_user.roles = roles_array
-          if up_to_date_user.save
-            self.roles = roles_array
-          end
-        else
-          true
-        end
-      end
-    end
-    
-    def has_role? expected_roles
-      return false unless expected_roles
-      expected_roles = [expected_roles] unless expected_roles.is_a?(Array)
-      !(expected_roles.select {|r| self.roles.include? r }).empty?
+    def has_role? role_name, related_object = nil
+      role_user = if related_object
+        role_users.where(:name => role_name, :roleable_id => related_object.id, :roleable_type => related_object.class.name)
+      else
+        role_users.where(:name => role_name)
+      end.first
     end
     
     def full_name

@@ -18,7 +18,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     end
   end
   
-  def create_geo_tables
+  def create_crm_tables
     handle_migration 'create_geo_countries.rb', 'db/migrate/fluxx_crm_create_geo_countries.rb'
     sleep 1
     handle_migration 'create_geo_states.rb', 'db/migrate/fluxx_crm_create_geo_states.rb'
@@ -42,6 +42,8 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'create_group_members.rb', 'db/migrate/fluxx_crm_create_group_members.rb'
     sleep 1
     handle_migration 'create_workflow_events.rb', 'db/migrate/fluxx_crm_create_workflow_events.rb'
+    sleep 1
+    handle_migration 'create_role_users.rb', 'db/migrate/fluxx_crm_create_role_users.rb'
     sleep 1
   end
   

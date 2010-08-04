@@ -4,13 +4,31 @@ class UserTest < ActiveSupport::TestCase
   def setup
   end
   
+  test "test to create then delete a role_user with no roleable" do
+    user = User.make
+    user.add_role 'president'
+    assert_equal 1, user.role_users.size
+    user.reload.has_role? 'president'
+    user.remove_role 'president'
+    assert_equal 0, user.role_users.size
+  end
+  
+  test "test to create then delete a role_user with a roleable" do
+    user = User.make
+    org = Organization.make
+    user.add_role 'president', org
+    assert_equal 1, user.role_users.size
+    user.reload.has_role? 'president', org
+    user.remove_role 'president', org
+    assert_equal 0, user.role_users.size
+  end
+  
   test "test that a role can be assigned and deleted" do
     new_user = User.make
-    new_user.add_role 'fred_role'
-    assert_equal 'fred_role', new_user.roles.first
-    new_user.reload.has_role? 'fred_role'
-    new_user.remove_role 'fred_role'
-    assert new_user.roles.empty?
+    new_user.add_role 'president'
+    new_user.reload.has_role? 'president'
+    new_user.remove_role 'president'
+    assert new_user.role_users.empty?
     assert !(new_user.reload.has_role? 'fred_role')
   end
   
@@ -32,9 +50,29 @@ class UserTest < ActiveSupport::TestCase
     new_user.reload
     assert new_user.has_role? 'fred_role_1'
     assert new_user.has_role? 'fred_role_2'
+  end
 
-    # The user_1 is unaffected because it has not been reloaded
-    assert !(user_1.has_role? 'fred_role_2')
+  test "Check that we can merge two users that have assigned the same role" do
+    good_user = User.make
+    good_user.add_role 'role_good'
+    dupe_user = User.make
+    dupe_user.add_role 'role_dupe'
+    good_user.merge dupe_user
+    assert !(User.exists? dupe_user.id)
+    assert good_user.has_role? 'role_dupe'
+  end
+  
+  test "Check that we can merge two users that each are members of a particular group" do
+    good_user_group = Group.make
+    dupe_user_group = Group.make
+    good_user = User.make
+    dupe_user = User.make
+    GroupMember.make :groupable => good_user, :groupable_type => User.name, :group => good_user_group
+    GroupMember.make :groupable => dupe_user, :groupable_type => User.name, :group => dupe_user_group
+    good_user.merge dupe_user
+    assert !(User.exists? dupe_user.id)
+    assert good_user.groups.include?(good_user_group)
+    assert good_user.groups.include?(dupe_user_group)
   end
   
   test "Check that we can merge two users" do
@@ -84,30 +122,6 @@ class UserTest < ActiveSupport::TestCase
     assert !(User.exists? dupe_user.id)
     assert_equal 0, Organization.count(:conditions => ['locked_by_id = ?', dupe_user.id])
   end
-  
-  test "Check that we can merge two users that have assigned the same role" do
-    good_user = User.make
-    good_user.add_role 'role_good'
-    dupe_user = User.make
-    dupe_user.add_role 'role_dupe'
-    good_user.merge dupe_user
-    assert !(User.exists? dupe_user.id)
-    assert good_user.has_role? 'role_dupe'
-  end
-  
-  test "Check that we can merge two users that each are members of a particular group" do
-    good_user_group = Group.make
-    dupe_user_group = Group.make
-    good_user = User.make
-    dupe_user = User.make
-    GroupMember.make :groupable => good_user, :groupable_type => User.name, :group => good_user_group
-    GroupMember.make :groupable => dupe_user, :groupable_type => User.name, :group => dupe_user_group
-    good_user.merge dupe_user
-    assert !(User.exists? dupe_user.id)
-    assert good_user.groups.include?(good_user_group)
-    assert good_user.groups.include?(dupe_user_group)
-  end
-  
   
   test "Check that we can merge two users that have overlapping user orgs" do
     good_user = User.make

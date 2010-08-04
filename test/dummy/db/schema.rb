@@ -1,15 +1,16 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# This file is auto-generated from the current state of the database. Instead 
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your 
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100725015340) do
+ActiveRecord::Schema.define(:version => 20100804140632) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -232,6 +233,20 @@ ActiveRecord::Schema.define(:version => 20100725015340) do
     t.string   "model_class",                    :null => false
     t.text     "delta_attributes",               :null => false
   end
+
+  create_table "role_users", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id", :limit => 12
+    t.integer  "updated_by_id", :limit => 12
+    t.string   "name",                        :null => false
+    t.integer  "user_id",       :limit => 12
+    t.string   "roleable_type"
+    t.integer  "roleable_id",   :limit => 12
+  end
+
+  add_index "role_users", ["name", "roleable_type", "roleable_id"], :name => "index_role_users_on_name_and_roleable_type_and_roleable_id"
+  add_index "role_users", ["user_id"], :name => "index_role_users_on_user_id"
 
   create_table "user_organizations", :force => true do |t|
     t.datetime "created_at"
