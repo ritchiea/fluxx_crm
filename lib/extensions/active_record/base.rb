@@ -6,14 +6,26 @@ class ActiveRecord::Base
     self.instance_eval do
       attr_accessor :workflow_note
       attr_accessor :workflow_ip_address
-      before_save :track_workflow_changes
+      before_create :track_workflow_create
+      before_update :track_workflow_update
+      before_destroy :track_workflow_destroy
+    end
+
+    define_method :track_workflow_create do
+      track_workflow_changes true, 'create'
+    end
+    define_method :track_workflow_update do
+      track_workflow_changes false, 'update'
+    end
+    define_method :track_workflow_destroy do
+      track_workflow_changes true, 'destroy'
     end
     
-    define_method :track_workflow_changes do
+    define_method :track_workflow_changes do |force, change_type|
       # If state changed, track a WorkflowEvent
-      if changed_attributes['state'] != state
-        WorkflowEvent.create :comment => self.workflow_note, :ip_address => self.workflow_ip_address.to_s, :workflowable_type => self.class.to_s, 
-          :workflowable_id => self.id, :old_state   => changed_attributes['state'], :new_state   => self.state, :created_by  => self.updated_by, :updated_by => self.updated_by
+      if force || changed_attributes['state'] != state
+        wfe = WorkflowEvent.create :comment => self.workflow_note, :change_type => change_type, :ip_address => self.workflow_ip_address.to_s, :workflowable_type => self.class.to_s, 
+          :workflowable_id => self.id, :old_state   => changed_attributes['state'] || '', :new_state => self.state || '', :created_by  => self.updated_by, :updated_by => self.updated_by
       end
     end
     

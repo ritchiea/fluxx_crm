@@ -12,6 +12,14 @@ module FluxxRoleUser
   end
 
   module ModelClassMethods
+    def find_by_roleable related_object
+      if related_object
+        self.where(:roleable_id => related_object.id, :roleable_type => related_object.class.name)
+      else
+        []
+      end
+    end
+    
   end
 
   module ModelInstanceMethods

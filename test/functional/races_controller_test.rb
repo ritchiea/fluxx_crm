@@ -23,4 +23,15 @@ class RacesControllerTest < ActionController::TestCase
     assert_equal 'beginning', @race.reload.state
   end
   
+  test "should generate a workflow event" do
+    race = Race.make
+    assert_equal 'new', race.state
+    assert_difference('WorkflowEvent.count') do
+      race.kick_off
+      assert_equal 'beginning', race.state
+      race.save
+    end
+    
+  end
+  
 end
