@@ -1,4 +1,17 @@
 class ActiveRecord::Base
+  
+  def self.insta_favorite
+    has_many :favorites, :as => :favorable
+    define_method :is_favorite_for? do |user|
+      Favorite.find :first, :conditions => {:user_id => user.id, :favorable_type => self.class.name, :favorable_id => self.id}
+    end
+    
+    define_method :favorite_user_ids do
+      favorites.map{|fav| fav.user_id}.flatten.compact
+    end
+    
+  end
+  
   def self.insta_workflow
     local_workflow_object = @workflow_object = ActiveRecord::ModelDslWorkflow.new(self)
     yield @workflow_object if block_given?

@@ -9,7 +9,6 @@ module FluxxOrganization
     base.has_many :satellite_orgs, :class_name => 'Organization',  :foreign_key => :parent_org_id, :conditions => {:deleted_at => nil}
     base.belongs_to :geo_country
     base.belongs_to :geo_state
-    base.has_many :favorites, :as => :favorable
     base.has_many :model_documents, :as => :documentable
     base.has_many :notes, :as => :notable
     base.has_many :group_members, :as => :groupable
@@ -33,7 +32,7 @@ module FluxxOrganization
 
     base.validates_presence_of     :name
     base.validates_length_of       :name,    :within => 3..100
-    
+    base.insta_favorite
     
     base.extend(ModelClassMethods)
     base.class_eval do

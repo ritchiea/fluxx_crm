@@ -33,6 +33,7 @@ module FluxxUser
     base.insta_utc do |insta|
       insta.time_attributes = [:birth_at]
     end  
+    base.insta_favorite
 
     base.extend(ModelClassMethods)
     base.class_eval do
