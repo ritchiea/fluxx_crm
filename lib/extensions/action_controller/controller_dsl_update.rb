@@ -4,6 +4,7 @@ class ActionController::ControllerDslUpdate < ActionController::ControllerDsl
       self.pre do |config, controller|
         event_action = controller.params[:event_action]
         controller.pre_model = config.load_existing_model controller.params, nil
+        p "ESH: have event_action=#{event_action.inspect}, sending it to pre_model=#{controller.pre_model.inspect}"
         controller.pre_model.send event_action if event_action
       end
     end

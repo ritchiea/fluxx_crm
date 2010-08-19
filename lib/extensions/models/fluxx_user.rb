@@ -117,6 +117,15 @@ module FluxxUser
       end.first
     end
     
+    def has_role! role_name, related_object = nil
+      role = has_role?(role_name, related_object)
+      if role
+        role
+      else
+        add_role role_name, related_object
+      end
+    end
+    
     def full_name
       [first_name, last_name].join ' '
     end
