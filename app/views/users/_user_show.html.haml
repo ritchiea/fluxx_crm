@@ -29,10 +29,9 @@
 
 - build_user_work_contact_details(primary_user_org, model).each do |name, value|
   - unless value.blank?
-    %dl
-      %dt= name
-      %dd= value
-  <br clear="all" />
+    .pairs
+      .key= name
+      .value= value
 
 %h2
   Home Contact Details
@@ -50,21 +49,14 @@
     %span.zipcode= model.personal_postal_code
 
 - unless model.personal_phone.blank?
-  %dl
-    %dt
-      Home Phone
-    %dd= model.personal_phone
-
-<br clear="all" />
+  .pairs
+    .key Home Phone
+    .value= model.personal_phone
 
 - unless model.birth_at.blank?
-  %dl
-    %dt
-      Birthday
-    %dd= model.birth_at.mdy
-
-<br clear="all" />
-
+  .pairs
+    .key Birthday
+    .value= model.birth_at.mdy
 
 = render :partial => "user_organizations/list_user_organizations", :locals => { :model => model}
 -# TODO ESH: admin  <%= render :partial => "user_roles", :locals => { :model => model} %>

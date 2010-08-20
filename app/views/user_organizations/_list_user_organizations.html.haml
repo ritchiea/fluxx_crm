@@ -1,9 +1,8 @@
 %h2
-  - if can_current_user_edit_create_users? 
-    -# TODO ESH: switch new-detail to open a modal instead
-    = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}),
-      :class => 'to-modal'
-  Relationships
+  %span Relationships
+  .actions
+    - if can_current_user_edit_create_users? 
+      = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}), :class => 'new-detail'
 
 %div.org_row
 - if(model.user_organizations.size > 0)

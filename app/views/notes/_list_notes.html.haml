@@ -1,14 +1,17 @@
-%div.fluxx-card-show-wide-list.fluxx-card-show-notes
-  %ol.fluxx-card-show-wide-list-elements
-    %li.fluxx-card-show-wide-list-title
-      -if can_current_user_edit_create_users?
-        %div.fluxx-card-show-wide-list-add= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => model.id, :notable_type => model.class.name}), :class => 'to-modal', :title => "Add Note"
-      Notes
-      - if (model.respond_to?(:notes) ? model.notes.empty? : true)
-        %li= "No Notes"
-      - else
-        - model.notes.where(:deleted_at => nil).sort_by{|note| (-1 * note.created_at.to_i) if note.created_at}.each do |note|
-          %li.fluxx-card-show-note-item
+%table.tabular{:cellspacing => 0}
+  %thead
+    %tr
+      %th
+        %span Notes
+        .actions= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => model.id, :notable_type => model.class.name}), :class => 'to-modal', :title => "Add Note"
+  %tbody
+    - if (model.respond_to?(:notes) ? model.notes.empty? : true)
+      %tr
+        %td= "No Notes"
+    - else
+      - model.notes.where(:deleted_at => nil).sort_by{|note| (-1 * note.created_at.to_i) if note.created_at}.each do |note|
+        %tr
+          %td
             = link_to 'note', note
             %span
               - if note.created_by
@@ -21,6 +24,5 @@
                 = note.created_at.full
               - else
                 no timestamp
-          - if can_current_user_edit_create_users?
-            %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), note_path(note), {:class => 'as-delete'}
-    %li.list-footer
+            - if can_current_user_edit_create_users?
+              %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), note_path(note), {:class => 'as-delete'}

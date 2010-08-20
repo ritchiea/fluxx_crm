@@ -1,15 +1,22 @@
-%div.fluxx-card-show-wide-list.fluxx-card-show-audits
-  %ol.fluxx-card-show-wide-list-elements
-    %li.fluxx-card-show-wide-list-title= link_to image_tag('/fluxx_engine/theme/default/images/icons/report_magnify.png'), '#', :onclick => 'var $t=$(this).parents(".fluxx-card-show-wide-list").find("table");$t.is(":visible") ? $t.fadeOut() : $t.fadeIn()', :class => 'fluxx-card-show-wide-list-actions', :title => "Show/Hide History Details" + "History"
+%table.tabular{:cellspacing => 0}
+  %thead
+    %tr
+      %th
+        %span history
+        .actions
+          = link_to image_tag('/fluxx_engine/theme/default/images/icons/report_magnify.png'), '#', :class => 'toggle-tables', :title => "Show/Hide History Details" + "History"
+  %tbody
     - if !model.respond_to?(:audits) || model.audits.empty?
-      %li No history available
-    - else  # Make sure that the audits are ordered in descending order by id and filtered by request_tracking_id
+      %tr
+        %td No history available
+    - else
       - load_audits(model).each do |audit|
-        %li
-          - audit_summary, audit_table = build_audit_table_and_summary model, audit
-          - if audit.full_model.blank?
-            %span= raw(audit_summary + audit_table)
-          - else
-            %span
-              = link_to(raw(audit_summary), url_for(:id => model.to_param, :audit_id => audit.id), :class => 'fluxx-card-link-to-new-card', :title => "History")
-              = audit_table
+        %tr
+          %td
+            - audit_summary, audit_table = build_audit_table_and_summary model, audit
+            - if audit.full_model.blank?
+              %span= raw(audit_summary + audit_table)
+            - else
+              %span
+                = link_to(raw(audit_summary), url_for(:id => model.to_param, :audit_id => audit.id), :class => 'fluxx-card-link-to-new-card', :title => "History")
+                = audit_table
