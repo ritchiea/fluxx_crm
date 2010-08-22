@@ -15,14 +15,14 @@ module FluxxModelDocumentsController
       end
       
       insta.format do |format|
-        format.html do |controller_dsl, controller, outcome|
+        format.html do |controller_dsl, controller, outcome, default_block|
           controller.render :text => outcome
         end
       end
     end
     base.insta_delete ModelDocument do |insta|
       insta.format do |format|
-        format.html do |controller_dsl, controller, outcome|
+        format.html do |controller_dsl, controller, outcome, default_block|
           controller.render :text => outcome
         end
       end

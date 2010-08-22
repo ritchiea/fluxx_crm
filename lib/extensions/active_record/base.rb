@@ -71,10 +71,16 @@ class ActiveRecord::Base
     
       define_method :track_workflow_changes do |force, change_type|
         # If state changed, track a WorkflowEvent
-        if force || changed_attributes['state'] != state
+        if force || (changed_attributes['state'] != state && !changed_attributes['state'].blank?)
          unless workflow_object.workflow_disabled
             wfe = WorkflowEvent.create :comment => self.workflow_note, :change_type => change_type, :ip_address => self.workflow_ip_address.to_s, :workflowable_type => self.class.to_s, 
               :workflowable_id => self.id, :old_state   => changed_attributes['state'] || '', :new_state => self.state || '', :created_by  => self.updated_by, :updated_by => self.updated_by
+            # p "ESH: creating new wfe=#{wfe.inspect}"
+            # begin
+            #   rails Exception.new 'stack trace'
+            # rescue Exception => exception
+            #   p "ESH: have an exception #{exception.backtrace.inspect}"
+            # end
           end
         end
       end

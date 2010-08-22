@@ -3,7 +3,11 @@ class ActionController::ControllerDslShow < ActionController::ControllerDsl
     if model_class.public_method_defined?(:current_allowed_events)
       self.footer_template = 'insta/show_buttons'
       self.post do |config, controller, model|
-        action_buttons = model.current_allowed_events
+        action_buttons = if model
+          model.current_allowed_events
+        else
+          []
+        end
         controller.send :instance_variable_set, "@action_buttons", action_buttons
       end
     else
