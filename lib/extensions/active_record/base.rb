@@ -58,6 +58,17 @@ class ActiveRecord::Base
           returning(block.call) { workflow_object.workflow_disabled = false unless workflow_was_disabled }
         end
       end
+      
+      define_method :state_in do |states|
+        self_state = self.state
+        # Note that before the model is created, it may have a blank state; for now consider that to be the initial state
+        self_state = self.class.aasm_initial_state if self_state.blank?
+        if states.is_a?(Array)
+          !states.select{|cur_state| cur_state == self_state}.empty?
+        else
+          states.to_s == self_state
+        end
+      end
 
       define_method :track_workflow_create do
         track_workflow_changes true, 'create'
