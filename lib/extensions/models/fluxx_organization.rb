@@ -81,6 +81,10 @@ module FluxxOrganization
     def is_headquarters?
       parent_org_id == nil
     end
+    
+    def satellites
+      Organization.where(:id => related_ids).all
+    end
   
     def satellite_ids
       Organization.find(:all, :select => :id, :conditions => {:parent_org_id => self.id}).map(&:id)
