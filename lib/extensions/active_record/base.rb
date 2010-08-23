@@ -64,7 +64,7 @@ class ActiveRecord::Base
         # Note that before the model is created, it may have a blank state; for now consider that to be the initial state
         self_state = self.class.aasm_initial_state if self_state.blank?
         if states.is_a?(Array)
-          !states.select{|cur_state| cur_state == self_state}.empty?
+          !states.select{|cur_state| cur_state.to_s == self_state.to_s}.empty?
         else
           states.to_s == self_state
         end
