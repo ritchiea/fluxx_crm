@@ -57,6 +57,11 @@ class ActiveRecord::Base
           workflow_object.workflow_disabled = true
           returning(block.call) { workflow_object.workflow_disabled = false unless workflow_was_disabled }
         end
+        
+        def event_to_english event_name
+          workflow_object.event_to_english event_name
+        end
+        
       end
       
       define_method :state_in do |states|
@@ -96,13 +101,10 @@ class ActiveRecord::Base
         end
       end
     
-      define_method :state_to_english do |state_name|
-        local_workflow_object.state_to_english state_name
+      define_method :state_to_english do
+        local_workflow_object.state_to_english self.state
       end
     
-      define_method :event_to_english do |event_name|
-        local_workflow_object.event_to_english event_name
-      end
 
       define_method :current_allowed_events do
         self.aasm_events_for_current_state.map do |event_name|

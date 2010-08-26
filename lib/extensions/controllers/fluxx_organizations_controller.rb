@@ -2,8 +2,6 @@ module FluxxOrganizationsController
   def self.included(base)
     base.insta_index Organization do |insta|
       insta.template = 'organization_list'
-      insta.filter_title = "Organizations Filter"
-      insta.filter_template = 'organizations/organization_filter'
     end
     base.insta_show Organization do |insta|
       insta.template = 'organization_show'
