@@ -62,6 +62,10 @@ class ActiveRecord::Base
           workflow_object.event_to_english event_name
         end
         
+        def state_to_english_translation state_name
+          workflow_object.state_to_english state_name
+        end
+        
       end
       
       define_method :state_in do |states|
