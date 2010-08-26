@@ -108,7 +108,7 @@ class ActiveRecord::Base
 
       define_method :current_allowed_events do
         self.aasm_events_for_current_state.map do |event_name|
-          [event_name, self.event_to_english(event_name)]
+          [event_name, self.class.event_to_english(event_name)]
         end
       end
     end
