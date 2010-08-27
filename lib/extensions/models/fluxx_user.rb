@@ -109,9 +109,12 @@ module FluxxUser
       role_user.destroy if role_user
     end
     
+    # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
     def has_role? role_name, related_object = nil
       role_user = if related_object
-        role_users.where(:name => role_name, :roleable_id => related_object.id, :roleable_type => related_object.class.name)
+        roles = role_users.where(:name => role_name, :roleable_id => related_object.id, :roleable_type => related_object.class.name).all
+        roles = role_users.where(:name => role_name, :roleable_id => related_object.parent_id, :roleable_type => related_object.class.name).all if roles.empty? && related_object.respond_to?('parent_id')
+        roles
       else
         role_users.where(:name => role_name)
       end.first

@@ -4,7 +4,11 @@ class ActionController::ControllerDslShow < ActionController::ControllerDsl
       self.footer_template = 'insta/show_buttons'
       self.post do |config, controller, model|
         action_buttons = if model
-          model.current_allowed_events
+          event_pairs = model.current_allowed_events    # Find all events
+          p "ESH: all events = #{event_pairs.inspect}"
+          event_names = event_pairs.map {|event| event.first}
+          allowed_event_names = controller.event_allowed?(event_names, model) # Limit them by role
+          event_pairs.select{|event_pair| allowed_event_names.include?(event_pair.first)}
         else
           []
         end

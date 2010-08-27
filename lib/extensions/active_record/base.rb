@@ -109,16 +109,19 @@ class ActiveRecord::Base
         local_workflow_object.state_to_english self.state
       end
     
-
-      define_method :current_allowed_events do
-        self.aasm_events_for_current_state.map do |event_name|
+      # Allow a parameter possible_events which is an array of legal event names that are being looked for
+      define_method :current_allowed_events do |*optional|
+        possible_events, *ignored = *optional
+        all_events = self.aasm_events_for_current_state.map do |event_name|
           [event_name, self.class.event_to_english(event_name)]
+        end
+        
+        if possible_events
+          all_events & possible_events
+        else
+          all_events
         end
       end
     end
-  end
-  
-  def self.insta_role
-  
   end
 end
