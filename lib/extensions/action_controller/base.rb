@@ -20,14 +20,11 @@ class ActionController::Base
         events = [events] unless events.is_a?(Array)
         
         related_object_model = if role_object.extract_related_object_proc
-          p "ESH: calling role_object.extract_related_object_proc"
           role_object.extract_related_object_proc.call model
         else
-          p "ESH: NOT calling role_object.extract_related_object_proc"
           model
         end
         
-        p "ESH: looking within #{events.inspect}, with related_object_model=#{related_object_model.inspect}"
         events.select{|event| role_object.event_allowed_for_user?(fluxx_current_user, event, related_object_model)}
       end
     end
