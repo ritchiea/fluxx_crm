@@ -49,10 +49,7 @@ class ActionController::ControllerDslRole < ActionController::ControllerDsl
   
   def event_allowed_for_user? user, event, related_object_model=nil
     event_mappings = event_role_mappings[event]
-    p "ESH: 111a for event=#{event}, found event_mappings=#{event_mappings.inspect} out of #{event_role_mappings.inspect}"
     event_mappings && !(event_mappings.keys.select do |related_object|
-      p "ESH: 111b in event_allowed_for_user?, related_object_model.class=#{related_object_model.class}, related_object=#{related_object.inspect}"
-      p "ESH: 111c event_mappings[related_object]=#{event_mappings[related_object].inspect}"
       related_object_model.class == related_object && event_mappings[related_object] && !(event_mappings[related_object].select do |role|
         user.has_role?(role, related_object_model)
       end).empty?

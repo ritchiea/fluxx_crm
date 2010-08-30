@@ -25,7 +25,8 @@ class ActionController::Base
           model
         end
         
-        events.select{|event| role_object.event_allowed_for_user?(fluxx_current_user, event, related_object_model)}
+        events_available = events.select{|event| role_object.event_allowed_for_user?(fluxx_current_user, event, related_object_model)}
+        events_available.empty? ? nil : events_available
       end
     end
   end
