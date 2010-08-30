@@ -1,4 +1,6 @@
 module FluxxModelDocument
+  SEARCH_ATTRIBUTES = [:documentable_id, :documentable_type]
+
   def self.included(base)
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
@@ -6,7 +8,9 @@ module FluxxModelDocument
 
     base.has_attached_file :document
     
-    base.insta_search
+    base.insta_search do |insta|
+      insta.filter_fields = SEARCH_ATTRIBUTES
+    end
 
     base.validates_presence_of :documentable
     base.validates_attachment_presence :document

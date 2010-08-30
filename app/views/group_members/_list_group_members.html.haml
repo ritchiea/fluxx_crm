@@ -3,26 +3,11 @@
     %tr
       %th
         %span Groups
-        .actions= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_group_member_path(:group_member => {:groupable_id => model.id, :groupable_type => model.class.name}), :class => 'to-modal', :title => "Add Group"
-  %tbody
+        .actions= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_group_member_path(:group_member => {:groupable_id => model.id, :groupable_type => model.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Group"
+  %tbody.partial{'data-src' => url_for(group_members_path({:groupable_id => model.id, :groupable_type => model.class.name}))}
     - if (model.respond_to?(:group_members) ? model.group_members.empty? : true)
       %tr
         %td= "No Groups"
     - else
       - model.group_members.sort_by{|group_member| group_member.group.name if group_member.group}.each do |group_member|
-        %tr
-          %td
-            = truncate(group_member.group.name, :length => 25) if group_member.group
-            %span
-              - if group_member.created_by
-                By
-                = group_member.created_by.full_name 
-              - if group_member.created_at
-                Added at
-                = group_member.created_at.ampm_time
-                on
-                = group_member.created_at.full
-              - else
-                no timestamp
-            - if can_current_user_edit_create_users?
-              %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), group_member_path(group_member), {:class => 'as-delete'}
+        = render :partial => "group_members/group_member_list", :locals => { :model => group_member}

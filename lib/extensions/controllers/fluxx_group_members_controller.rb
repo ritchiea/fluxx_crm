@@ -1,5 +1,8 @@
 module FluxxGroupMembersController
   def self.included(base)
+    base.insta_index GroupMember do |insta|
+      insta.template = 'group_member_list'
+    end
     base.insta_show GroupMember do |insta|
       insta.template = 'group_member_show'
     end
