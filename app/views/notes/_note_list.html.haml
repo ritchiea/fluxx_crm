@@ -1,2 +1,17 @@
-%ul.lines
-  %li= model.note
+%tr
+  %td
+    = link_to model.note, model, :class => 'to-modal'
+    <br/>
+    %span
+      - if model.created_by
+        By
+        = model.created_by.full_name 
+      - if model.created_at
+        Added at
+        = model.created_at.ampm_time
+        on
+        = model.created_at.full
+      - else
+        no timestamp
+      - if can_current_user_edit_create_users?
+        %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), note_path(model), {:class => 'as-delete'}

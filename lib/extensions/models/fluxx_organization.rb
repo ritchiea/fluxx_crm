@@ -10,8 +10,9 @@ module FluxxOrganization
     base.belongs_to :geo_country
     base.belongs_to :geo_state
     base.has_many :model_documents, :as => :documentable
-    base.has_many :notes, :as => :notable
+    base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
     base.has_many :group_members, :as => :groupable
+    base.has_many :groups, :through => :group_members
 
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
