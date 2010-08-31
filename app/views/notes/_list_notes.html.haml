@@ -1,7 +1,4 @@
-- if (model.respond_to?(:notes) ? model.notes.empty? : true)
-  %tr
-    %td= "No Notes"
-- else
+- if model.respond_to?(:notes)
   - partial_data_src_url = url_for(notes_path({:notable_id => model.id, :notable_type => model.class.name, :skip_wrapper => true}))
   %span.partial{'data-src' => partial_data_src_url}
     = render :partial => 'notes/note_list',  :locals => {:models => model.notes.where(:deleted_at => nil), :notable => model}
