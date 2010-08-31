@@ -1,14 +1,7 @@
-%table.tabular{:cellspacing => 0}
-  %thead
-    %tr
-      %th
-        %span Notes
-        .actions= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => model.id, :notable_type => model.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Note"
-  %tbody.partial{'data-src' => url_for(notes_path({:notable_id => model.id, :notable_type => model.class.name}))}
-    - if (model.respond_to?(:notes) ? model.notes.empty? : true)
-      %tr
-        %td= "No Notes"
-    - else
-      - model.notes.where(:deleted_at => nil).sort_by{|note| (-1 * note.created_at.to_i) if note.created_at}.each do |note|
-        = render :partial => "notes/note_list", :locals => { :model => note}
-        
+- if (model.respond_to?(:notes) ? model.notes.empty? : true)
+  %tr
+    %td= "No Notes"
+- else
+  - partial_data_src_url = url_for(notes_path({:notable_id => model.id, :notable_type => model.class.name, :skip_wrapper => true}))
+  %span.partial{'data-src' => partial_data_src_url}
+    = render :partial => 'notes/note_list',  :locals => {:models => model.notes.where(:deleted_at => nil), :notable => model}
