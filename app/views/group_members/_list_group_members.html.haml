@@ -1,13 +1,5 @@
-%table.tabular{:cellspacing => 0}
-  %thead
-    %tr
-      %th
-        %span Groups
-        .actions= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_group_member_path(:group_member => {:groupable_id => model.id, :groupable_type => model.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Group"
-  %tbody.partial{'data-src' => url_for(group_members_path({:groupable_id => model.id, :groupable_type => model.class.name}))}
-    - if (model.respond_to?(:group_members) ? model.group_members.empty? : true)
-      %tr
-        %td= "No Groups"
-    - else
-      - model.group_members.sort_by{|group_member| group_member.group.name if group_member.group}.each do |group_member|
-        = render :partial => "group_members/group_member_list", :locals => { :model => group_member}
+- if model.respond_to?(:group_members)
+  - partial_data_src_url = url_for(group_members_path({:groupable_id => model.id, :groupable_type => model.class.name, :skip_wrapper => true}))
+  %span.partial{'data-src' => partial_data_src_url}
+    = render :partial => 'group_members/group_member_list',  :locals => {:models => model.group_members, :groupable => model}
+

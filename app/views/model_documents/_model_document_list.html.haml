@@ -1,7 +1,7 @@
 - documentable = nil unless defined?(:documentable)
 - unless documentable
   - if params[:documentable_id] && params[:documentable_type]
-    - documentable = BlobStruct.new :id => params[:documentable_id], :documentable_type => params[:documentable_type]
+    - documentable = BlobStruct.new :id => params[:documentable_id], :class => Kernel.const_get(params[:documentable_type])
 
 
 %table.tabular{:cellspacing => 0}
