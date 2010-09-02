@@ -1,6 +1,7 @@
 require 'fluxx_engine'
 
 namespace :fluxx_crm do
+  desc "load up all countries and states from the directory specified by variable geo_dir"
   task :geo => :environment do
     require 'fastercsv'
     geo_dir = ENV['geo_dir'] || "#{File.dirname(__FILE__).to_s}/../db/geo"
@@ -55,6 +56,7 @@ namespace :fluxx_crm do
     end
   end
   
+  desc "load up all cities from the directory specified by variable geo_dir"
   task :geo_cities => :environment do
     require 'fastercsv'
     geo_dir = ENV['geo_dir'] || "#{File.dirname(__FILE__).to_s}/../db/geo"

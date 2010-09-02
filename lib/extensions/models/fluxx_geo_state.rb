@@ -2,7 +2,7 @@ module FluxxGeoState
   def self.included(base)
     base.belongs_to :geo_country
     base.has_many :geo_cities
-    base.acts_as_audited :protect => true
+    base.acts_as_audited
 
     base.validates_presence_of :geo_country
 

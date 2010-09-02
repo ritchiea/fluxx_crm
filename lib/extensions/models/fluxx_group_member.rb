@@ -13,7 +13,7 @@ module FluxxGroupMember
     base.insta_multi
     base.insta_export
     base.insta_lock
-    base.acts_as_audited :protect => true
+    base.acts_as_audited
     
     base.extend(ModelClassMethods)
     base.class_eval do

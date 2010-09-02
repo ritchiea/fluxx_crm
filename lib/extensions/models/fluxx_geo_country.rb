@@ -3,7 +3,7 @@ module FluxxGeoCountry
 
   def self.included(base)
     base.has_many :geo_states
-    base.acts_as_audited :protect => true
+    base.acts_as_audited
     
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
