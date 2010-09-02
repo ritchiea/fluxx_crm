@@ -1,0 +1,21 @@
+- if current_user.has_role? 'admin'
+  - user_admin_role = model.has_role? 'admin'
+  %h2
+    Admin
+    %div.org_row
+      - if user_admin_role
+        %span.delete-button= link_to 'Remove Admin Role', user_admin_role, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+      - else
+        %span.create-button= link_to 'Add Admin Role', role_users_path(:role_user => {:user_id => model.id, :name => 'Admin'}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
+
+  %h2
+    %div.edit_link= link_to 'Add Role', new_role_user_path(:role_user => {:user_id => model.id}), :class => 'to-modal', 'data-on-success' => 'refreshCaller'
+    Program Roles
+
+  - model.role_users.where(:roleable_type => 'Program').all.each do |ru|
+    - program = Program.find ru.roleable_id
+    %div.org_row
+      %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), ru, {:class => 'as-delete'}
+      = ru.name
+      ,
+      = program.name

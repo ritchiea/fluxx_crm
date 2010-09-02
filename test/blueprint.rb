@@ -120,4 +120,5 @@ Race.blueprint do
 end
 
 RoleUser.blueprint do
+  name Sham.word
 end

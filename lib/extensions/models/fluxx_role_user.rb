@@ -4,6 +4,8 @@ module FluxxRoleUser
     base.belongs_to :created_by,  :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :user
+    base.insta_search
+    base.insta_export
 
     base.extend(ModelClassMethods)
     base.class_eval do

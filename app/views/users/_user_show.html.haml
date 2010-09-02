@@ -59,7 +59,7 @@
     .value= model.birth_at.mdy
 
 = render :partial => "user_organizations/list_user_organizations", :locals => { :model => model}
--# TODO ESH: admin  <%= render :partial => "user_roles", :locals => { :model => model} %>
+= render :partial => "user_roles", :locals => { :model => model}
 
 = render :partial => "model_documents/list_model_documents", :locals => { :model => model}
 = render :partial => "group_members/list_group_members", :locals => { :model => model, :class_type => User.name}

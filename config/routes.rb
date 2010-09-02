@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :geo_states
   resources :group_members
   resources :notes
+  resources :role_users
   resources :users
 end
 
