@@ -1,4 +1,10 @@
 %li= link_to 'Edit', send("edit_#{@model_name}_path", @model), :class => 'to-self'
+- if @model.respond_to?(:is_favorite_for?)
+  - favorite = @model.is_favorite_for? current_user
+  - if favorite
+    %li= link_to 'Remove Favorite', favorite, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+  - else
+    %li= link_to 'Add As Favorite', favorites_path(:favorite => {:user_id => current_user.id, :favorable_id => @model.id, :favorable_type => @model.class}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
+  %li= link_to 'Edit', send("edit_#{@model_name}_path", @model), :class => 'to-self'
 - @action_buttons.each do |button_clause|
-  - event_name, english_event_name = button_clause
-  %li= link_to english_event_name, self.send("#{model.class.name.underscore.downcase}_path", {:event_action => event_name}), :class => 'as-put'
+  = render :partial => "insta/show_action_buttons", :locals => { :model => @model, :button_clause => button_clause}
