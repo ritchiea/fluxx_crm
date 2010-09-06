@@ -112,14 +112,16 @@ class ActiveRecord::Base
       # Allow a parameter possible_events which is an array of legal event names that are being looked for
       define_method :current_allowed_events do |*optional|
         possible_events, *ignored = *optional
-        all_events = self.aasm_events_for_current_state.map do |event_name|
-          [event_name, self.class.event_to_english(event_name)]
-        end
+        all_events = self.aasm_events_for_current_state
         
-        if possible_events
+        permitted_events = if possible_events
           all_events & possible_events
         else
           all_events
+        end || []
+        
+        permitted_events.map do |event_name|
+          [event_name, self.class.event_to_english(event_name)]
         end
       end
     end

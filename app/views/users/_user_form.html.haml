@@ -1,4 +1,10 @@
 
+- if current_user.has_role? 'admin'
+  = form.input :login, :label => 'Login:'
+- if current_user.has_role?('admin') || current_user.id == model.id 
+  = form.input :password, :label => 'Password:'
+  = form.input :password_confirmation, :label => 'Password Confirmation:'
+  = form.input :time_zone, :as => :time_zone, :priority_zones => /Pacific Time|Beijing/
 = form.input :salutation, :label => "Prefix"
 = form.input :first_name, :label => "First Name"
 = form.input :middle_initial, :label => "Middle Name"

@@ -1,4 +1,5 @@
-%li= link_to 'Edit', send("edit_#{@model_name}_path", @model), :class => 'to-self'
+%li= link_to 'Edit', send("edit_#{@model_name}_path", @model), :class => 'to-self' if @edit_enabled
+%li= link_to 'Delete', @model, :class => 'as-delete' if @delete_enabled
 - if @model.respond_to?(:is_favorite_for?)
   - favorite = @model.is_favorite_for? current_user
   - if favorite
