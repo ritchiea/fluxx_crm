@@ -1,4 +1,4 @@
-%h1.minimize-detail-pull= [model.first_name, model.last_name].join ' '
+%h1.minimize-detail-pull= [model.first_name, model.middle_initial, model.last_name].join ' '
 
 - primary_user_org = model.primary_user_organization
 - if primary_user_org
@@ -20,10 +20,10 @@
       %span.address2= primary_user_org.organization.street_address2
     - if primary_user_org.organization.city
       %span.city= primary_user_org.organization.city
-    - if primary_user_org.organization.country_state && primary_user_org.organization.country_state.name
-      %abbr{:title => primary_user_org.organization.country_state.name}
-        - if primary_user_org.organization.country_state && primary_user_org.organization.country_state.abbreviation  
-          = primary_user_org.organization.country_state.abbreviation
+    - if primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.name
+      %abbr{:title => primary_user_org.organization.geo_state.name}
+        - if primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.abbreviation  
+          = primary_user_org.organization.geo_state.abbreviation
       - if primary_user_org.organization.postal_code
         %span.zipcode= primary_user_org.organization.postal_code
 

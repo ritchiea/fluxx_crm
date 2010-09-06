@@ -11,7 +11,7 @@
       - if can_current_user_edit_create_organizations?
         %span.temp
           = link_to 'edit', edit_user_organization_path(user_org),
-           :class => 'fluxx-card-link-to-modal fluxx-card-link-modal-action-onclose-reload-self fluxx-card-modal-close-on-success[.fluxx-card-show]'
+           :class => 'to-modal'
           &nbsp;&nbsp;
           = link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), user_organization_path(user_org), {:class => 'as-delete'}
       
@@ -20,8 +20,7 @@
       - else
         <br />
         - if can_current_user_edit_create_organizations?
-          - link_to_update('make primary', @model, {:class => 'fluxx-card-form-to-self'}) do |form|
-            = form.hidden_field :primary_user_organization_id, :value => user_org.id
+          %li= link_to 'make primary', self.send("#{@model_name}_path", {:user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
     - unless user_org.department.blank?
       = user_org.title
       ,
