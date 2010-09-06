@@ -13,6 +13,8 @@ class ActionController::ControllerDslShow < ActionController::ControllerDsl
           end
           allowed_event_names && event_pairs.select{|event_pair| allowed_event_names.include?(event_pair.first)}
         end || []
+        controller.send :instance_variable_set, "@edit_enabled", true
+        controller.send :instance_variable_set, "@delete_enabled", true
         controller.send :instance_variable_set, "@action_buttons", action_buttons
       end
     else
