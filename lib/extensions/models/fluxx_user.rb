@@ -42,6 +42,13 @@ module FluxxUser
   end
 
   module ModelClassMethods
+    
+    # ESH: hack to rename User to Person
+    def model_name
+      u = ActiveModel::Name.new User
+      u.instance_variable_set '@human', 'Person'
+      u
+    end
   end
 
   module ModelInstanceMethods
