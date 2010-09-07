@@ -23,12 +23,12 @@ module ApplicationHelper
       acc
     end
     audit_changes = audit.attributes['audit_changes']
-    audit_summary = '<span>'
+    audit_summary = ''
     audit_summary += " By #{audit.user.full_name}" if audit.user
     audit_summary += " Modified at #{audit.created_at.ampm_time} on #{audit.created_at.full}" if audit.created_at
     audit_table = ''
     if audit_changes && audit_changes.is_a?(Hash)
-      audit_table += "<table class='fluxx-card-show-audits-detail'><tr><th class'attribute'>Attribute</th><th class='old'>Was</th><th class='arrow'>&nbsp;</th><th class='new'>Changed To</th></tr>"
+      audit_table += "<table class='audit-detail'><tr><th class'attribute'>Attribute</th><th class='old'>Was</th><th class='arrow'>&nbsp;</th><th class='new'>Changed To</th></tr>"
       audit_changes.keys.each do |k|
         change = audit_changes[k]
         unless !change.is_a?(Array) || (change.first.blank? && change.second.blank?)
