@@ -1,6 +1,7 @@
 module FluxxModelDocumentsController
   def self.included(base)
     base.insta_index ModelDocument do |insta|
+      insta.suppress_model_iteration = true
       insta.template = 'model_document_list'
     end
     # The view page will want to pass in the documentable ID and Class
