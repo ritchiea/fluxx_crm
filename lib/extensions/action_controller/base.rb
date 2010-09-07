@@ -16,14 +16,23 @@ class ActionController::Base
       write_inheritable_attribute :role_object, local_role_object
       yield local_role_object if block_given?
       
-      define_method :event_allowed? do |events, model|
-        events = [events] unless events.is_a?(Array)
-        
+      define_method :extract_related_model do |model|
         related_object_model = if role_object.extract_related_object_proc
           role_object.extract_related_object_proc.call model
         else
           model
         end
+      end
+      
+      define_method :has_role_for_event? do |event, model|
+        related_object_model = extract_related_model model
+        role_object.event_allowed_for_user?(fluxx_current_user, event, related_object_model)
+      end
+      
+      define_method :event_allowed? do |events, model|
+        events = [events] unless events.is_a?(Array)
+        
+        related_object_model = extract_related_model model
         
         events_available = events.select do |event| 
           event = event.first if event.is_a? Array
