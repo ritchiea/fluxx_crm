@@ -2,7 +2,7 @@
   %span Satellites
   .actions
     - if can_current_user_edit_create_organizations?
-      = link_to image_tag("/fluxx_engine/theme/default/images/icons/add.png"), new_organization_path(:organization => {:parent_org_id => model.id}), :class => 'to-modal', :title => "Add a Satellite"
+      = link_to image_tag("/fluxx_engine/theme/default/images/icons/add.png"), new_organization_path(:organization => {:parent_org_id => model.id}), :class => 'to-modal', :title => "Add a Satellite", 'data-on-success' => 'refreshCaller,close', 'data-is-success' => '.show'
 - if model.satellite_orgs.empty?
   %p No satellite offices available
 - model.satellite_orgs.each do |satellite|
@@ -11,6 +11,6 @@
       .actions
         - if !respond_to?(:detailed) || (respond_to?(:detailed) && !detailed)
           %span.details_link= link_to image_tag("/fluxx_engine/theme/default/images/icons/page_white_magnify.png"), organization_url(satellite), :class => 'to-modal', :title => "Show Satellite Details"
-        %span.edit_link= link_to image_tag("/fluxx_engine/theme/default/images/icons/page_edit.png"), edit_organization_url(satellite), :class => 'to-modal', :title => "Edit Satellite"
-        %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), organization_path(satellite), {:class => 'as-delete', :title => "Delete Satellite"}
+        %span.edit_link= link_to image_tag("/fluxx_engine/theme/default/images/icons/page_edit.png"), edit_organization_url(satellite), :class => 'to-modal', :title => "Edit Satellite", 'data-on-success' => 'refreshCaller,close', 'data-is-success' => '.show'
+        %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), organization_path(satellite), {:class => 'as-delete', :title => "Delete Satellite", 'data-on-success' => 'refreshCaller'}
     = render :partial => "insta/show/contact_info", :locals => { :location => satellite, :detailed => false}
