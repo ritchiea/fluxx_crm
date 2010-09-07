@@ -22,6 +22,15 @@ ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
+def current_user
+  @current_user unless @current_user == false
+end
+
+# Store the given user id in the session.
+def current_user=(new_user)
+  @current_user = new_user || false
+end
+
 def login_as user
   @controller.current_user = user
 end
