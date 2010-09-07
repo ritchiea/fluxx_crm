@@ -52,6 +52,14 @@ module FluxxUser
   end
 
   module ModelInstanceMethods
+    
+    def main_phone
+      work = self.work_phone
+      org = primary_user_organization && primary_user_organization.organization ? primary_user_organization.organization.phone : nil
+      mobile = self.personal_mobile
+      work || org || mobile
+    end
+    
     def before_create
       self.blog_url = clean_url(self.blog_url)
     end

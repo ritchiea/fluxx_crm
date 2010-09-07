@@ -55,19 +55,19 @@ module FluxxOrganization
       self.blog_url = clean_url(self.blog_url)
     end
   
-    def country= val
-      if val.is_a? Country
-        write_attribute(:country, val) 
+    def geo_country= val
+      if val.is_a? GeoCountry
+        write_attribute(:geo_country, val) 
       elsif
-        write_attribute(:country, Country.find_by_name(val))
+        write_attribute(:geo_country, GeoCountry.find_by_name(val))
       end
     end
 
-    def country_state= val
-      if val.is_a? CountryState
-        write_attribute(:country_state, val) 
+    def geo_state= val
+      if val.is_a? GeoState
+        write_attribute(:geo_state, val) 
       elsif
-        write_attribute(:country_state, CountryState.find_by_name(val))
+        write_attribute(:geo_state, GeoState.find_by_name(val))
       end
     end
   
@@ -104,15 +104,15 @@ module FluxxOrganization
     end
   
     def state_name
-      country_state.name if country_state
+      geo_state.name if geo_state
     end
     
     def state_abbreviation
-      country_state.abbreviation if country_state
+      geo_state.abbreviation if geo_state
     end
   
     def country_name
-      country.name if country
+      geo_country.name if geo_country
     end
   
     def to_s
