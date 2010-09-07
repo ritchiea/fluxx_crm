@@ -19,4 +19,4 @@
             - else
               %span
                 = link_to(raw(audit_summary), url_for(:id => model.to_param, :audit_id => audit.id), :class => 'fluxx-card-link-to-new-card', :title => "History")
-                = audit_table
+                = raw audit_table

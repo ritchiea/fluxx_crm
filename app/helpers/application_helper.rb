@@ -9,38 +9,6 @@ module ApplicationHelper
       true
     end
   
-  def link_to_delete label, model, options = {}, use_onclick=true
-    options[:method] = :delete
-    link_class = options.delete(:link_class)
-    refresh_function = (options[:refresh] == :partial ? 'onCompleteRefreshPartial' : 'onCompleteRefresh')
-    append_to = (options[:refresh] == :partial ? 'fluxxCardPartial' : 'fluxxCardArea')
-
-    form = raw(form_for(model, :html => options){|f| })
-    form = "$('#{raw form}').submit(#{refresh_function}).appendTo($(this).#{append_to}()).submit();return false;"
-
-    raw link_to(label, model, :onclick => (
-        use_onclick ? raw("if(confirm('This record will be deleted. Are you sure?')) {#{raw form}}; return false;") : "#{raw form}"), :class => link_class)
-  end  
-  
-  def link_to_update label, model, options = {}
-    options[:method] = :put
-    link_class = options.delete(:link_class)
-    concat link_to(label, model, :onclick => "$(this).next().submit();return false;", :class => link_class)
-    raw(form_for(model, :html => options) do |form| 
-      yield form
-    end)
-  end
-
-  def link_to_post label, model, url, options = {}
-    options[:method] = :post
-    options[:style] = 'display: none'
-    link_class = options.delete(:link_class)
-    concat link_to(label, url, :onclick => "$(this).next().submit();return false;", :class => link_class)
-    raw(form_for(model, :url => url, :html => options) do |form| 
-      yield form
-    end)
-  end
-  
   def load_audits model
     model.audits.sort_by{|aud| aud.id * -1}
   end
@@ -54,7 +22,7 @@ module ApplicationHelper
       acc[ref.name.to_s] = ref
       acc
     end
-    audit_changes = audit.attributes['changes']
+    audit_changes = audit.attributes['audit_changes']
     audit_summary = '<span>'
     audit_summary += " By #{audit.user.full_name}" if audit.user
     audit_summary += " Modified at #{audit.created_at.ampm_time} on #{audit.created_at.full}" if audit.created_at
