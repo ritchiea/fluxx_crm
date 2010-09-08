@@ -4,10 +4,6 @@ module FluxxFavoritesController
       insta.template = 'favorite_show'
     end
     base.insta_post Favorite do |insta|
-      insta.pre do |controller_dsl, controller|
-        controller.pre_model = Favorite.find :first
-      end
-      
       insta.template = 'favorite_form'
     end
     base.insta_delete Favorite do |insta|
