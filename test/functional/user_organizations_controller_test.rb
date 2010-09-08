@@ -50,8 +50,8 @@ class UserOrganizationsControllerTest < ActionController::TestCase
     @org4 = Organization.make
     @user_org2 = UserOrganization.make :organization => @org4, :user => @user1
     put :update, :id => @user_org2.id, :user_organization => {:organization_id => @org2.id}
-
-    assigns(:user_organization).reload # Check to see what the actual current value in the DB is for the user_org's organization_id
+    
+    p "ESH: have #{UserOrganization.where(:organization_id => @org2.id, :user_id => @user1.id).all.size} instances"
     assert_equal @org4.id, assigns(:user_organization).organization_id
   end
 

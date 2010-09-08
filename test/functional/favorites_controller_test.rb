@@ -21,6 +21,7 @@ class FavoritesControllerTest < ActionController::TestCase
 
   test "should not create duplicate favorites" do
     dupe_favorite = Favorite.make :favorable_type => @org1.class.name, :favorable_id => @org1.id, :user_id => @user1.id
+    p "ESH: have favorites = #{Favorite.all.inspect}"
     assert_difference('Favorite.count', 0) do
       post :create, :favorite => {:favorable_type => @org1.class.name, :favorable_id => @org1.id, :user_id => @user1.id}
     end
