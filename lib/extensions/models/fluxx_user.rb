@@ -17,6 +17,7 @@ module FluxxUser
     base.has_many :groups, :through => :group_members
     base.has_many :role_users
     base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
+    base.before_save :preprocess_user
     
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
@@ -29,7 +30,13 @@ module FluxxUser
     base.insta_multi
     base.insta_export
     base.insta_lock
-    # TODO ESH: add authentication validation (login/email/password etc)
+    
+    base.validates_presence_of     :first_name
+    base.validates_presence_of     :last_name
+
+    base.validates_presence_of     :email
+    base.validates_length_of       :email,    :within => 6..400 #r@a.wk
+    
     base.insta_utc do |insta|
       insta.time_attributes = [:birth_at]
     end  
@@ -58,6 +65,10 @@ module FluxxUser
       org = primary_user_organization && primary_user_organization.organization ? primary_user_organization.organization.phone : nil
       mobile = self.personal_mobile
       work || org || mobile
+    end
+    
+    def preprocess_user
+      self.login = nil if login == ''
     end
     
     def before_create
