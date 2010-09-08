@@ -48,6 +48,14 @@ class UsersControllerTest < ActionController::TestCase
     assert @response.header["Location"] =~ /#{user_path(assigns(:user))}$/
   end
 
+  test "create user should give a validation error with a non-unique email address" do
+    assert_difference('User.count', 0) do
+      post :create, :user => { :first_name => 'some random name for you', :last_name => 'a last name', :email => @user1.email }
+    end
+
+    assert !assigns(:model).errors.empty?
+  end
+
   test "should show user" do
     get :show, :id => @user1.to_param
     assert_response :success
