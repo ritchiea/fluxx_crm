@@ -70,8 +70,8 @@ module FluxxOrganization
         write_attribute(:geo_state, GeoState.find_by_name(val))
       end
     end
-  
-    def auto_complete_name
+    
+    def autocomplete_to_s
       if is_headquarters?
         "#{name} - headquarters"
       else
