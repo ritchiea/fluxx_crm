@@ -2,6 +2,7 @@ module FluxxUsersController
   def self.included(base)
     base.insta_index User do |insta|
       insta.template = 'user_list'
+      insta.order_clause = 'last_name asc, first_name asc'
     end
     base.insta_show User do |insta|
       insta.template = 'user_show'

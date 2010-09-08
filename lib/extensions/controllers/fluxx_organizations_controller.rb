@@ -2,6 +2,7 @@ module FluxxOrganizationsController
   def self.included(base)
     base.insta_index Organization do |insta|
       insta.template = 'organization_list'
+      insta.order_clause = 'name asc'
     end
     base.insta_show Organization do |insta|
       insta.template = 'organization_show'
