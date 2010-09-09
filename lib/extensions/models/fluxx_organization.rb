@@ -83,6 +83,10 @@ module FluxxOrganization
       parent_org_id == nil
     end
     
+    def display_name
+      parent_org ? parent_org.name : name
+    end
+    
     def satellites
       Organization.where(:id => related_ids).all
     end
