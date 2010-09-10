@@ -13,6 +13,7 @@ module FluxxOrganization
     base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
     base.has_many :group_members, :as => :groupable
     base.has_many :groups, :through => :group_members
+    base.after_save :rename_satellites
 
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
@@ -84,7 +85,7 @@ module FluxxOrganization
     end
     
     def display_name
-      parent_org ? parent_org.name : name
+      name
     end
     
     def satellites
@@ -149,5 +150,16 @@ module FluxxOrganization
       Note.update_all ['notable_id = ?', self.id], ['notable_type = ? AND notable_id = ?', 'Organization', dup.id]
       Favorite.update_all ['favorable_id = ?', self.id], ['favorable_type = ? AND favorable_id = ?', 'Organization', dup.id]
     end
+  end
+  
+  def rename_satellites
+    # If this org has been updated and has satellites, need to synchronize the name
+    satellites.each do |sat|
+      sat.update_attributes :name => self.name unless sat.name == self.name
+    end
+  end
+  
+  def realtime_update_id
+    parent_org_id ? parent_org_id : id
   end
 end

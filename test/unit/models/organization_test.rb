@@ -12,6 +12,13 @@ class OrganizationTest < ActiveSupport::TestCase
     assert_not_nil org.id
   end
   
+  test "make sure that updating the name of an org updates its satellites if any" do
+    sat = Organization.make :parent_org_id => @organization.id
+    @organization.name = @organization.name + 'fred'
+    @organization.save
+    assert_equal @organization.name, sat.reload.name
+  end
+  
   test "Adding organizations to users" do
     u = User.make :first_name => 'Eric', :login => 'ericfluxx', :email => 'fred@acesfconsulting.com'
     org = Organization.make :name => 'freddie mac'

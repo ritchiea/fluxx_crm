@@ -3,6 +3,7 @@ module FluxxOrganizationsController
     base.insta_index Organization do |insta|
       insta.template = 'organization_list'
       insta.order_clause = 'name asc'
+      insta.search_conditions = {:parent_org_id => 0}
     end
     base.insta_show Organization do |insta|
       insta.template = 'organization_show'
