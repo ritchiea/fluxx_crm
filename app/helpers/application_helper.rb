@@ -13,6 +13,31 @@ module ApplicationHelper
     model.audits.sort_by{|aud| aud.id * -1}
   end
   
+  # Convert mime type to a class that can be used 
+  def mime_type_to_class mime_type
+    if mime_type.index('image') == 0
+      'file-type file-type-image'
+    elsif mime_type.index('audio') == 0
+      'file-type file-type-audio'
+    elsif mime_type.index('video') == 0
+      'file-type file-type-video'
+    elsif mime_type.index('application') == 0
+      if mime_type.index('msword') || mime_type.index('officedocument.wordprocessing')
+        'file-type file-type-word'
+      elsif mime_type.index('vnd.ms-excel')
+        'file-type file-type-excel'
+      elsif mime_type.index('powerpoint') || mime_type.index('officedocument.presentation')
+        'file-type file-type-powerpoint'
+      elsif mime_type.index('pdf')
+        'file-type file-type-pdf'
+      else
+        'file-type file-type-file'
+      end
+    else  
+      'file-type file-type-file'
+    end  
+  end
+
   def build_audit_table_and_summary model, audit
     reflections_by_fk = model.class.reflect_on_all_associations.inject({}) do |acc, ref|
       acc[ref.association_foreign_key] = ref if ref
