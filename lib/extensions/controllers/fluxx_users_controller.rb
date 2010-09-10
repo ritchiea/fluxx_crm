@@ -3,6 +3,7 @@ module FluxxUsersController
     base.insta_index User do |insta|
       insta.template = 'user_list'
       insta.order_clause = 'last_name asc, first_name asc'
+      insta.icon_style = 'style-users'
     end
     base.insta_show User do |insta|
       insta.template = 'user_show'

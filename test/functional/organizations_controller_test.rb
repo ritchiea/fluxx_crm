@@ -20,11 +20,13 @@ class OrganizationsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:organizations)
   end
 
+# TODO ESH: I put in a parent_org_id = 0 where clause for sphinx; may need to swizzle that to parent_org_id = nil and work out a way to make that 0 when it gets to sphinx for this test to pass
   test "autocomplete" do
     Organization.make
     lookup_org = Organization.make
     get :index, :name => lookup_org.name, :format => :json
     a = @response.body.de_json # try to deserialize the JSON to an array
+    p "ESH: have an a=#{a.inspect}"
     assert_equal lookup_org.autocomplete_to_s, a.first['label']
     assert_equal lookup_org.id, a.first['value']
   end

@@ -4,6 +4,7 @@ module FluxxOrganizationsController
       insta.template = 'organization_list'
       insta.order_clause = 'name asc'
       insta.search_conditions = {:parent_org_id => 0}
+      insta.icon_style = 'style-organizations'
     end
     base.insta_show Organization do |insta|
       insta.template = 'organization_show'
