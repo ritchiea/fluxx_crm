@@ -1,28 +1,35 @@
 module FluxxOrganizationsController
+  ICON_STYLE = 'style-organizations'
   def self.included(base)
     base.insta_index Organization do |insta|
       insta.template = 'organization_list'
       insta.order_clause = 'name asc'
       insta.search_conditions = {:parent_org_id => 0}
-      insta.icon_style = 'style-organizations'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_show Organization do |insta|
       insta.template = 'organization_show'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_new Organization do |insta|
       insta.template = 'organization_form'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_edit Organization do |insta|
       insta.template = 'organization_form'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_post Organization do |insta|
       insta.template = 'organization_form'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_put Organization do |insta|
       insta.template = 'organization_form'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_delete Organization do |insta|
       insta.template = 'organization_form'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_related Organization do |insta|
       # NOTE ESH: this causes tests to fail
