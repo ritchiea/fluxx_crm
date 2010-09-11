@@ -1,6 +1,4 @@
 %ul.lines
   %li= model.name
-  %li= model.city
-  %li= model.geo_state.abbreviation if model.geo_state
-  %li= model.geo_country.iso3 if model.geo_country
+  %li= [model.city, (model.geo_state ? model.geo_state.abbreviation : nil), (model.geo_country ? model.geo_country.iso3 : nil) ].compact.join(', ')
   %li= model.url
