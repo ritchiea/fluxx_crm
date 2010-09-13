@@ -14,8 +14,8 @@
 = form.input :personal_mobile, :label => "Mobile Phone"
 = form.input :work_fax, :label => "Direct Fax"
 
-= form.input :street_address, :label => "Street Address"
-= form.input :street_address2, :label => "Street Address 2"
+= form.input :personal_street_address, :label => "Street Address"
+= form.input :personal_street_address2, :label => "Street Address 2"
 = form.input :personal_city, :label => "City"
 = form.input :personal_geo_country, :label => 'Country:', :as => :select, :input_html => {:class => 'geo_country_select', 'data-related-child'.to_sym => '.geo-state-select'}, :collection => GeoCountry.all.map {|country| [country.name, country.id]}
 - state_collection = form.object.personal_geo_country ? form.object.personal_geo_country.find_related_geo_states : []
