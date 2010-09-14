@@ -9,10 +9,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hansen"]
-  s.date = %q{2010-08-03}
+  s.date = %q{2010-09-14}
   s.email = %q{fluxx@acesfconsulting.com}
   s.extra_rdoc_files = [
-    "README.textile"
+    "LICENSE",
+     "README.textile"
   ]
   s.files = [
     "app/controllers/application_controller.rb",
@@ -25,6 +26,7 @@ Gem::Specification.new do |s|
      "app/controllers/model_documents_controller.rb",
      "app/controllers/notes_controller.rb",
      "app/controllers/organizations_controller.rb",
+     "app/controllers/role_users_controller.rb",
      "app/controllers/user_organizations_controller.rb",
      "app/controllers/users_controller.rb",
      "app/helpers/application_helper.rb",
@@ -37,13 +39,14 @@ Gem::Specification.new do |s|
      "app/models/model_document.rb",
      "app/models/note.rb",
      "app/models/organization.rb",
+     "app/models/role_user.rb",
      "app/models/user.rb",
      "app/models/user_organization.rb",
      "app/models/workflow_event.rb",
      "app/views/audits/_list_audits.html.haml",
-     "app/views/favorites/_favorites_form.html.haml",
-     "app/views/favorites/_favorites_list.html.haml",
-     "app/views/favorites/_favorites_show.html.haml",
+     "app/views/favorites/_favorite_form.html.haml",
+     "app/views/favorites/_favorite_list.html.haml",
+     "app/views/favorites/_favorite_show.html.haml",
      "app/views/geo_cities/_geo_city_form.html.haml",
      "app/views/geo_cities/_geo_city_list.html.haml",
      "app/views/geo_cities/_geo_city_show.html.haml",
@@ -57,8 +60,10 @@ Gem::Specification.new do |s|
      "app/views/group_members/_group_member_list.html.haml",
      "app/views/group_members/_group_member_show.html.haml",
      "app/views/group_members/_list_group_members.html.haml",
+     "app/views/insta/_show_action_buttons.html.haml",
      "app/views/insta/_show_buttons.html.haml",
      "app/views/model_documents/_list_model_documents.html.haml",
+     "app/views/model_documents/_model_document_list.html.haml",
      "app/views/notes/_list_notes.html.haml",
      "app/views/notes/_note_form.html.haml",
      "app/views/notes/_note_list.html.haml",
@@ -68,15 +73,22 @@ Gem::Specification.new do |s|
      "app/views/organizations/_organization_location.html.haml",
      "app/views/organizations/_organization_satellites.html.haml",
      "app/views/organizations/_organization_show.html.haml",
+     "app/views/role_users/_role_user_form.html.haml",
+     "app/views/role_users/_role_user_list.html.haml",
+     "app/views/role_users/_role_user_show.html.haml",
      "app/views/user_organizations/_list_user_organizations.html.haml",
      "app/views/user_organizations/_user_organization_form.html.haml",
      "app/views/user_organizations/_user_organization_list.html.haml",
      "app/views/user_organizations/_user_organization_show.html.haml",
+     "app/views/users/_admin_user.html.haml",
      "app/views/users/_related_users.html.haml",
      "app/views/users/_user_form.html.haml",
      "app/views/users/_user_list.html.haml",
+     "app/views/users/_user_roles.html.haml",
      "app/views/users/_user_show.html.haml",
      "config/routes.rb",
+     "lib/extensions/action_controller/base.rb",
+     "lib/extensions/action_controller/controller_dsl_role.rb",
      "lib/extensions/action_controller/controller_dsl_show.rb",
      "lib/extensions/action_controller/controller_dsl_update.rb",
      "lib/extensions/active_record/base.rb",
@@ -90,6 +102,7 @@ Gem::Specification.new do |s|
      "lib/extensions/controllers/fluxx_model_documents_controller.rb",
      "lib/extensions/controllers/fluxx_notes_controller.rb",
      "lib/extensions/controllers/fluxx_organizations_controller.rb",
+     "lib/extensions/controllers/fluxx_role_users_controller.rb",
      "lib/extensions/controllers/fluxx_user_organizations_controller.rb",
      "lib/extensions/controllers/fluxx_users_controller.rb",
      "lib/extensions/models/fluxx_favorite.rb",
@@ -101,6 +114,7 @@ Gem::Specification.new do |s|
      "lib/extensions/models/fluxx_model_document.rb",
      "lib/extensions/models/fluxx_note.rb",
      "lib/extensions/models/fluxx_organization.rb",
+     "lib/extensions/models/fluxx_role_user.rb",
      "lib/extensions/models/fluxx_user.rb",
      "lib/extensions/models/fluxx_user_organization.rb",
      "lib/extensions/models/fluxx_workflow_event.rb",
@@ -116,6 +130,7 @@ Gem::Specification.new do |s|
      "lib/generators/fluxx_crm_migration/templates/create_groups.rb",
      "lib/generators/fluxx_crm_migration/templates/create_notes.rb",
      "lib/generators/fluxx_crm_migration/templates/create_organizations.rb",
+     "lib/generators/fluxx_crm_migration/templates/create_role_users.rb",
      "lib/generators/fluxx_crm_migration/templates/create_user_organizations.rb",
      "lib/generators/fluxx_crm_migration/templates/create_users.rb",
      "lib/generators/fluxx_crm_migration/templates/create_workflow_events.rb",
@@ -133,6 +148,7 @@ Gem::Specification.new do |s|
      "test/dummy/app/helpers/application_helper.rb",
      "test/dummy/app/helpers/race_helper.rb",
      "test/dummy/app/models/race.rb",
+     "test/dummy/app/models/user.rb",
      "test/dummy/config/application.rb",
      "test/dummy/config/boot.rb",
      "test/dummy/config/environment.rb",
@@ -164,7 +180,7 @@ Gem::Specification.new do |s|
      "test/dummy/db/migrate/20100720033741_fluxx_crm_create_groups.rb",
      "test/dummy/db/migrate/20100723040020_fluxx_crm_create_workflow_events.rb",
      "test/dummy/db/migrate/20100725015340_create_races.rb",
-     "test/dummy/db/schema.rb",
+     "test/dummy/db/migrate/20100804140632_fluxx_crm_create_role_users.rb",
      "test/fluxx_crm_test.rb",
      "test/functional/favorites_controller_test.rb",
      "test/functional/geo_cities_controller_test.rb",
@@ -176,11 +192,13 @@ Gem::Specification.new do |s|
      "test/functional/notes_controller_test.rb",
      "test/functional/organizations_controller_test.rb",
      "test/functional/races_controller_test.rb",
+     "test/functional/role_users_controller_test.rb",
      "test/functional/user_organizations_controller_test.rb",
      "test/functional/users_controller_test.rb",
      "test/integration/navigation_test.rb",
      "test/support/integration_case.rb",
      "test/test_helper.rb",
+     "test/unit/action_controller/controller_dsl_role_test.rb",
      "test/unit/models/favorite_test.rb",
      "test/unit/models/geo_city_test.rb",
      "test/unit/models/geo_country_test.rb",
@@ -189,6 +207,7 @@ Gem::Specification.new do |s|
      "test/unit/models/model_document_test.rb",
      "test/unit/models/note_test.rb",
      "test/unit/models/organization_test.rb",
+     "test/unit/models/role_user_test.rb",
      "test/unit/models/user_organization_test.rb",
      "test/unit/models/user_test.rb",
      "test/unit/models/workflow_event_test.rb"
@@ -199,27 +218,9 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<fastercsv>, [">= 1.5.3"])
-      s.add_runtime_dependency(%q<formtastic-rails3>, [">= 0.9.10.0"])
-      s.add_runtime_dependency(%q<haml>, [">= 3"])
-      s.add_development_dependency(%q<jsmin>, [">= 1.0.1"])
-      s.add_development_dependency(%q<thin>, [">= 1.2.7"])
-      s.add_development_dependency(%q<json>, [">= 1.4.3"])
     else
-      s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
-      s.add_dependency(%q<formtastic-rails3>, [">= 0.9.10.0"])
-      s.add_dependency(%q<haml>, [">= 3"])
-      s.add_dependency(%q<jsmin>, [">= 1.0.1"])
-      s.add_dependency(%q<thin>, [">= 1.2.7"])
-      s.add_dependency(%q<json>, [">= 1.4.3"])
     end
   else
-    s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
-    s.add_dependency(%q<formtastic-rails3>, [">= 0.9.10.0"])
-    s.add_dependency(%q<haml>, [">= 3"])
-    s.add_dependency(%q<jsmin>, [">= 1.0.1"])
-    s.add_dependency(%q<thin>, [">= 1.2.7"])
-    s.add_dependency(%q<json>, [">= 1.4.3"])
   end
 end
 
