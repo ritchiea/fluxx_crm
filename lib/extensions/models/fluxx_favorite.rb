@@ -18,12 +18,10 @@ module FluxxFavorite
   module ModelInstanceMethods
     def update_related_data
       if favorable && favorable.class.respond_to?(:indexed_by_sphinx?)
-        favorable.class.without_realtime do
-          favorable.class.update_all 'delta = 1', ['id = ?', favorable.id]
-          if favorable
-            favorable.delta = 1
-            favorable.save 
-          end
+        favorable.class.update_all 'delta = 1', ['id = ?', favorable.id]
+        if favorable
+          favorable.delta = 1
+          favorable.save 
         end
       end
     end
