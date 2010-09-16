@@ -2,13 +2,14 @@ source "http://gemcutter.org"
 
 gem 'rails', '3.0.0'
 gem "aasm", '2.2.0'
+gem 'acts_as_audited_rails3', '>=1.1.1.5'
 gem "capybara", "0.3.7"
 gem "sqlite3-ruby", :require => "sqlite3"
 gem 'fastercsv', '>= 1.5.3'
 gem 'formtastic', '~> 1.1.0'
 gem 'haml', '>= 3'
 gem "will_paginate", "~> 3.0.pre2"
-gem "fluxx_engine", '>= 0.0.5', :path => "../fluxx_engine"
+gem "fluxx_engine", '>= 0.0.6', :path => "../fluxx_engine"
 gem 'jsmin', '>= 1.0.1'
 gem 'thin', '>= 1.2.7'
 gem 'machinist', '>=1.0.6'
@@ -16,7 +17,6 @@ gem 'faker', '>=0.3.1'
 gem 'rcov'
 gem 'thinking-sphinx', '2.0.0.rc1', :require => 'thinking_sphinx'
 
-gem 'acts_as_audited_rails3', '>=1.1.1.5'
 gem 'paperclip'
 
 

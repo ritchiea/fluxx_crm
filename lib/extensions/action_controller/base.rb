@@ -1,5 +1,6 @@
+require 'aasm'
 class ActionController::Base
-  rescue_from AASM::InvalidTransition, :with => :handle_bad_state_transition
+  rescue_from ::AASM::InvalidTransition, :with => :handle_bad_state_transition
   
   def handle_bad_state_transition
     error_message = "Unable to transition to this state"
