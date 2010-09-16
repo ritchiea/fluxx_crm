@@ -1,7 +1,7 @@
 source "http://gemcutter.org"
 
 gem 'rails', '3.0.0'
-gem "aasm", :git => "http://github.com/rubyist/aasm.git"
+gem "aasm", '2.2.0'
 gem "capybara", "0.3.7"
 gem "sqlite3-ruby", :require => "sqlite3"
 gem 'fastercsv', '>= 1.5.3'
@@ -16,7 +16,7 @@ gem 'faker', '>=0.3.1'
 gem 'rcov'
 gem 'thinking-sphinx', '2.0.0.rc1', :require => 'thinking_sphinx'
 
-gem 'acts_as_audited_rails3', '>=1.1.1.4'
+gem 'acts_as_audited_rails3', '>=1.1.1.5'
 gem 'paperclip'
 
 
