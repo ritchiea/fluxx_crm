@@ -4,7 +4,7 @@ module FluxxOrganizationsController
     base.insta_index Organization do |insta|
       insta.template = 'organization_list'
       insta.order_clause = 'name asc'
-      insta.search_conditions = {:parent_org_id => 0}
+      insta.search_conditions = {:parent_org_id => nil}
       insta.icon_style = ICON_STYLE
     end
     base.insta_show Organization do |insta|
@@ -30,18 +30,6 @@ module FluxxOrganizationsController
     base.insta_delete Organization do |insta|
       insta.template = 'organization_form'
       insta.icon_style = ICON_STYLE
-    end
-    base.insta_related Organization do |insta|
-      # NOTE ESH: this causes tests to fail
-      # insta.add_related do |related|
-      #   related.display_name = 'People'
-      #   related.related_class = User
-      #   related.search_id = :organization_id
-      #   related.extra_condition = {:deleted_at => 0}
-      #   related.max_results = 20
-      #   related.order = 'last_name asc, first_name asc'
-      #   related.display_template = '/users/related_users'
-      # end
     end
     
     base.extend(ModelClassMethods)

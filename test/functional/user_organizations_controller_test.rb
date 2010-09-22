@@ -46,13 +46,12 @@ class UserOrganizationsControllerTest < ActionController::TestCase
     assert_nil assigns(:user_organization).id
   end
 
-  test "should not be able to change a user_org to be the same organization/user as an existing one" do
+  test "should not be able to update a user_org to be the same organization/user as an existing one" do
     @org4 = Organization.make
     @user_org2 = UserOrganization.make :organization => @org4, :user => @user1
-    put :update, :id => @user_org2.id, :user_organization => {:organization_id => @org2.id}
+    put :update, :id => @user_org2.id, :user_organization => {:organization_id => @org2.id, :user_id => @user1.id}
     
-    p "ESH: have #{UserOrganization.where(:organization_id => @org2.id, :user_id => @user1.id).all.size} instances"
-    assert_equal @org4.id, assigns(:user_organization).organization_id
+    assert_equal @org4.id, assigns(:user_organization).reload.organization_id
   end
 
   test "should destroy user_organization" do
