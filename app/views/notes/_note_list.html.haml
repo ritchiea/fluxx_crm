@@ -8,7 +8,7 @@
       %tr
         %th
           %span Notes
-          .actions= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => notable.id, :notable_type => notable.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Note"
+          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => notable.id, :notable_type => notable.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Note"
   %tbody
     - if !models || models.empty?
       %tr
@@ -40,4 +40,4 @@
               - else
                 no timestamp
               - if can_current_user_edit_create_users?
-                - # %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), note_path(model), {:class => 'as-delete'}
+                - # %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), note_path(model), {:class => 'as-delete'}

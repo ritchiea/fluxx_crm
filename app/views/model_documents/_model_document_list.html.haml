@@ -10,7 +10,7 @@
       %tr
         %th
           %span Documents
-          .actions= link_to image_tag('/fluxx_engine/theme/default/images/icons/add.png', :class=> 'add-button'), model_documents_path(:model_document => {:documentable_id => documentable.id, :documentable_type => documentable.class.name}), :class => 'to-upload', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif", :title => "Add Document"
+          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), model_documents_path(:model_document => {:documentable_id => documentable.id, :documentable_type => documentable.class.name}), :class => 'to-upload', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif", :title => "Add Document"
   %tbody
     - if !models || models.empty?
       %tr
@@ -32,7 +32,7 @@
               - else
                 no timestamp
             - if can_current_user_edit_create_users?
-              %span.delete-button= link_to image_tag("/fluxx_engine/theme/default/images/icons/delete.png"), model_document_path(model), :class => 'as-delete'
+              %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), model_document_path(model), :class => 'as-delete'
         
 
 
