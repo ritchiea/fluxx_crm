@@ -18,6 +18,7 @@ gem 'rcov'
 gem 'thinking-sphinx', '2.0.0.rc1', :require => 'thinking_sphinx'
 
 gem 'paperclip'
+gem 'compass'
 
 
 if RUBY_VERSION < '1.9'

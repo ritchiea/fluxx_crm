@@ -99,6 +99,10 @@ module FluxxOrganization
     def related_ids
       [self.id] + satellite_ids
     end
+    
+    def related_users limit_amount=20
+      users.where(:deleted_at => nil).order('last_name asc, first_name asc').limit(limit_amount)
+    end
 
     def has_satellites?
       is_headquarters? && Organization.find(id, :select => "(select count(*) from organizations sat where sat.parent_org_id = organizations.id) satellite_count").satellite_count.to_i
