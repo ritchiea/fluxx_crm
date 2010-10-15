@@ -24,8 +24,5 @@ module FluxxGeoState
     def to_s
       name
     end
-    def abbreviation
-      fips_10_4
-    end
   end
 end
