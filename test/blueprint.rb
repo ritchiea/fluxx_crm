@@ -79,6 +79,9 @@ class Documentable
   end
 end
 
+Document.blueprint do
+  document Sham.document
+end
 
 Note.blueprint do
   note Sham.sentence

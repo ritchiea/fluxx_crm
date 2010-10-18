@@ -16,7 +16,8 @@ class ModelDocumentsControllerTest < ActionController::TestCase
   end
   
   test "should destroy model_document" do
-    delete :destroy, :id => @model_doc.to_param
-    assert_not_nil @model_doc.reload().deleted_at 
+    assert_difference('ModelDocument.count', -1) do
+      delete :destroy, :id => @model_doc.to_param
+    end
   end
 end

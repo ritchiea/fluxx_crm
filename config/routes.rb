@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :geo_countries
   resources :groups
   resources :model_documents
+  resources :documents
   resources :organizations
   resources :user_organizations
   resources :geo_cities
