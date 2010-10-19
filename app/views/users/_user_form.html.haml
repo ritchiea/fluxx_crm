@@ -1,3 +1,4 @@
+= render :partial => 'users/user_form_header',  :locals => {:model => model, :form => form}
 
 - if current_user.has_role? 'admin'
   = form.input :login, :label => 'Login:'
