@@ -36,22 +36,6 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-spec = Gem::Specification.new do |s|
-  s.name = "fluxx_crm"
-  s.summary = "Insert FluxxCrm summary."
-  s.description = "Insert FluxxCrm description."
-  s.files =  FileList["[A-Z]*", "lib/**/*"]
-  s.version = "0.0.1"
-end
-
-Rake::GemPackageTask.new(spec) do |pkg|
-end
-
-desc "Install the gem #{spec.name}-#{spec.version}.gem"
-task :install do
-  system("gem install pkg/#{spec.name}-#{spec.version}.gem --no-ri --no-rdoc")
-end
-
 require 'rcov/rcovtask'
 
 desc "Create a cross-referenced code coverage report."
