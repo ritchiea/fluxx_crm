@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fluxx_crm}
-  s.version = "0.0.4"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hansen"]
-  s.date = %q{2010-09-16}
+  s.date = %q{2010-10-19}
   s.email = %q{fluxx@acesfconsulting.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "app/controllers/application_controller.rb",
+    "app/controllers/documents_controller.rb",
     "app/controllers/favorites_controller.rb",
     "app/controllers/geo_cities_controller.rb",
     "app/controllers/geo_countries_controller.rb",
@@ -30,9 +31,11 @@ Gem::Specification.new do |s|
     "app/controllers/user_organizations_controller.rb",
     "app/controllers/users_controller.rb",
     "app/helpers/application_helper.rb",
+    "app/models/document.rb",
     "app/models/favorite.rb",
     "app/models/geo_city.rb",
     "app/models/geo_country.rb",
+    "app/models/geo_region.rb",
     "app/models/geo_state.rb",
     "app/models/group.rb",
     "app/models/group_member.rb",
@@ -43,6 +46,7 @@ Gem::Specification.new do |s|
     "app/models/user.rb",
     "app/models/user_organization.rb",
     "app/models/workflow_event.rb",
+    "app/stylesheets/theme/default/style.sass",
     "app/views/audits/_list_audits.html.haml",
     "app/views/favorites/_favorite_form.html.haml",
     "app/views/favorites/_favorite_list.html.haml",
@@ -83,6 +87,7 @@ Gem::Specification.new do |s|
     "app/views/users/_admin_user.html.haml",
     "app/views/users/_related_users.html.haml",
     "app/views/users/_user_form.html.haml",
+    "app/views/users/_user_form_header.html.haml",
     "app/views/users/_user_list.html.haml",
     "app/views/users/_user_roles.html.haml",
     "app/views/users/_user_show.html.haml",
@@ -93,6 +98,7 @@ Gem::Specification.new do |s|
     "lib/extensions/action_controller/controller_dsl_update.rb",
     "lib/extensions/active_record/base.rb",
     "lib/extensions/active_record/model_dsl_workflow.rb",
+    "lib/extensions/controllers/fluxx_documents_controller.rb",
     "lib/extensions/controllers/fluxx_favorites_controller.rb",
     "lib/extensions/controllers/fluxx_geo_cities_controller.rb",
     "lib/extensions/controllers/fluxx_geo_countries_controller.rb",
@@ -105,9 +111,11 @@ Gem::Specification.new do |s|
     "lib/extensions/controllers/fluxx_role_users_controller.rb",
     "lib/extensions/controllers/fluxx_user_organizations_controller.rb",
     "lib/extensions/controllers/fluxx_users_controller.rb",
+    "lib/extensions/models/fluxx_document.rb",
     "lib/extensions/models/fluxx_favorite.rb",
     "lib/extensions/models/fluxx_geo_city.rb",
     "lib/extensions/models/fluxx_geo_country.rb",
+    "lib/extensions/models/fluxx_geo_region.rb",
     "lib/extensions/models/fluxx_geo_state.rb",
     "lib/extensions/models/fluxx_group.rb",
     "lib/extensions/models/fluxx_group_member.rb",
@@ -125,9 +133,11 @@ Gem::Specification.new do |s|
     "lib/generators/fluxx_crm_migration/templates/create_favorites.rb",
     "lib/generators/fluxx_crm_migration/templates/create_geo_cities.rb",
     "lib/generators/fluxx_crm_migration/templates/create_geo_countries.rb",
+    "lib/generators/fluxx_crm_migration/templates/create_geo_regions.rb",
     "lib/generators/fluxx_crm_migration/templates/create_geo_states.rb",
     "lib/generators/fluxx_crm_migration/templates/create_group_members.rb",
     "lib/generators/fluxx_crm_migration/templates/create_groups.rb",
+    "lib/generators/fluxx_crm_migration/templates/create_model_documents.rb",
     "lib/generators/fluxx_crm_migration/templates/create_notes.rb",
     "lib/generators/fluxx_crm_migration/templates/create_organizations.rb",
     "lib/generators/fluxx_crm_migration/templates/create_role_users.rb",
@@ -180,8 +190,11 @@ Gem::Specification.new do |s|
     "test/dummy/db/migrate/20100723040020_fluxx_crm_create_workflow_events.rb",
     "test/dummy/db/migrate/20100725015340_create_races.rb",
     "test/dummy/db/migrate/20100804140632_fluxx_crm_create_role_users.rb",
+    "test/dummy/db/migrate/20101018230021_fluxx_crm_create_documents.rb",
+    "test/dummy/db/migrate/20101018232829_fluxx_crm_create_geo_regions.rb",
     "test/dummy/db/schema.rb",
     "test/fluxx_crm_test.rb",
+    "test/functional/documents_controller_test.rb",
     "test/functional/favorites_controller_test.rb",
     "test/functional/geo_cities_controller_test.rb",
     "test/functional/geo_countries_controller_test.rb",
@@ -227,7 +240,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<formtastic>, ["~> 1.1.0"])
       s.add_runtime_dependency(%q<haml>, [">= 3"])
       s.add_runtime_dependency(%q<will_paginate>, ["~> 3.0.pre2"])
-      s.add_runtime_dependency(%q<fluxx_engine>, [">= 0.0.6"])
+      s.add_runtime_dependency(%q<fluxx_engine>, [">= 0.0.7"])
       s.add_runtime_dependency(%q<jsmin>, [">= 1.0.1"])
       s.add_runtime_dependency(%q<thin>, [">= 1.2.7"])
       s.add_runtime_dependency(%q<machinist>, [">= 1.0.6"])
@@ -235,6 +248,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<rcov>, [">= 0"])
       s.add_runtime_dependency(%q<thinking-sphinx>, ["= 2.0.0.rc1"])
       s.add_runtime_dependency(%q<paperclip>, [">= 0"])
+      s.add_runtime_dependency(%q<compass>, [">= 0"])
       s.add_runtime_dependency(%q<ruby-debug>, [">= 0.10.3"])
     else
       s.add_dependency(%q<rails>, ["= 3.0.0"])
@@ -246,7 +260,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<formtastic>, ["~> 1.1.0"])
       s.add_dependency(%q<haml>, [">= 3"])
       s.add_dependency(%q<will_paginate>, ["~> 3.0.pre2"])
-      s.add_dependency(%q<fluxx_engine>, [">= 0.0.6"])
+      s.add_dependency(%q<fluxx_engine>, [">= 0.0.7"])
       s.add_dependency(%q<jsmin>, [">= 1.0.1"])
       s.add_dependency(%q<thin>, [">= 1.2.7"])
       s.add_dependency(%q<machinist>, [">= 1.0.6"])
@@ -254,6 +268,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<thinking-sphinx>, ["= 2.0.0.rc1"])
       s.add_dependency(%q<paperclip>, [">= 0"])
+      s.add_dependency(%q<compass>, [">= 0"])
       s.add_dependency(%q<ruby-debug>, [">= 0.10.3"])
     end
   else
@@ -266,7 +281,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<formtastic>, ["~> 1.1.0"])
     s.add_dependency(%q<haml>, [">= 3"])
     s.add_dependency(%q<will_paginate>, ["~> 3.0.pre2"])
-    s.add_dependency(%q<fluxx_engine>, [">= 0.0.6"])
+    s.add_dependency(%q<fluxx_engine>, [">= 0.0.7"])
     s.add_dependency(%q<jsmin>, [">= 1.0.1"])
     s.add_dependency(%q<thin>, [">= 1.2.7"])
     s.add_dependency(%q<machinist>, [">= 1.0.6"])
@@ -274,6 +289,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<thinking-sphinx>, ["= 2.0.0.rc1"])
     s.add_dependency(%q<paperclip>, [">= 0"])
+    s.add_dependency(%q<compass>, [">= 0"])
     s.add_dependency(%q<ruby-debug>, [">= 0.10.3"])
   end
 end
