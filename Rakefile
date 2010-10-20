@@ -5,7 +5,7 @@ begin
     gem.summary = "Fluxx CRM Core"
     gem.email = "fluxx@acesfconsulting.com"
     gem.authors = ["Eric Hansen"]
-    gem.files = Dir["{lib}/**/*", "{app}/**/*", "{config}/**/*"]
+    gem.files = Dir["{lib}/**/*", "{app}/**/*", "{config}/**/*", "{public}/**/*"]
   end
   Jeweler::GemcutterTasks.new
 rescue
