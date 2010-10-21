@@ -135,4 +135,95 @@ class UserTest < ActiveSupport::TestCase
     assert UserOrganization.exists? good_user_org.id
   end
   
+  
+  def setup_user_profile
+    user_profile = UserProfile.make
+    user = User.make :user_profile => user_profile
+    [user_profile, user]
+  end
+  
+  test "check that user_profile can set up the correct permissions for a user" do
+    user_profile, user = setup_user_profile
+    assert_equal user_profile, user.user_profile
+    
+    assert !user.has_create_for_model?(Organization)
+    
+    UserProfileRule.make :user_profile => user_profile, :role_name => 'create_organization'
+    assert user.reload.has_create_for_model?(Organization)
+  end
+  
+  test "check that a create_all privilege is respected" do
+    employee_profile = UserProfile.make :name => 'Employee'
+    UserProfileRule.make :user_profile => employee_profile, :role_name => 'create_all'
+    user = User.make :user_profile => employee_profile
+    assert user.reload.has_create_for_model?(Organization)
+  end
+  test "check that has_create_for_own_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('create_own', TestModel)
+    assert user.reload.has_create_for_own_model?(TestModel)
+  end
+
+  test "check that has_create_for_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('create', TestModel)
+    assert user.has_create_for_model?(TestModel)
+  end
+
+  test "check that has_update_for_own_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('update_own', TestModel)
+    assert user.has_update_for_own_model?(TestModel.new)
+  end
+
+  test "check that has_update_for_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('update', TestModel)
+    assert user.has_update_for_model?(TestModel)
+  end
+
+  test "check that has_delete_for_own_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('delete_own', TestModel)
+    assert user.has_delete_for_own_model?(TestModel.new)
+  end
+
+  test "check that has_delete_for_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('delete', TestModel)
+    assert user.has_delete_for_model?(TestModel)
+  end
+
+  test "check that has_view_for_own_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('view_own', TestModel)
+    assert user.has_view_for_own_model?(TestModel.new)
+  end
+
+  test "check that has_view_for_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('view', TestModel)
+    assert user.has_view_for_model?(TestModel)
+  end
+
+  test "check that has_view_for_own_model works for a user with subclass" do
+    user_profile, user = setup_user_profile
+    user.has_role!('view_own', TestModel)
+    assert user.has_view_for_own_model?(SubTestModel.new)
+  end
+
+  test "check that has_view_for_model works for a user with subclass" do
+    user_profile, user = setup_user_profile
+    user.has_role!('view', TestModel)
+    assert user.has_view_for_model?(SubTestModel)
+  end
+end
+
+class TestModel
+  def relates_to_user? user
+    true
+  end
+end
+  
+class SubTestModel < TestModel
 end

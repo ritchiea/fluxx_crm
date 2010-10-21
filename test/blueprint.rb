@@ -125,3 +125,14 @@ end
 RoleUser.blueprint do
   name Sham.word
 end
+
+UserProfile.blueprint do
+  name 'board'
+end
+
+UserProfileRule.blueprint do
+  role_name 'create_organization'
+  user_profile do
+    UserProfile.make
+  end
+end

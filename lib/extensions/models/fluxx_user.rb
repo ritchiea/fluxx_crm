@@ -11,6 +11,7 @@ module FluxxUser
     base.belongs_to :primary_organization, :class_name => 'Organization', :include => :primary_user_organization, :foreign_key => 'organization_id'
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
+    base.belongs_to :user_profile
     base.has_many :model_documents, :as => :documentable
     base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
     base.has_many :group_members, :as => :groupable
@@ -137,7 +138,7 @@ module FluxxUser
     end
     
     # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
-    def has_role? role_name, related_object = nil
+    def has_role_user? role_name, related_object = nil
       role_user = if related_object
         roles = role_users.where(:name => role_name, :roleable_id => related_object.id, :roleable_type => related_object.class.name).all
         roles = role_users.where(:name => role_name, :roleable_id => related_object.parent_id, :roleable_type => related_object.class.name).all if roles.empty? && related_object.respond_to?('parent_id')
@@ -147,13 +148,90 @@ module FluxxUser
       end.first
     end
     
+    # Add a role if none exists; if related_object is a class, generated a role_name that includes the class
     def has_role! role_name, related_object = nil
-      role = has_role?(role_name, related_object)
+      role = if related_object.is_a? Class
+        has_role?("role_name_#{class_perm_name related_object}")
+      else
+        has_role?(role_name, related_object)
+      end
       if role
         role
       else
-        add_role role_name, related_object
+        role = if related_object.is_a? Class
+          add_role "#{role_name}_#{class_perm_name related_object}"
+        else
+          add_role role_name, related_object
+        end
       end
+    end
+    
+    # Check to see if this users profile includes the role_name
+    def user_profile_include? role_name
+      if user_profile
+        user_profile.has_rule? role_name
+      end
+    end
+    
+    # Check for either a simple role or a profile rule for the role associated with this user
+    def has_role? role_name, related_object = nil
+      has_role_user?(role_name, related_object) || self.user_profile_include?(role_name)
+    end
+    
+    # Calculate the tableized name of a model_class
+    def class_perm_name model_class
+      model_class.name.tableize.singularize.downcase
+    end
+    
+    def user_related_to_model? model
+      (model.respond_to?(:relates_to_user?) && model.relates_to_user?(self))
+    end
+    
+    def is_admin?
+      self.has_role?('admin')
+    end
+    
+    def has_role_for_class? role_name, klass
+      cur_klass = klass
+      role_found = false
+      while cur_klass && !role_found
+        role_found = has_role?("#{role_name}_#{class_perm_name(cur_klass)}")
+        cur_klass = cur_klass.superclass
+        cur_klass = nil if cur_klass == ActiveRecord::Base || cur_klass == Object
+      end
+      role_found
+    end
+
+    def has_create_for_own_model? model_class
+      has_role_for_class?("create_own", model_class)
+    end
+    
+    def has_create_for_model? model_class
+      is_admin? || has_role_for_class?("create", model_class) || has_role?("create_all")
+    end
+    
+    def has_update_for_own_model? model
+      has_role_for_class?("update_own", model.class) && user_related_to_model?(model)
+    end
+
+    def has_update_for_model? model_class
+      is_admin? || has_role_for_class?("update", model_class) || has_role?("update_all")
+    end
+    
+    def has_delete_for_own_model? model
+      has_role_for_class?("delete_own", model.class) && user_related_to_model?(model)
+    end
+
+    def has_delete_for_model? model_class
+      is_admin? || has_role_for_class?("delete", model_class) || has_role?("delete_all")
+    end
+    
+    def has_view_for_own_model? model
+      has_role_for_class?("view_own", model.class) && user_related_to_model?(model)
+    end
+
+    def has_view_for_model? model_class
+      is_admin? || has_role_for_class?("view", model_class) || has_role?("view_all")
     end
     
     def full_name

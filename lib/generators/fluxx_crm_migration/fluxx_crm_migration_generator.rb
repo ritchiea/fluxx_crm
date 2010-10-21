@@ -49,6 +49,10 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_role_users.rb', 'db/migrate/fluxx_crm_create_role_users.rb'
     sleep 1
+    handle_migration 'create_user_profiles.rb', 'db/migrate/fluxx_crm_create_user_profiles.rb'
+    sleep 1
+    handle_migration 'create_user_profile_rules.rb', 'db/migrate/fluxx_crm_create_user_profile_rules.rb'
+    sleep 1
   end
   
   private
