@@ -31,7 +31,16 @@ def current_user=(new_user)
   @current_user = new_user || false
 end
 
+def add_perms user
+  user.has_role! 'listview_all'
+  user.has_role! 'view_all'
+  user.has_role! 'create_all'
+  user.has_role! 'update_all'
+  user.has_role! 'delete_all'
+end
+
 def login_as user
+  add_perms user
   @controller.current_user = user
 end
 

@@ -149,21 +149,33 @@ module FluxxUser
     end
     
     # Add a role if none exists; if related_object is a class, generated a role_name that includes the class
-    def has_role! role_name, related_object = nil
+    def has_role! role_name, related_object = nil, remove_role=false
       role = if related_object.is_a? Class
-        has_role?("role_name_#{class_perm_name related_object}")
+        has_role_for_object? role_name, related_object
+      elsif related_object.is_a? String
+        has_role_for_object? role_name, related_object
       else
         has_role?(role_name, related_object)
       end
-      if role
-        role
+      if remove_role
+        role.destroy
       else
-        role = if related_object.is_a? Class
-          add_role "#{role_name}_#{class_perm_name related_object}"
+        if role
+          role
         else
-          add_role role_name, related_object
+          role = if related_object.is_a? Class
+            add_role "#{role_name}_#{class_perm_name related_object}"
+          elsif related_object.is_a? String
+            add_role "#{role_name}_#{related_object.to_s}"
+          else
+            add_role role_name, related_object
+          end
         end
       end
+    end
+    
+    def clear_role role_name, related_object = nil
+      has_role! role_name, related_object, true
     end
     
     # Check to see if this users profile includes the role_name
@@ -191,47 +203,67 @@ module FluxxUser
       self.has_role?('admin')
     end
     
-    def has_role_for_class? role_name, klass
-      cur_klass = klass
+    # role_name: name of role to check for this user
+    # model: accept either a class, string or model
+    def has_role_for_object? role_name, model
+      cur_model = if model.is_a? Class
+        model
+      elsif model.is_a? String
+        model
+      else
+        model.class
+      end
       role_found = false
-      while cur_klass && !role_found
-        role_found = has_role?("#{role_name}_#{class_perm_name(cur_klass)}")
-        cur_klass = cur_klass.superclass
-        cur_klass = nil if cur_klass == ActiveRecord::Base || cur_klass == Object
+      while cur_model && !role_found
+        role_found = if cur_model.is_a? Class
+          has_role?("#{role_name}_#{class_perm_name(cur_model)}")
+        else
+          has_role?("#{role_name}_#{cur_model.to_s}")
+        end
+        if cur_model.is_a? Class
+          cur_model = cur_model.superclass
+          cur_model = nil if cur_model == ActiveRecord::Base || cur_model == Object
+        else
+          cur_model = nil
+        end
       end
       role_found
     end
 
     def has_create_for_own_model? model_class
-      has_role_for_class?("create_own", model_class)
+      has_role_for_object?("create_own", model_class)
     end
     
     def has_create_for_model? model_class
-      is_admin? || has_role_for_class?("create", model_class) || has_role?("create_all")
+      is_admin? || has_role_for_object?("create", model_class) || has_role?("create_all")
     end
     
     def has_update_for_own_model? model
-      has_role_for_class?("update_own", model.class) && user_related_to_model?(model)
+      has_role_for_object?("update_own", model) && user_related_to_model?(model)
     end
 
     def has_update_for_model? model_class
-      is_admin? || has_role_for_class?("update", model_class) || has_role?("update_all")
+      is_admin? || has_role_for_object?("update", model_class) || has_role?("update_all")
     end
     
     def has_delete_for_own_model? model
-      has_role_for_class?("delete_own", model.class) && user_related_to_model?(model)
+      has_role_for_object?("delete_own", model) && user_related_to_model?(model)
     end
 
     def has_delete_for_model? model_class
-      is_admin? || has_role_for_class?("delete", model_class) || has_role?("delete_all")
+      is_admin? || has_role_for_object?("delete", model_class) || has_role?("delete_all")
+    end
+    
+    def has_listview_for_model? model_class
+      is_admin? || has_role_for_object?("listview", model_class) || has_role?("listview_all")
     end
     
     def has_view_for_own_model? model
-      has_role_for_class?("view_own", model.class) && user_related_to_model?(model)
+      has_role_for_object?("view_own", model) && user_related_to_model?(model)
     end
 
     def has_view_for_model? model_class
-      is_admin? || has_role_for_class?("view", model_class) || has_role?("view_all")
+      is_admin? || has_role_for_object?("view", model_class) || has_role?("view_all")
     end
     
     def full_name

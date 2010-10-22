@@ -170,6 +170,13 @@ class UserTest < ActiveSupport::TestCase
     assert user.has_create_for_model?(TestModel)
   end
 
+  test "check that has_create_for_model works for a user using a string" do
+    user_profile, user = setup_user_profile
+    string_perm = 'some_crazy_model_type'
+    user.has_role!('create', string_perm)
+    assert user.has_create_for_model?(string_perm)
+  end
+
   test "check that has_update_for_own_model works for a user" do
     user_profile, user = setup_user_profile
     user.has_role!('update_own', TestModel)
@@ -179,7 +186,7 @@ class UserTest < ActiveSupport::TestCase
   test "check that has_update_for_model works for a user" do
     user_profile, user = setup_user_profile
     user.has_role!('update', TestModel)
-    assert user.has_update_for_model?(TestModel)
+    assert user.has_update_for_model?(TestModel.new)
   end
 
   test "check that has_delete_for_own_model works for a user" do
@@ -191,9 +198,15 @@ class UserTest < ActiveSupport::TestCase
   test "check that has_delete_for_model works for a user" do
     user_profile, user = setup_user_profile
     user.has_role!('delete', TestModel)
-    assert user.has_delete_for_model?(TestModel)
+    assert user.has_delete_for_model?(TestModel.new)
   end
 
+  test "check that has_listview_for_model works for a user" do
+    user_profile, user = setup_user_profile
+    user.has_role!('listview', TestModel)
+    assert user.has_listview_for_model?(TestModel)
+  end
+  
   test "check that has_view_for_own_model works for a user" do
     user_profile, user = setup_user_profile
     user.has_role!('view_own', TestModel)
@@ -203,7 +216,7 @@ class UserTest < ActiveSupport::TestCase
   test "check that has_view_for_model works for a user" do
     user_profile, user = setup_user_profile
     user.has_role!('view', TestModel)
-    assert user.has_view_for_model?(TestModel)
+    assert user.has_view_for_model?(TestModel.new)
   end
 
   test "check that has_view_for_own_model works for a user with subclass" do
@@ -215,7 +228,7 @@ class UserTest < ActiveSupport::TestCase
   test "check that has_view_for_model works for a user with subclass" do
     user_profile, user = setup_user_profile
     user.has_role!('view', TestModel)
-    assert user.has_view_for_model?(SubTestModel)
+    assert user.has_view_for_model?(SubTestModel.new)
   end
 end
 

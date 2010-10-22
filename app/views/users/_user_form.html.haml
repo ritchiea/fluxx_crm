@@ -1,6 +1,7 @@
 = render :partial => 'users/user_form_header',  :locals => {:model => model, :form => form}
 
 - if current_user.has_role? 'admin'
+  = form.input :user_profile, :label => 'Profile', :required => false, :as => :select, :include_blank => true, :collection => UserProfile.all.map{|up| [up.name, up.id]}
   = form.input :login, :label => 'Login:'
 - if current_user.has_role?('admin') || current_user.id == model.id 
   = form.input :password, :label => 'Password:'
