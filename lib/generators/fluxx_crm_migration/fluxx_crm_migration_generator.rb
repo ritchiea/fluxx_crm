@@ -53,6 +53,11 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_user_profile_rules.rb', 'db/migrate/fluxx_crm_create_user_profile_rules.rb'
     sleep 1
+    handle_migration 'add_allowed_field_to_profile_rules.rb', 'db/migrate/fluxx_crm_add_allowed_field_to_profile_rules.rb'
+    sleep 1
+    handle_migration 'create_model_document_type.rb', 'db/migrate/fluxx_crm_create_model_document_type.rb'
+    sleep 1
+    
   end
   
   private
