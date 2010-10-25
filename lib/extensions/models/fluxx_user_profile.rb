@@ -17,7 +17,7 @@ module FluxxUserProfile
 
   module ModelInstanceMethods
     def has_rule? role_name
-      !self.user_profile_rules.select {|rule| rule.role_name = role_name}.empty?
+      self.user_profile_rules.select {|rule| rule.role_name == role_name}.first
     end
   end
 end

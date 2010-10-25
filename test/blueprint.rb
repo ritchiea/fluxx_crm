@@ -131,8 +131,4 @@ UserProfile.blueprint do
 end
 
 UserProfileRule.blueprint do
-  role_name 'create_organization'
-  user_profile do
-    UserProfile.make
-  end
 end

@@ -186,8 +186,10 @@ module FluxxUser
     end
     
     # Check for either a simple role or a profile rule for the role associated with this user
-    def has_role? role_name, related_object = nil
-      has_role_user?(role_name, related_object) || self.user_profile_include?(role_name)
+    # always_return_object says that if a user_profile_rule is found (and not a role_user), return the rule that was found.  This is because sometimes a rule will be present and be marked not allowed
+    def has_role? role_name, related_object = nil, always_return_object=false
+      user_profile_role = self.user_profile_include?(role_name) # related object doesn't matter for user_profile_roles
+      has_role_user?(role_name, related_object) || (always_return_object ? user_profile_role : (user_profile_role && user_profile_role.allowed?))
     end
     
     # Calculate the tableized name of a model_class
@@ -216,9 +218,9 @@ module FluxxUser
       role_found = false
       while cur_model && !role_found
         role_found = if cur_model.is_a? Class
-          has_role?("#{role_name}_#{class_perm_name(cur_model)}")
+          has_role?("#{role_name}_#{class_perm_name(cur_model)}", nil, true)
         else
-          has_role?("#{role_name}_#{cur_model.to_s}")
+          has_role?("#{role_name}_#{cur_model.to_s}", nil, true)
         end
         if cur_model.is_a? Class
           cur_model = cur_model.superclass
@@ -227,7 +229,16 @@ module FluxxUser
           cur_model = nil
         end
       end
-      role_found
+
+      if role_found && role_found.is_a?(UserProfileRule)
+        role_found.allowed
+      elsif role_found
+        role_found
+      elsif ['create', 'update', 'delete', 'view', 'listview'].include? role_name.to_s
+        has_role?("create_all")
+      else
+        role_found
+      end
     end
 
     def has_create_for_own_model? model_class
@@ -235,7 +246,7 @@ module FluxxUser
     end
     
     def has_create_for_model? model_class
-      is_admin? || has_role_for_object?("create", model_class) || has_role?("create_all")
+      is_admin? || has_role_for_object?("create", model_class)
     end
     
     def has_update_for_own_model? model
@@ -243,7 +254,7 @@ module FluxxUser
     end
 
     def has_update_for_model? model_class
-      is_admin? || has_role_for_object?("update", model_class) || has_role?("update_all")
+      is_admin? || has_role_for_object?("update", model_class)
     end
     
     def has_delete_for_own_model? model
@@ -251,11 +262,11 @@ module FluxxUser
     end
 
     def has_delete_for_model? model_class
-      is_admin? || has_role_for_object?("delete", model_class) || has_role?("delete_all")
+      is_admin? || has_role_for_object?("delete", model_class)
     end
     
     def has_listview_for_model? model_class
-      is_admin? || has_role_for_object?("listview", model_class) || has_role?("listview_all")
+      is_admin? || has_role_for_object?("listview", model_class)
     end
     
     def has_view_for_own_model? model
@@ -263,7 +274,7 @@ module FluxxUser
     end
 
     def has_view_for_model? model_class
-      is_admin? || has_role_for_object?("view", model_class) || has_role?("view_all")
+      is_admin? || has_role_for_object?("view", model_class)
     end
     
     def full_name

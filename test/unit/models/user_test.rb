@@ -230,6 +230,16 @@ class UserTest < ActiveSupport::TestCase
     user.has_role!('view', TestModel)
     assert user.has_view_for_model?(SubTestModel.new)
   end
+  
+  test "check that we can add a user_rule with create_all and NOT create Organization and have it respect that.  Should still be able to create a TestModel" do
+    user_profile, user = setup_user_profile
+    UserProfileRule.create :user_profile => user_profile, :role_name => 'create_all'
+    assert user.reload.has_create_for_model?(Organization)
+    UserProfileRule.create :user_profile => user_profile, :role_name => 'create_organization', :allowed => false
+    user.reload
+    assert !user.reload.has_create_for_model?(Organization)
+    assert user.reload.has_create_for_model?(TestModel)
+  end
 end
 
 class TestModel
