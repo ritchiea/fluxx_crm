@@ -21,14 +21,14 @@ class GeoCountriesControllerTest < ActionController::TestCase
   end
 
   test "autocomplete" do
-    get :index, :name => @country.name, :format => :json
+    get :index, :name => @country.name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
     assert_equal @country.name, a.first['label']
     assert_equal @country.id, a.first['value']
   end
 
   test "should confirm that name_exists" do
-    get :index, :name => @country.name, :format => :json
+    get :index, :name => @country.name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
     assert_equal @country.id, a.first['value']
   end

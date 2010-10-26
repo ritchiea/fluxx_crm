@@ -22,14 +22,14 @@ class UsersControllerTest < ActionController::TestCase
   test "autocomplete" do
     User.make
     lookup_user = User.make
-    get :index, :first_name => lookup_user.first_name, :last_name => lookup_user.last_name, :format => :json
+    get :index, :first_name => lookup_user.first_name, :last_name => lookup_user.last_name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
     assert_equal lookup_user.to_s, a.first['label']
     assert_equal lookup_user.id, a.first['value']
   end
 
   test "should confirm that user_exists" do
-    get :index, :first_name => @user1.first_name, :format => :json
+    get :index, :first_name => @user1.first_name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
     assert_equal @user1.id, a.first['value']
   end

@@ -24,7 +24,7 @@ class OrganizationsControllerTest < ActionController::TestCase
   test "autocomplete" do
     Organization.make
     lookup_org = Organization.make
-    get :index, :name => lookup_org.name, :format => :json
+    get :index, :name => lookup_org.name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
     p "ESH: have an a=#{a.inspect}"
     assert_equal lookup_org.autocomplete_to_s, a.first['label']
@@ -32,7 +32,7 @@ class OrganizationsControllerTest < ActionController::TestCase
   end
 
   test "should confirm that name_exists" do
-    get :index, :name => @org1.name, :format => :json
+    get :index, :name => @org1.name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
     assert_equal @org1.id, a.first['value']
   end
