@@ -2,8 +2,14 @@ class Race < ActiveRecord::Base
   belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
 
   insta_workflow do |insta|
-    insta.states_to_english = {:new => 'New', :beginning => 'Beginning', :middle => 'Middle', :final => 'Final'}
-    insta.events_to_english = {:kick_off => 'Kick Off', :sprint => 'Sprint', :final_sprint => 'Final Sprint'}
+    insta.add_state_to_english :new, 'New'
+    insta.add_state_to_english :beginning, 'Beginning'
+    insta.add_state_to_english :middle, 'Middle'
+    insta.add_state_to_english :final, 'Final'
+
+    insta.add_event_to_english :kick_off, 'Kick Off'
+    insta.add_event_to_english :sprint, 'Sprint'
+    insta.add_event_to_english :final_sprint, 'Final Sprint'
   end
   insta_search
   
