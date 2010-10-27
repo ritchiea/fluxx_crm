@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fluxx_crm}
-  s.version = "0.0.7"
+  s.version = "0.0.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hansen"]
@@ -232,6 +232,7 @@ Gem::Specification.new do |s|
     "test/support/integration_case.rb",
     "test/test_helper.rb",
     "test/unit/action_controller/controller_dsl_role_test.rb",
+    "test/unit/active_record/model_dsl_workflow_test.rb",
     "test/unit/models/favorite_test.rb",
     "test/unit/models/geo_city_test.rb",
     "test/unit/models/geo_country_test.rb",
