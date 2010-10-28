@@ -14,7 +14,7 @@
       %tr
         %td= "No Groups"
     - else
-      - models.sort_by{|group_member| group_member.group.name if group_member.group}.each do |model|
+      - models.sort_by{|group_member| group_member.group ? (group_member.group.name || '') : ''}.each do |model|
         %tr
           %td
             = truncate(model.group.name, :length => 25) if model.group

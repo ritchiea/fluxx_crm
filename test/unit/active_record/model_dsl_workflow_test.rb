@@ -6,7 +6,7 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
   end
   
   test "add state via add_state_to_english" do
-    assert_nil @dsl_workflow.states_to_english
+    assert_equal Hash.new, @dsl_workflow.states_to_english
     @dsl_workflow.add_state_to_english :a_new_state, 'A New State'
     assert_equal @dsl_workflow.states_to_english[:a_new_state], 'A New State'
   end
