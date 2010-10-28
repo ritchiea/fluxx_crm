@@ -5,6 +5,11 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
     @dsl_workflow = ActiveRecord::ModelDslWorkflow.new Race
   end
   
+  test 'state and events should both initally be empty' do
+    assert @dsl_workflow.states_to_english.empty?
+    assert @dsl_workflow.events_to_english.empty?    
+  end
+  
   test "add state via add_state_to_english" do
     assert_equal Hash.new, @dsl_workflow.states_to_english
     @dsl_workflow.add_state_to_english :a_new_state, 'A New State'
@@ -16,13 +21,17 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
   end
 
   test 'clearing states' do
+    @dsl_workflow.add_state_to_english :a_new_state, 'A New State'
+    assert !@dsl_workflow.states_to_english.empty?
     @dsl_workflow.clear_states_to_english
-    assert_equal @dsl_workflow.states_to_english, {}
+    assert @dsl_workflow.states_to_english.empty?
   end
   
   test 'clearing events' do
+    @dsl_workflow.add_event_to_english :a_new_event, 'A New Event'
+    assert !@dsl_workflow.events_to_english.empty?
     @dsl_workflow.clear_events_to_english
-    assert_equal @dsl_workflow.events_to_english, {}
+    assert @dsl_workflow.events_to_english.empty?
   end
   
   test 'clearing and adding' do
@@ -30,7 +39,7 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
     workflow = race.workflow_object
     assert_equal workflow.states_to_english.size, 4
     workflow.clear_states_to_english
-    assert_equal workflow.states_to_english.size, 0
+    assert workflow.states_to_english.empty?
     workflow.add_state_to_english :a_new_state, 'A New State'
     assert_equal workflow.states_to_english.size, 1
     assert_equal workflow.state_to_english('a_new_state'), 'A New State'
