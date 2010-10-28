@@ -14,7 +14,7 @@
       %tr
         %td= "No Notes"
     - else
-      - models.sort_by{|note| note.created_at ? (-1 * note.created_at.to_i) : Time.at(0) }.each do |model|
+      - models.sort_by{|note| note.created_at ? (-1 * note.created_at.to_i) : Time.at(0).to_i }.each do |model|
         %tr
           %td
             - if model.respond_to? :note
