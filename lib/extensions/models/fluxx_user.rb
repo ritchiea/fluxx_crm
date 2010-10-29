@@ -36,8 +36,11 @@ module FluxxUser
     base.validates_presence_of     :last_name
 
     base.validates_presence_of     :email
-    base.validates_length_of       :email,    :within => 6..400 #r@a.wk
+    base.validates_length_of       :email,    :within => 6..250
     base.validates_uniqueness_of   :email
+
+    base.validates_length_of       :login,    :within => 6..40
+    base.validates_uniqueness_of   :login
     
     base.insta_utc do |insta|
       insta.time_attributes = [:birth_at]
