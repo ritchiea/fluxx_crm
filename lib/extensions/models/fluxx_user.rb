@@ -39,8 +39,8 @@ module FluxxUser
     base.validates_length_of       :email,    :within => 6..250
     base.validates_uniqueness_of   :email
 
-    base.validates_length_of       :login,    :within => 6..40
-    base.validates_uniqueness_of   :login
+    base.validates_length_of       :login,    :within => 6..40, :if => lambda {|user| user.login }
+    base.validates_uniqueness_of   :login, :if => lambda {|user| user.login }
     
     base.insta_utc do |insta|
       insta.time_attributes = [:birth_at]
