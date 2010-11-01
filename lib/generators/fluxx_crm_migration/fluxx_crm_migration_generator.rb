@@ -57,6 +57,16 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_model_document_type.rb', 'db/migrate/fluxx_crm_create_model_document_type.rb'
     sleep 1
+    handle_migration 'create_projects.rb', 'db/migrate/fluxx_crm_create_projects.rb'
+    sleep 1
+    handle_migration 'create_project_lists.rb', 'db/migrate/fluxx_crm_create_project_lists.rb'
+    sleep 1
+    handle_migration 'create_project_list_items.rb', 'db/migrate/fluxx_crm_create_project_list_items.rb'
+    sleep 1
+    handle_migration 'create_project_organizations.rb', 'db/migrate/fluxx_crm_create_project_organizations.rb'
+    sleep 1
+    handle_migration 'create_project_users.rb', 'db/migrate/fluxx_crm_create_project_users.rb'
+    sleep 1
     
   end
   
