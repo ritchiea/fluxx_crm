@@ -67,6 +67,8 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_project_users.rb', 'db/migrate/fluxx_crm_create_project_users.rb'
     sleep 1
+    handle_migration 'create_wiki_documents.rb', 'db/migrate/fluxx_crm_create_wiki_documents.rb'
+    sleep 1
     
   end
   

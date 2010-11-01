@@ -11,7 +11,7 @@ end
 gem 'formtastic', '~> 1.1.0'
 gem 'haml', '>= 3'
 gem "will_paginate", "~> 3.0.pre2"
-gem "fluxx_engine", '>= 0.0.7', :path => "../fluxx_engine"
+gem "fluxx_engine", '>= 0.0.7', :path => "../../../fluxx_engine"
 gem 'jsmin', '>= 1.0.1'
 gem 'thin', '>= 1.2.7'
 gem 'machinist', '>=1.0.6'
