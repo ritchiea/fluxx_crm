@@ -9,6 +9,7 @@ module FluxxProjectList
       insta.filter_fields = SEARCH_ATTRIBUTES
     end
     base.insta_export
+    base.insta_multi
     
     base.extend(ModelClassMethods)
     base.class_eval do
