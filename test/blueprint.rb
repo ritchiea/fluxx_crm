@@ -160,6 +160,29 @@ end
 
 WikiDocument.blueprint do
   wiki_order 1
+  title Sham.word
   note Sham.sentence
 end
 
+def setup_multi_element_groups
+  unless bp_attrs[:executed_setup_multi_element_groups]
+    bp_attrs[:executed_setup_multi_element_groups] = true
+    MultiElementValue.delete_all
+    MultiElementGroup.delete_all
+    project_type_group = MultiElementGroup.create :name => 'project_types', :description => 'ProjectType', :target_class_name => 'Project'
+    MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'Program'
+    MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'IT'
+    MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'Grants'
+    MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'Finance'
+    MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'HR'
+    MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'All Staff'
+
+    # project list types 
+    project_list_type_group = MultiElementGroup.create :name => 'list_types', :description => 'ListType', :target_class_name => 'ProjectList'
+    MultiElementValue.create :multi_element_group_id => project_list_type_group.id, :value => 'Numbers'
+    MultiElementValue.create :multi_element_group_id => project_list_type_group.id, :value => 'Bulleted'
+    MultiElementValue.create :multi_element_group_id => project_list_type_group.id, :value => 'To-Do'
+
+    Project.add_multi_elements
+  end
+end

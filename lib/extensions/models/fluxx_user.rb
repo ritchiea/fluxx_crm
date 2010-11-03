@@ -61,6 +61,13 @@ module FluxxUser
       u.instance_variable_set '@human', 'Person'
       u
     end
+    
+    def employees
+      user_profile = UserProfile.where(:name => 'employee').first
+      if user_profile
+        User.where(:user_profile_id => user_profile.id).all
+      end || []
+    end
   end
 
   module ModelInstanceMethods

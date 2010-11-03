@@ -13,5 +13,11 @@ Rails.application.routes.draw do
   resources :notes
   resources :role_users
   resources :users
+  resources :projects
+  resources :project_lists
+  resources :project_list_items
+  resources :project_users
+  resources :project_organizations
+  resources :wiki_documents
 end
 

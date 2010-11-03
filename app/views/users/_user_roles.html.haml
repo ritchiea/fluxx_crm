@@ -15,7 +15,7 @@
   - model.role_users.where(:roleable_type => 'Program').all.each do |ru|
     - program = Program.find ru.roleable_id
     %div.org_row
-      %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), ru, {:class => 'as-delete'}
+      %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), ru, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
       = ru.name
       ,
       = program.name

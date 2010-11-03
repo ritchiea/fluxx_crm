@@ -1,0 +1,24 @@
+%h1= model.title
+%span= model.description
+
+.pairs
+  .key= 'Status:'
+  .value= ''
+
+.pairs
+  .key= 'Project Lead:'
+  .value= model.lead_user.full_name if model.lead_user
+
+.pairs
+  .key= 'Project Type:'
+  .value= model.project_type
+  
+.pairs
+  .key= 'Last Updated:'
+  .value= model.updated_at.mdy if model.updated_at
+  
+= render :partial => "project_lists/list_project_lists", :locals => { :model => model}
+
+  
+
+

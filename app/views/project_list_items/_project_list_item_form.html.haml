@@ -1,0 +1,11 @@
+- unless model.project_list
+  - model.project_list = ProjectList.find model.project_list_id if model.project_list_id rescue nil
+= form.input :project_list_id, :as => :hidden
+
+= form.input :list_item_text, :label => "List Item:", :as => :text
+- if model.project_list && model.project_list.project_list_type && model.project_list.project_list_type.value == 'To-Do'
+  = form.input :assigned_user, :label => "Assign Item To:", :as => :select, :collection => (model.project_list && model.project_list.project && model.project_list.project.project_users ? model.project_list.project.project_users.map{|user| [user.full_name, user.id]} : [])
+
+  = form.input :due_at, :lable => "Date Due:"
+
+= form.commit_button

@@ -33,8 +33,8 @@
                 = model.created_at.full
               - else
                 no timestamp
-            - if can_current_user_edit_create_users?
-              %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), model_document_path(model), :class => 'as-delete'
+            - if current_user.has_delete_for_model? model
+              %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), model_document_path(model), :class => 'as-delete', 'data-on-success' => 'refreshCaller'
         
 
 

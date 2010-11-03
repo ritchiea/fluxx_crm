@@ -1,0 +1,5 @@
+= form.input :project_id, :as => :hidden
+
+= render :partial => "organizations/single_org_lookup", :locals => { :model => model, :form => form }
+
+= form.commit_button
