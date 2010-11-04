@@ -3,7 +3,7 @@
 
 .pairs
   .key= 'Status:'
-  .value= ''
+  .value= model.state.humanize if model.state
 
 .pairs
   .key= 'Project Lead:'
@@ -19,6 +19,11 @@
   
 = render :partial => "project_lists/list_project_lists", :locals => { :model => model}
 
+= render :partial => "project_users/list_project_users", :locals => { :model => model}
+= render :partial => "project_organizations/list_project_organizations", :locals => { :model => model}
+-#= render :partial => "project_requests/list_project_requests", :locals => { :model => model}
+-#= render :partial => "project_requests/list_project_grants", :locals => { :model => model}
+= render :partial => "wiki_documents/list_wiki_documents", :locals => { :model => model}
   
 
 

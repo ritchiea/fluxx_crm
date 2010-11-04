@@ -1,0 +1,27 @@
+- related_model = nil unless defined?(:related_model)
+- unless related_model
+  - if params[:model_id] && params[:model_type]
+    - related_model = BlobStruct.new :id => params[:model_id], :class => Kernel.const_get(params[:model_type])
+%table.tabular{:cellspacing => 0}
+  - if related_model
+    %thead
+      %tr
+        %th
+          %span Wiki Documents
+          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_wiki_document_path(:wiki_document => {:model_id => related_model.id, :model_type => related_model.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "add a wiki doc"
+  %tbody
+    - if !models || models.empty?
+      %tr
+        %td= "No Wiki Docs"
+    - else
+      - models.each do |model|
+        %tr
+          %td
+            = link_to model.title, wiki_document_path(model), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "view/edit wiki doc"
+            Last Edited
+            - if model.updated_at
+              = " On #{model.updated_at.mdy}"
+            - if model.updated_by
+              = " By #{model.updated_by}"
+            - if current_user.has_delete_for_model? model
+              %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), wiki_document_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}

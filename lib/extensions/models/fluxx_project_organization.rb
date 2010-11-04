@@ -4,6 +4,7 @@ module FluxxProjectOrganization
   def self.included(base)
     base.belongs_to :project
     base.belongs_to :organization
+    base.send :attr_accessor, :organization_lookup
     #base.acts_as_audited
     
     base.insta_search do |insta|
