@@ -8,7 +8,6 @@
       %tr
         %th
           %span Organizations
-          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_project_organization_path(:project_organization => {:project_id => project.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "link a person"
   %tbody
     - if !models || models.empty?
       %tr
