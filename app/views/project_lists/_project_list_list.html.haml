@@ -3,7 +3,7 @@
   - if params[:project_id]
     - project = Project.find(grab_param(:project_list, :project_id)) rescue nil
 - if project
-  %h2 
+  %h3 
     Lists
     %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_project_list_path(:project_list => {:project_id => project.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-partial-span', :title => "Add Project List"
   - if !models || models.empty?
