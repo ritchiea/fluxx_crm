@@ -2,23 +2,17 @@
 - unless project
   - if params[:project_id]
     - project = Project.find(grab_param(:project_list, :project_id)) rescue nil
-%table.tabular{:cellspacing => 0}
-  - if project
-    %thead
-      %tr
-        %th
-          %span Lists
-          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_project_list_path(:project_list => {:project_id => project.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-partial-span', :title => "Add Project List"
-  %tbody
-    - if !models || models.empty?
-      %tr
-        %td= "No Lists"
-    - else
-      - models.each do |model|
-        %tr
-          %td
-            = model.title
-            - if current_user.has_delete_for_model? model
-              %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
-            = render :partial => "project_list_items/list_project_list_items", :locals => { :model => model}
-            
+- if project
+  %h2 
+    Lists
+    %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_project_list_path(:project_list => {:project_id => project.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-partial-span', :title => "Add Project List"
+  - if !models || models.empty?
+    %span= link_to 'Add a List', new_project_list_path(:project_list => {:project_id => project.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-partial-span', :title => "Add Project List"
+  - else
+    - models.each do |model|
+      %ul
+        %li
+          = model.title
+          - if current_user.has_delete_for_model? model
+            %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+          = render :partial => "project_list_items/list_project_list_items", :locals => { :model => model}

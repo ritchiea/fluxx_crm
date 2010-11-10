@@ -2,22 +2,18 @@
 - unless project_list
   - if params[:project_list_id]
     - project_list = ProjectList.find(grab_param(:project_list, :project_id)) rescue nil
-%table.tabular{:cellspacing => 0}
-  - if project_list
-    %thead
-      %tr
-        %th
-          %span Items
-          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-item-partial-span', :title => "add an item"
-- order_open_element, order_close_element = project_list.is_numbered? ? ['<ol>', '</ol>'] : ['<ul>', '</ul>']
-!= order_open_element
+- if project_list    
+  - order_open_element, order_close_element = project_list.is_numbered? ? ['<ol>', '</ol>'] : ['<ul>', '</ul>']
+  != order_open_element
 - if !models || models.empty?
-  %li= "No Items"
+  %li
+    = "No Items"
+    %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-item-partial-span', :title => "add an item"
 - else
   - models.each do |model|
     %li
-      -# Add a checkbox
+      %input{:type=>"checkbox"}
       = model.list_item_text
       - if current_user.has_delete_for_model? model
-        %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_item_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
-!= order_close_element
+        /%span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_item_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+  != order_close_element
