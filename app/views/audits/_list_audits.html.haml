@@ -2,13 +2,13 @@
   %thead
     %tr
       %th
-        %span history
-        .actions
+        = "History"
+        %span.actions
           = link_to image_tag('/images/fluxx_engine/theme/default/icons/report_magnify.png'), '#', :class => 'toggle-visible', 'data-selector' => '.audit-detail', :title => "Show/Hide History Details" + "History"
   %tbody
     - if !model.respond_to?(:audits) || model.audits.empty?
       %tr
-        %td No history available
+        %td= "No history available"
     - else
       - load_audits(model).each do |audit|
         %tr

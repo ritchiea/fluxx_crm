@@ -1,6 +1,6 @@
-%h2
-  %span Relationships
-  .actions
+%h3
+  = "Relationships"
+  %span.actions
     - if can_current_user_edit_create_users? 
       = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close'
 
@@ -32,4 +32,4 @@
   <br clear="all"/>
       
 - else
-  No links to organizations
+  = "No links to organizations"
