@@ -1,4 +1,4 @@
-- project_list = nil unless defined?(:project_list)
+- project_list ||= nil
 - unless project_list
   - if params[:project_list_id]
     - project_list = ProjectList.find(grab_param(:project_list, :project_id)) rescue nil

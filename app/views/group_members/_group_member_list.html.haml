@@ -1,4 +1,4 @@
-- groupable = nil unless defined?(:groupable)
+- groupable ||= nil
 - unless groupable
   - if params[:groupable_id] && params[:groupable_type]
     - groupable = BlobStruct.new :id => params[:groupable_id], :class => Kernel.const_get(params[:groupable_type])

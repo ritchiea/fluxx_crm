@@ -1,4 +1,4 @@
-- notable = nil unless defined?(:notable)
+- notable ||= nil
 - unless notable
   - if params[:notable_id] && params[:notable_type]
     - notable = BlobStruct.new :id => params[:notable_id], :class => Kernel.const_get(params[:notable_type])
