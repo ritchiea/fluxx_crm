@@ -8,7 +8,7 @@
       %tr
         %th
           %span Groups
-          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_group_member_path(:group_member => {:groupable_id => groupable.id, :groupable_type => groupable.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Group"
+          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_group_member_path(:group_member => {:groupable_id => groupable.id, :groupable_type => groupable.class.name}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Group"
   %tbody
     - if !models || models.empty?
       %tr

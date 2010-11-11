@@ -8,7 +8,7 @@
       %tr
         %th
           %span Notes
-          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => notable.id, :notable_type => notable.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Note"
+          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => notable.id, :notable_type => notable.class.name}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Note"
   %tbody
     - if !models || models.empty?
       %tr

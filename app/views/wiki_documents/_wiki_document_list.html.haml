@@ -8,7 +8,7 @@
       %tr
         %th
           %span Wiki Documents
-          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_wiki_document_path(:wiki_document => {:model_id => related_model.id, :model_type => related_model.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.wiki-document-partial-span', :title => "add a wiki doc"
+          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_wiki_document_path(:wiki_document => {:model_id => related_model.id, :model_type => related_model.class.name}), :class => 'to-modal', 'data-on-success' => 'refreshNamed,close', 'target' => '.wiki-document-partial-span', :title => "add a wiki doc"
   %tbody
     - if !models || models.empty?
       %tr
@@ -17,7 +17,7 @@
       - models.each do |model|
         %tr
           %td
-            = link_to model.title, wiki_document_path(model), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller', :title => "view/edit wiki doc"
+            = link_to model.title, wiki_document_path(model), :class => 'to-modal', 'data-on-success' => 'refreshCaller', :title => "view/edit wiki doc"
             Last Edited
             - if model.updated_at
               = " On #{model.updated_at.mdy}"

@@ -17,7 +17,7 @@
       %tr
         %th
           %span= "#{documentable.class.respond_to?(:document_title_name) ? documentable.class.document_title_name : documentable.class.name.humanize} Documents"
-          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), model_documents_path(:model_document => {:documentable_id => documentable.id, :documentable_type => documentable.class.name}), :class => 'to-upload', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif", :title => "Add Document", 'data-document-type-url' => model_document_types_path(:model_type => documentable.class.name, :name => 'associated_request_documents', :format => :json), 'data-document-type-param' => 'model_document[model_document_type_id]'
+          .actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), model_documents_path(:model_document => {:documentable_id => documentable.id, :documentable_type => documentable.class.name}), :class => 'to-upload', 'data-on-success' => 'refreshCaller,close', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif", :title => "Add Document", 'data-document-type-url' => model_document_types_path(:model_type => documentable.class.name, :name => 'associated_request_documents', :format => :json), 'data-document-type-param' => 'model_document[model_document_type_id]'
   %tbody
     - unless required_doc_ids.empty?
       - missing_docs.each do |missing|
@@ -49,7 +49,7 @@
             - if current_user.has_delete_for_model? model
               %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), model_document_path(model), :class => 'as-delete', 'data-on-success' => 'refreshCaller'
             - if current_user.has_update_for_model? model
-              %span.edit_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_model_document_path(model), :class => 'to-modal', :title => "Edit Eval Matrix Element", 'data-on-success' => 'refreshCaller,close', 'data-is-success' => '.show'
+              %span.edit_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_model_document_path(model), :class => 'to-modal', :title => "Edit Eval Matrix Element", 'data-on-success' => 'refreshCaller,close'
 
 
 
