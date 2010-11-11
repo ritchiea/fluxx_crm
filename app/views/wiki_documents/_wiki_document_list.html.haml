@@ -1,4 +1,4 @@
-- related_model = nil unless defined?(:related_model)
+- related_model ||= nil
 - unless related_model
   - if params[:model_id] && params[:model_type]
     - related_model = BlobStruct.new :id => params[:model_id], :class => Kernel.const_get(params[:model_type])
