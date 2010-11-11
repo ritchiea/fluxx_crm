@@ -2,12 +2,12 @@
 = current_user.user_profile.name if current_user.user_profile
 - primary_user_org = model.primary_user_organization
 - if primary_user_org
-  %div.subhead
+  %h4.subhead
     = primary_user_org.title
     - unless primary_user_org.title.blank?
       ,
       = primary_user_org.organization.name
-.partial{:class => 'contact-info'}
+%div.partial
   %h3
     Work Contact Details
   - if primary_user_org
@@ -30,7 +30,7 @@
       .pairs
         .key= name
         .value= value
-.partial{:class => 'contact-info'}
+%div.partial
   %h3
     Home Contact Details
   %p.address

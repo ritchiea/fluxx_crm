@@ -1,4 +1,4 @@
-.partial
+%div.partial
   %h3
     = "Satellites"
     %span.actions
@@ -7,7 +7,7 @@
   - if model.satellite_orgs.empty?
     %p.caption No satellite offices available
   - model.satellite_orgs.each do |satellite|
-    .satellite
+    %div.satellite{:class => 'content'}
       - if can_current_user_edit_create_organizations?
         %span.actions
           - if !respond_to?(:detailed) || (respond_to?(:detailed) && !detailed)

@@ -1,21 +1,23 @@
-- if current_user.has_role? 'admin'
-  - user_admin_role = model.has_role? 'admin'
-  %h2
-    Admin
-    %div.org_row
+%div.partial
+  %h3= "Roles"
+  - if current_user.has_role? 'admin'
+    - user_admin_role = model.has_role? 'admin'
+    %h4
+      = "Admin"
       - if user_admin_role
-        %span.delete-button= link_to 'Remove Admin Role', user_admin_role, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+        %span.actions{:class => 'delete-button'}= link_to 'Remove Admin Role', user_admin_role, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
       - else
-        %span.create-button= link_to 'Add Admin Role', role_users_path(:role_user => {:user_id => model.id, :name => 'Admin'}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
+        %span.actions{:class => 'create-button'}= link_to 'Add Admin Role', role_users_path(:role_user => {:user_id => model.id, :name => 'Admin'}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
 
-  %h2
-    %div.edit_link= link_to 'Add Role', new_role_user_path(:role_user => {:user_id => model.id}), :class => 'to-modal', 'data-on-success' => 'refreshCaller'
-    Program Roles
+    %h4
+      = "Program Roles"
+      %span.actions{:class => 'edit_link'}= link_to 'Add Role', new_role_user_path(:role_user => {:user_id => model.id}), :class => 'to-modal', 'data-on-success' => 'refreshCaller'
+    
 
-  - model.role_users.where(:roleable_type => 'Program').all.each do |ru|
-    - program = Program.find ru.roleable_id
-    %div.org_row
-      %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), ru, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
-      = ru.name
-      ,
-      = program.name
+    - model.role_users.where(:roleable_type => 'Program').all.each do |ru|
+      - program = Program.find ru.roleable_id
+      %div.content
+        = ru.name
+        ,
+        = program.name
+        %span.actions{:class => 'delete-button'}= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), ru, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}

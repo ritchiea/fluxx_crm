@@ -1,35 +1,28 @@
-%h3
-  = "Relationships"
-  %span.actions
-    - if can_current_user_edit_create_users? 
-      = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close'
+%div.partial
+  %h3
+    = "Relationships"
+    %span.actions
+      - if can_current_user_edit_create_users? 
+        = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close'
 
-%div.org_row
-- if(model.user_organizations.size > 0)
-  - model.user_organizations.each do |user_org|
-    %div.edit_row_links
-      - if can_current_user_edit_create_organizations?
-        %span.temp
-          = link_to 'edit', edit_user_organization_path(user_org),
-           :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close'
-          &nbsp;&nbsp;
-          = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), user_organization_path(user_org), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
-      
-      - if model.primary_user_organization == user_org
-        <br />Primary Org
-      - else
-        <br />
-        - if can_current_user_edit_create_organizations?
-          %li= link_to 'make primary', self.send("#{@model_name}_path", {:user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
-    - unless user_org.department.blank?
-      = user_org.title
-      ,
-    - unless user_org.department.blank?
-      = user_org.department
-      ,
-    = user_org.organization.name
-       
-  <br clear="all"/>
-      
-- else
-  = "No links to organizations"
+  - if(model.user_organizations.size > 0)
+    - model.user_organizations.each do |user_org|
+      %div.content
+        - unless user_org.department.blank?
+          = user_org.title
+          ,
+        - unless user_org.department.blank?
+          = user_org.department
+          ,
+        = user_org.organization.name
+        %span.actions
+          - if model.primary_user_organization == user_org
+            = "Primary Org"
+          - else
+            - if can_current_user_edit_create_organizations?
+              = link_to 'make primary', self.send("#{@model_name}_path", {:user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
+          - if can_current_user_edit_create_organizations?
+            = link_to 'edit', edit_user_organization_path(user_org), {:class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close'}
+            = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), user_organization_path(user_org), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+  - else
+    %p= "No links to organizations"

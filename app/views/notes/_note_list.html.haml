@@ -24,8 +24,9 @@
                 = model.workflowable.class.state_to_english_translation model.old_state
                 &#8594;
                 = model.workflowable.class.state_to_english_translation model.new_state
-              <br/>
-              = model.comment
+              - if !model.comment == ''
+                <br/>
+                = model.comment
             <br/>
             %span
               - if model.created_by
