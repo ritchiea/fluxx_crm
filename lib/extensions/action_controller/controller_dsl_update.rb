@@ -18,7 +18,7 @@ class ActionController::ControllerDslUpdate < ActionController::ControllerDsl
               cur_model.save(false)
               # Go on with life, the state transition happened uneventfully
             else
-              # Something is wrong; send the user back to the edit page
+              # Something is wrong; send the user back to the show page
               controller.flash[:error] = I18n.t(:unable_to_promote) + cur_model.errors.full_messages.to_sentence + '.'
               
               extra_options = {:id => cur_model.id}
