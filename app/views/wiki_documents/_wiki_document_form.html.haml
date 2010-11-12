@@ -1,7 +1,7 @@
-= form.input :model_id, :as => :hidden
-= form.input :model_type, :as => :hidden
-
-= form.input :title, :label => "Title:"
-= form.input :note, :label => "Content:", :as => :text
-
-= form.commit_button
+%fieldset.inputs
+  %ol
+    = form.input :model_id, :as => :hidden
+    = form.input :model_type, :as => :hidden
+    = form.input :title, :label => "Title:"
+    = form.input :note, :label => "Content:", :as => :text
+    = form.commit_button

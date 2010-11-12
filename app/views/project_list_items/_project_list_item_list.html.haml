@@ -7,13 +7,14 @@
   != order_open_element
 - if !models || models.empty?
   %li
-    = "No Items"
-    %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-item-partial-span', :title => "add an item"
+    %p= link_to "Add an item", new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-item-partial-span', :title => "add an item"
 - else
   - models.each do |model|
-    %li
+    %li.content
       %input{:type=>"checkbox"}
       = model.list_item_text
       - if current_user.has_delete_for_model? model
-        /%span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_item_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+        %span.actions
+          = link_to image_tag("/images/fluxx_engine/theme/default/icons/bin.png"), project_list_item_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
   != order_close_element
+  %p= link_to "Add an item", new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', 'data-on-success-target' => '.project-list-item-partial-span', :title => "add an item"

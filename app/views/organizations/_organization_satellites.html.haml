@@ -7,12 +7,13 @@
   - if model.satellite_orgs.empty?
     %p.caption No satellite offices available
   - model.satellite_orgs.each do |satellite|
-    %div.satellite{:class => 'content'}
+    %div.satellite{:class => 'content', :style => 'padding-left:25px;'}
       - if can_current_user_edit_create_organizations?
         %span.actions
           - if !respond_to?(:detailed) || (respond_to?(:detailed) && !detailed)
-            = link_to image_tag("/images/fluxx_engine/theme/default/icons/page_white_magnify.png"), organization_url(satellite), :class => 'to-modal', :title => "Show Satellite Details"
+            // Creates a potential endless loop of modal windows 
+            //= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_white_magnify.png"), organization_url(satellite), :class => 'to-modal', :title => "Show Satellite Details"
+          = link_to image_tag("/images/fluxx_engine/theme/default/icons/bin.png"), organization_path(satellite), {:class => 'as-delete', :title => "Delete Satellite", 'data-on-success' => 'refreshCaller'}
           = link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_organization_url(satellite), :class => 'to-modal', :title => "Edit Satellite", 'data-on-success' => 'refreshCaller,close', 'data-is-success' => '.show'
-          = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), organization_path(satellite), {:class => 'as-delete', :title => "Delete Satellite", 'data-on-success' => 'refreshCaller'}
       %h4= satellite.name
       = render :partial => "insta/show/contact_info", :locals => { :location => satellite, :detailed => false}

@@ -7,7 +7,7 @@
 
   - if(model.user_organizations.size > 0)
     - model.user_organizations.each do |user_org|
-      %div.content
+      %div.content{:style => "padding-left:20px;"}
         - unless user_org.department.blank?
           = user_org.title
           ,
@@ -15,14 +15,15 @@
           = user_org.department
           ,
         = user_org.organization.name
-        %span.actions
-          - if model.primary_user_organization == user_org
-            = "Primary Org"
-          - else
-            - if can_current_user_edit_create_organizations?
-              = link_to 'make primary', self.send("#{@model_name}_path", {:user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
+        - if can_current_user_edit_create_organizations?
+          %span.actions
+            = link_to image_tag("/images/fluxx_engine/theme/default/icons/bin.png"), user_organization_path(user_org), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+            = link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_user_organization_path(user_org), {:class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close'}
+        <br/>
+        - if model.primary_user_organization == user_org
+          %span.caption= "Primary Org"
+        - else
           - if can_current_user_edit_create_organizations?
-            = link_to 'edit', edit_user_organization_path(user_org), {:class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close'}
-            = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), user_organization_path(user_org), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+            %span.caption= link_to 'make primary', self.send("#{@model_name}_path", {:user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
   - else
     %p= "No links to organizations"
