@@ -1,10 +1,11 @@
-- model = model.parent_org if model.parent_org # Dont display a satellite as a HQ
+- model = model.parent_org if !params[:show_satellite] && model.parent_org # Dont display a satellite as a HQ
 %h1.organization-name= model.name
 %span.organization-id{:style => "display: none"} 
   = model.id
 = render :partial => "insta/show/contact_info", :locals => {:location => model, :detailed => true}
-= render :partial => "organization_satellites", :locals => { :model => model}
-= render :partial => "model_documents/list_model_documents", :locals => { :model => model}
-= render :partial => "group_members/list_group_members", :locals => { :model => @model, :class_type => Organization.name}
-= render :partial => "notes/list_notes", :locals => { :model => @model, :class_type => Organization.name}
-= render :partial => "audits/list_audits", :locals => { :model => @model}
+- unless params[:show_satellite]
+  = render :partial => "organization_satellites", :locals => { :model => model}
+  = render :partial => "model_documents/list_model_documents", :locals => { :model => model}
+  = render :partial => "group_members/list_group_members", :locals => { :model => @model, :class_type => Organization.name}
+  = render :partial => "notes/list_notes", :locals => { :model => @model, :class_type => Organization.name}
+  = render :partial => "audits/list_audits", :locals => { :model => @model}
