@@ -1,4 +1,4 @@
-- notable = nil unless defined?(:notable)
+- notable ||= nil
 - unless notable
   - if params[:notable_id] && params[:notable_type]
     - notable = BlobStruct.new :id => params[:notable_id], :class => Kernel.const_get(params[:notable_type])
@@ -9,6 +9,8 @@
         %th
           = "Notes"
           %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => notable.id, :notable_type => notable.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Note"
+          = "Notes"
+          %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_note_path(:note => {:notable_id => notable.id, :notable_type => notable.class.name}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Note"
   %tbody
     - if !models || models.empty?
       %tr

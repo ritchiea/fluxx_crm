@@ -1,4 +1,4 @@
-- groupable = nil unless defined?(:groupable)
+- groupable ||= nil
 - unless groupable
   - if params[:groupable_id] && params[:groupable_type]
     - groupable = BlobStruct.new :id => params[:groupable_id], :class => Kernel.const_get(params[:groupable_type])
@@ -7,8 +7,8 @@
     %thead
       %tr
         %th
-          = "Groups"
-          %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_group_member_path(:group_member => {:groupable_id => groupable.id, :groupable_type => groupable.class.name}), :class => 'to-modal', 'data-is-success' => '.show', 'data-on-success' => 'refreshCaller,close', :title => "Add Group"
+          Groups
+          %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_group_member_path(:group_member => {:groupable_id => groupable.id, :groupable_type => groupable.class.name}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', :title => "Add Group"
   %tbody
     - if !models || models.empty?
       %tr

@@ -24,25 +24,16 @@
 %table
   %thead
     %tr
-      %th
-        = "People:" 
-        = render :partial => "project_users/project_user_add", :locals => { :model => model}
-      %th
-        = "Organizations:"
-        = render :partial => "project_organizations/project_organization_add", :locals => { :model => model}
-      %th
-        = "Requests:"
-        = render :partial => "project_requests/project_request_add", :locals => { :model => model}
-      %th
-        = "Grants:"
-        = render :partial => "project_requests/project_grant_add", :locals => { :model => model}
+      %th= "People:" 
+      %th= "Organizations:"
+      %th= "Requests:"
+      %th= "Grants:"
   %tbody
     %tr
       %td= render :partial => "project_users/list_project_users", :locals => { :model => model}
       %td= render :partial => "project_organizations/list_project_organizations", :locals => { :model => model}
       %td= render :partial => "project_requests/list_project_requests", :locals => { :model => model}
       %td= render :partial => "project_requests/list_project_grants", :locals => { :model => model}
-
 = render :partial => "wiki_documents/list_wiki_documents", :locals => { :model => model}
 = render :partial => "notes/list_notes", :locals => { :model => model, :class_type => Project.name}
 = render :partial => "audits/list_audits", :locals => { :model => model}  
