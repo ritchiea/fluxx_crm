@@ -6,7 +6,7 @@
         = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
   - if(model.user_organizations.size > 0)
     - model.user_organizations.each do |user_org|
-      %div.content{:style => "padding-left:20px;"}
+      %div
         - unless user_org.department.blank?
           = user_org.title
           ,
