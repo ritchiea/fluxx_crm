@@ -11,7 +11,7 @@
       - if can_current_user_edit_create_organizations?
         %span.actions
           - if !respond_to?(:detailed) || (respond_to?(:detailed) && !detailed)
-            %span.details_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_white_magnify.png"), organization_url(satellite), :class => 'to-modal', :title => "Show Satellite Details"
+            %span.details_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_white_magnify.png"), organization_url(:id => satellite.id, :show_satellite => true), :class => 'to-modal', :title => "Show Satellite Details"
           %span.edit_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_organization_url(satellite), :class => 'to-modal', :title => "Edit Satellite", 'data-on-success' => 'refreshCaller,close'
           %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), organization_path(satellite), {:class => 'as-delete', :title => "Delete Satellite", 'data-on-success' => 'refreshCaller'}
       %h4= satellite.name
