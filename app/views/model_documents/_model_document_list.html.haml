@@ -26,7 +26,8 @@
             = "Missing document:  #{missing.name}"
     - if !models || models.empty?
       %tr
-        %td No Documents
+        %td 
+          %p.caption=  "No Documents"
     - else
       - # Show the documents with types first in order
       - models.sort_by{|model| [(model.model_document_type ? (model.model_document_type.name || '||') : '||'), (model.created_at ? (-1 * model.created_at.to_i) : nil)]}.each do |model|
@@ -47,10 +48,11 @@
                 = model.created_at.full
               - else
                 no timestamp
-            - if current_user.has_delete_for_model? model
-              %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), model_document_path(model), :class => 'as-delete', 'data-on-success' => 'refreshCaller'
-            - if current_user.has_update_for_model? model
-              %span.edit_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_model_document_path(model), :class => 'to-modal', :title => "Edit Eval Matrix Element", 'data-on-success' => 'refreshCaller,close'
+            %span.actions
+              - if current_user.has_delete_for_model? model
+                %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), model_document_path(model), :class => 'as-delete', 'data-on-success' => 'refreshCaller'
+              - if current_user.has_update_for_model? model
+                %span.edit_link= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_model_document_path(model), :class => 'to-modal', :title => "Edit Eval Matrix Element", 'data-on-success' => 'refreshCaller,close'
       %tr
         %td
         

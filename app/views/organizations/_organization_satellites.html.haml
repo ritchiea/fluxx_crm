@@ -7,7 +7,7 @@
   - if model.satellite_orgs.empty?
     %p.caption No satellite offices available
   - model.satellite_orgs.each do |satellite|
-    %div.satellite
+    %div
       - if can_current_user_edit_create_organizations?
         %span.actions
           - if !respond_to?(:detailed) || (respond_to?(:detailed) && !detailed)
