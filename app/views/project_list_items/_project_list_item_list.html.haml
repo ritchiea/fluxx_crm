@@ -10,7 +10,7 @@
 - else
   != order_open_element
   - models.each do |model|
-    %li.content
+    %li.action-item
       %input{:type=>"checkbox"}
       = model.list_item_text
       - if current_user.has_delete_for_model? model
