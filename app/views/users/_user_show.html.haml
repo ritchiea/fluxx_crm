@@ -38,17 +38,19 @@
   %h3
     Home Contact Details
   %p.address
-  - if model.personal_street_address
-    %span.address1= model.personal_street_address
-  - if model.personal_street_address2
-    %span.address2= model.personal_street_address2
-  - if model.personal_city
-    %span.city= model.personal_city
-  - if model.personal_geo_state && model.personal_geo_state.name
-    %abbr{:title => model.personal_geo_state.name}
-      = model.personal_geo_state.abbreviation
-  - if model.personal_postal_code
-    %span.zipcode= model.personal_postal_code
+    - if model.personal_street_address
+      %span.address1= model.personal_street_address
+      <br/>
+    - if model.personal_street_address2
+      %span.address2= model.personal_street_address2
+      <br/>
+    - if model.personal_city
+      %span.city= model.personal_city
+    - if model.personal_geo_state && model.personal_geo_state.name
+      %abbr{:title => model.personal_geo_state.name}
+        = model.personal_geo_state.abbreviation
+    - if model.personal_postal_code
+      %span.zipcode= model.personal_postal_code
   - unless model.personal_phone.blank?
     .pairs
       .key Home Phone
