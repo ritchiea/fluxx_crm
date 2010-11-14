@@ -16,7 +16,7 @@
 
   - model.role_users.where(:roleable_type => 'Program').all.each do |ru|
     - program = Program.find ru.roleable_id
-    %div.content
+    %div.action-item
       = ru.name
       ,
       = program.name

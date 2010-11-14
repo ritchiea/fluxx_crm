@@ -10,7 +10,7 @@
     %p.caption= "There are no lists."
   - else
     - models.each do |model|
-      %div.content
+      %div.action-item
         %strong= model.title
         - if current_user.has_delete_for_model? model
           %span.actions
