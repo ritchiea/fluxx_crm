@@ -23,12 +23,12 @@
               %span
                 = "By"
                 = model.created_by.full_name 
-              - if model.created_at
-                = "Added at"
-                = model.created_at.ampm_time
-                = "on"
-                = model.created_at.full
-              - else
-                = "no timestamp"
+                - if model.created_at
+                  = "Added at"
+                  = model.created_at.ampm_time
+                  = "on"
+                  = model.created_at.full
+                - else
+                  = "no timestamp"
               - if can_current_user_edit_create_users?
-                %span.actions= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), group_member_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+                %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), group_member_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
