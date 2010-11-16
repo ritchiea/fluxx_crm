@@ -26,13 +26,13 @@ module FluxxProjectList
 
   module ModelInstanceMethods
     def is_numbered?
-      list_type && list_type == 'Numbers'
+      list_type && list_type.value == 'Numbers'
     end
     def is_bulleted?
-      list_type && list_type == 'Bulleted'
+      list_type && list_type.value == 'Bulleted'
     end
     def is_todo?
-      list_type && list_type == 'To-Do'
+      list_type && list_type.value == 'To-Do'
     end
   end
 end

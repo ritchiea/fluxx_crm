@@ -11,7 +11,8 @@
   != order_open_element
   - models.each do |model|
     %li.action-item
-      %input{:type=>"checkbox"}
+      - if project_list && project_list.is_todo?
+        %input{:type=>"checkbox", :class => 'as-put', 'data-on-success' => 'refreshCaller', :href => project_list_item_path(:id => model.id, :project_list_item => {:item_completed => !model.item_completed}), :checked => model.item_completed}
       = model.list_item_text
       - if current_user.has_delete_for_model? model
         %span.actions
