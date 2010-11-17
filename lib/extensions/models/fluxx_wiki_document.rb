@@ -13,6 +13,10 @@ module FluxxWikiDocument
     base.insta_export
     base.insta_multi
     base.insta_lock
+    base.insta_realtime do |insta|
+      insta.delta_attributes = SEARCH_ATTRIBUTES
+      insta.updated_by_field = :updated_by_id
+    end
     
     base.extend(ModelClassMethods)
     base.class_eval do
