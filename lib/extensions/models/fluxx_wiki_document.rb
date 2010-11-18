@@ -16,6 +16,9 @@ module FluxxWikiDocument
     base.insta_realtime do |insta|
       insta.delta_attributes = SEARCH_ATTRIBUTES
       insta.updated_by_field = :updated_by_id
+      insta.after_realtime do |model, params|
+        model.model.trigger_realtime_update if model.model && model.model.respond_to?(:trigger_realtime_update)
+      end
     end
     
     base.extend(ModelClassMethods)
