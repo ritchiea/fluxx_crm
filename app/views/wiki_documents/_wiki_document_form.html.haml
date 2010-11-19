@@ -3,5 +3,5 @@
     = form.input :model_id, :as => :hidden
     = form.input :model_type, :as => :hidden
     = form.input :title, :label => "Title:"
-    = form.input :note, :label => "Content:", :as => :text, :input_html => {:class => 'wysiwyg'}
+    = form.input :note, :label => "Content:", :as => :text, :input_html => {:class => 'wysiwyg', 'data-wysiwyg-buttons' => 'bold,italic,underline,strikethrough,unorderedlist,link,image,disable'}
     = form.commit_button
