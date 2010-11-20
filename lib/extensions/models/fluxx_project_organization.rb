@@ -1,5 +1,5 @@
 module FluxxProjectOrganization
-  SEARCH_ATTRIBUTES = [:created_at, :updated_at]
+  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :project_id]
 
   def self.included(base)
     base.belongs_to :project
