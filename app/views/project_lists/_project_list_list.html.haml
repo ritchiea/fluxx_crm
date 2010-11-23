@@ -10,8 +10,9 @@
     %p.caption= "There are no lists."
   - else
     - models.each do |model|
-      %div
-        %strong= model.title
-        - if current_user.has_delete_for_model? model
-          %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
-        = render :partial => "project_list_items/list_project_list_items", :locals => { :model => model}
+      %ul.list
+        %li
+          %strong= model.title
+          - if current_user.has_delete_for_model? model
+            %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+          = render :partial => "project_list_items/list_project_list_items", :locals => { :model => model}

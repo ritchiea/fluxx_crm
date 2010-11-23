@@ -18,3 +18,5 @@
             = " By #{model.updated_by}"
           - if current_user.has_delete_for_model? model
             %span.delete-button= link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), wiki_document_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+  %tr
+    %td

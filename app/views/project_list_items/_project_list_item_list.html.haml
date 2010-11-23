@@ -4,9 +4,10 @@
     - project_list = ProjectList.find(grab_param(:project_list, :project_id)) rescue nil
 - if project_list    
   - order_open_element, order_close_element = project_list.is_numbered? ? ['<ol>', '</ol>'] : ['<ul>', '</ul>']
+  - order_open_element, order_close_element = ['<ul class="todo">', '</ul>'] if project_list.is_todo?
 - if !models || models.empty?
   %li
-    %p= link_to "Add an item", new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-on-success' => 'refreshNamed,close', 'target' => '.project-list-item-partial-span', :title => "add an item"
+    %p.add-item= link_to "Add an item", new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-on-success' => 'refreshNamed,close', 'target' => '.project-list-item-partial-span', :title => "add an item"
 - else
   != order_open_element
   - models.each do |model|
@@ -18,4 +19,4 @@
         %span.actions
           = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_item_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
   != order_close_element
-  %p= link_to "Add an item", new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-on-success' => 'refreshNamed,close', 'target' => '.project-list-item-partial-span', :title => "add an item"
+  %p.add-item= link_to "Add an item", new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-on-success' => 'refreshNamed,close', 'target' => '.project-list-item-partial-span', :title => "add an item"
