@@ -48,7 +48,8 @@ class ProjectListsControllerTest < ActionController::TestCase
     put :update, :id => @project_list1.to_param, :project_list => {}
     assert flash[:info]
     
-    assert_redirected_to project_list_path(assigns(:project_list))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{project_list_path(assigns(:project_list))}$/
   end
 
   test "should destroy project_list" do

@@ -66,7 +66,8 @@ class NotesControllerTest < ActionController::TestCase
     put :update, :id => @note1.to_param, :note => {}
     assert flash[:info]
     
-    assert_redirected_to note_path(assigns(:note))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{note_path(assigns(:note))}$/
   end
 
   test "should destroy note" do

@@ -37,7 +37,8 @@ class ProjectUsersControllerTest < ActionController::TestCase
     put :update, :id => @project_user1.to_param, :project_user => {}
     assert flash[:info]
     
-    assert_redirected_to project_user_path(assigns(:project_user))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{project_user_path(assigns(:project_user))}$/
   end
 
   test "should destroy project_user" do
