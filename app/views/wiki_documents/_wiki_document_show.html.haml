@@ -1,3 +1,7 @@
 %h1=model.title
 %br  
-%p=raw model.note
+
+- if model.model && model.model.respond_to?(:process_curly_template)
+  %p=raw model.model.process_curly_template model.note
+- else
+  %p=raw model.note

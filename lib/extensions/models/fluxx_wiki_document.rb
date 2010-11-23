@@ -7,6 +7,7 @@ module FluxxWikiDocument
     base.belongs_to :model, :polymorphic => true
     base.belongs_to :wiki_document_template
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
+    base.before_create :check_template
     
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
@@ -32,5 +33,10 @@ module FluxxWikiDocument
   end
 
   module ModelInstanceMethods
+    def check_template
+      if wiki_document_template
+        self.note = wiki_document_template.document
+      end
+    end
   end
 end
