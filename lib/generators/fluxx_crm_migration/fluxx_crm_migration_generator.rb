@@ -71,6 +71,8 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_wiki_document_templates.rb', 'db/migrate/fluxx_crm_create_wiki_document_templates.rb'
     sleep 1
+    handle_migration 'add_description_to_project_relationships.rb', 'db/migrate/fluxx_crm_add_description_to_project_relationships.rb'
+    sleep 1
   end
   
   private
