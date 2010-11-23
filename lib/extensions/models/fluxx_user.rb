@@ -46,6 +46,13 @@ module FluxxUser
       insta.time_attributes = [:birth_at]
     end  
     base.insta_favorite
+    
+    base.insta_template do |insta|
+      insta.entity_name = 'user'
+      insta.add_methods [:full_name]
+      insta.remove_methods [:id]
+    end
+    
 
     base.extend(ModelClassMethods)
     base.class_eval do

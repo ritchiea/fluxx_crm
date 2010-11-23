@@ -32,6 +32,12 @@ module FluxxOrganization
     base.insta_export
     base.insta_lock
 
+    base.insta_template do |insta|
+      insta.entity_name = 'organization'
+      insta.add_methods [:geo_country, :geo_state]
+      insta.remove_methods [:id]
+    end
+
     base.validates_presence_of     :name
     base.validates_length_of       :name,    :within => 3..100
     base.insta_favorite

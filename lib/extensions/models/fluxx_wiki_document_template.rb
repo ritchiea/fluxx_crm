@@ -22,6 +22,19 @@ module FluxxWikiDocumentTemplate
   end
 
   module ModelClassMethods
+    # STOP! use only for dev purposes
+    def reload_all_templated_wiki_documents
+      WikiDocumentTemplate.reload_all_doc_templates
+
+      WikiDocumentTemplate.connection.execute 'update wiki_documents, wiki_document_templates set wiki_documents.note = wiki_document_templates.document where wiki_documents.wiki_document_template_id = wiki_document_templates.id'
+    end
+    
+    def reload_all_doc_templates
+      WikiDocumentTemplate.all.each do |doc_template|
+        doc_contents = File.open("#{Rails.root}/app/views/doc_templates/#{doc_template.filename}", 'r').read_whole_file
+        doc_template.update_attribute :document, doc_contents
+      end
+    end
   end
 
   module ModelInstanceMethods
