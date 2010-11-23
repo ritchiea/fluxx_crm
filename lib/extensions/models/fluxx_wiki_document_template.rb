@@ -31,8 +31,13 @@ module FluxxWikiDocumentTemplate
     
     def reload_all_doc_templates
       WikiDocumentTemplate.all.each do |doc_template|
-        doc_contents = File.open("#{Rails.root}/app/views/doc_templates/#{doc_template.filename}", 'r').read_whole_file
-        doc_template.update_attribute :document, doc_contents
+        possible_files = ActionController::Base.view_paths.map {|v| "#{v.instance_variable_get '@path'}/doc_templates/#{doc_template.filename}"}
+        filename = possible_files.map{|file_name| file_name if File.exist?(file_name) }.compact.first
+        if filename
+          p "Loading file #{filename}"
+          doc_contents = File.open(filename, 'r').read_whole_file
+          doc_template.update_attribute :document, doc_contents
+        end
       end
     end
   end
