@@ -1,5 +1,6 @@
 = form.input :project_id, :as => :hidden
 
 = form.input :user, :label => "User:", :as => :select, :collection => (User.employees.map{|user| [user.full_name, user.id]} || [])
+= form.input :description, :as => :text
 
 = form.commit_button
