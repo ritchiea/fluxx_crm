@@ -87,7 +87,8 @@ class UsersControllerTest < ActionController::TestCase
     put :update, :id => @user1.to_param, :user => {}
     assert flash[:info]
     
-    assert_redirected_to user_path(assigns(:user))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{user_path(assigns(:user))}$/
   end
 
   test "should destroy user" do

@@ -33,11 +33,18 @@ class WikiDocumentsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should get edit with document templates" do
+    wiki_doc_template = WikiDocumentTemplate.make :model_type => @wiki_document1.model_type
+    get :edit, :id => @wiki_document1.to_param
+    assert_response :success
+  end
+
   test "should update wiki_document" do
     put :update, :id => @wiki_document1.to_param, :wiki_document => {}
     assert flash[:info]
     
-    assert_redirected_to wiki_document_path(assigns(:wiki_document))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{wiki_document_path(assigns(:wiki_document))}$/
   end
 
   test "should destroy wiki_document" do

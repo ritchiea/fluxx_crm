@@ -49,7 +49,8 @@ class RoleUsersControllerTest < ActionController::TestCase
     put :update, :id => @role_user.to_param, :role_user => {}
     assert flash[:info]
     
-    assert_redirected_to role_user_path(assigns(:role_user))
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{role_user_path(assigns(:role_user))}$/
   end
 
   test "should destroy role_user" do
