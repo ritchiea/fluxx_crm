@@ -1,6 +1,6 @@
 source "http://gemcutter.org"
 
-gem 'rails', '3.0.0'
+gem 'rails', '3.0.3'
 gem "aasm", '2.2.0'
 gem 'acts_as_audited_rails3', '>=1.1.1.5'
 gem "capybara", "0.3.7"
@@ -17,7 +17,7 @@ gem 'thin', '>= 1.2.7'
 gem 'machinist', '>=1.0.6'
 gem 'faker', '>=0.3.1'
 gem 'rcov'
-gem 'thinking-sphinx', '2.0.0.rc1', :require => 'thinking_sphinx'
+gem 'thinking-sphinx', '2.0.1', :require => 'thinking_sphinx'
 
 gem 'paperclip'
 gem 'compass'

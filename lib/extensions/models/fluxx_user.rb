@@ -49,7 +49,7 @@ module FluxxUser
     
     base.insta_template do |insta|
       insta.entity_name = 'user'
-      insta.add_methods [:full_name]
+      insta.add_methods [:full_name, :main_phone]
       insta.remove_methods [:id]
     end
     
