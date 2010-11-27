@@ -20,5 +20,6 @@ Rails.application.routes.draw do
   resources :project_organizations
   resources :wiki_documents
   resources :wiki_document_templates
+  resources :model_document_templates
 end
 

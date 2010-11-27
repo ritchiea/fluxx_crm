@@ -174,7 +174,14 @@ WikiDocumentTemplate.blueprint do
   document Sham.sentence
 end
 
-
+ModelDocumentTemplate.blueprint do
+  model_type Organization.name
+  document_type Sham.word
+  filename Sham.word
+  description Sham.word
+  category Sham.word
+  document Sham.sentence
+end
 
 def setup_multi_element_groups
   unless bp_attrs[:executed_setup_multi_element_groups]
