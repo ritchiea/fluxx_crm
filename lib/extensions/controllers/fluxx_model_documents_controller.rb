@@ -1,8 +1,10 @@
 module FluxxModelDocumentsController
+  ICON_STYLE = 'style-wiki'
   def self.included(base)
     base.insta_index ModelDocument do |insta|
       insta.suppress_model_iteration = true
       insta.template = 'model_document_list'
+      insta.icon_style = ICON_STYLE
     end
     # The view page will want to pass in the documentable ID and Class
     base.insta_post ModelDocument do |insta|
@@ -23,12 +25,15 @@ module FluxxModelDocumentsController
           controller.render :text => outcome
         end
       end
+      insta.icon_style = ICON_STYLE
     end
     base.insta_edit ModelDocument do |insta|
       insta.template = 'model_document_form'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_put ModelDocument do |insta|
       insta.template = 'model_document_form'
+      insta.icon_style = ICON_STYLE
     end
     base.insta_delete ModelDocument do |insta|
       insta.format do |format|
@@ -36,9 +41,11 @@ module FluxxModelDocumentsController
           controller.render :text => outcome
         end
       end
+      insta.icon_style = ICON_STYLE
     end
     base.insta_show ModelDocument do |insta|
       insta.template = 'model_document_show'
+      insta.icon_style = ICON_STYLE
     end
     base.extend(ModelClassMethods)
     base.class_eval do

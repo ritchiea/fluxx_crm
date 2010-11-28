@@ -26,5 +26,12 @@ module FluxxModelDocument
   end
 
   module ModelInstanceMethods
+    def is_file?
+      self.document_type == 'file'
+    end
+    
+    def is_text?
+      self.document_type == 'text'
+    end
   end
 end
