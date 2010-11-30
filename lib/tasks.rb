@@ -4,6 +4,7 @@ namespace :fluxx_crm do
   desc "Reload all document templates from their respective files"
   task :reload_doc_templates => :environment do
     WikiDocumentTemplate.reload_all_doc_templates
+    ModelDocumentTemplate.reload_all_doc_templates
   end
   
   desc "load up all countries and states from the directory specified by variable geo_dir"
