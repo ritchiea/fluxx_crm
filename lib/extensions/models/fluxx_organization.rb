@@ -18,6 +18,9 @@ module FluxxOrganization
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.scope :hq, :conditions => 'organizations.parent_org_id IS NULL'
+    base.send :attr_accessor, :force_headquarters
+    base.after_save :update_satellite_preference
+    
     base.acts_as_audited({:full_model_enabled => true, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
     base.insta_search do |insta|
@@ -171,5 +174,17 @@ module FluxxOrganization
   
   def realtime_update_id
     parent_org_id ? parent_org_id : id
+  end
+  
+  def update_satellite_preference
+    if self.force_headquarters == '1'
+      self.force_headquarters = nil # Very important to nil this out, or we could have ourselves an infinite loop on our hands
+      if parent_org
+        parent_satellites = parent_org.satellites
+        parent_satellites.each {|sat_org| sat_org.update_attributes :parent_org_id => self.id}
+        parent_org.update_attributes :parent_org_id => self.id
+        self.update_attributes :parent_org_id => nil
+      end
+    end
   end
 end

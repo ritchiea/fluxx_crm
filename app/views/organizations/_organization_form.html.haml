@@ -21,5 +21,7 @@
 = form.input :blog_url, :label => "Blog Url"
 = form.input :twitter_url, :label => "Twitter Url"
 = form.input :acronym, :label => "Acronym"
+- if parent_org
+  = form.input :force_headquarters, :label => 'Make Headquarters', :as => :boolean, :checked_value => 1, :unchecked_value => '', :required => false
 
 = form.commit_button

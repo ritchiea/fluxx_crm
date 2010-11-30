@@ -80,5 +80,16 @@ class OrganizationTest < ActiveSupport::TestCase
     # but for the case of primary is not merged, then it shouldn't change
     assert_equal UserOrganization.find(u3.primary_user_organization_id).organization_id, org3.id
   end
-
+  
+  test "switch an org from being a child to being a parent using force_headquarters" do
+    org1 = Organization.make
+    org2, org3 = Organization.make(:parent_org_id => org1.id), Organization.make(:parent_org_id => org1.id)
+    assert_equal org1, org2.parent_org
+    assert_equal org1, org3.parent_org
+    org3.force_headquarters = '1'
+    org3.save
+    assert_equal org3, org1.reload.parent_org
+    assert_equal org3, org2.reload.parent_org
+    assert org3.reload.parent_org.nil?
+  end
 end
