@@ -6,7 +6,7 @@
   - if(models.size > 0)
     - models.each do |user_org|
       %li.relationship{:class=>"action-item"}
-        - if can_current_user_edit_create_organizations?
+        - if current_user.has_delete_for_model? user_org
           %span.actions
             = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), user_organization_path(user_org), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
         = image_tag("/images/fluxx_engine/theme/default/card-icons/button_card_orgs.png", :class=> 'float_left', :width=> '18px')
@@ -14,7 +14,7 @@
         - if user.primary_user_organization == user_org
           %span= "Primary Org"
         - else
-          - if can_current_user_edit_create_organizations?
+          - if current_user.has_update_for_model? user_org
             %span= link_to 'make primary', user_path({:id => user.id, :user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
         <br/>
         %p.caption
