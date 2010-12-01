@@ -12,11 +12,11 @@ module FluxxModelDocumentsController
         if controller.params[:name]
           # Need to grab the file and add it to the model document
           controller.pre_model = ModelDocument.new controller.params[:model_document]
+          controller.pre_model.model_document_actual_filename = controller.params[:name]
           f = Tempfile.new controller.params[:name]
           f.write controller.request.body.read
           controller.pre_model.document = f
           f.close
-          controller.pre_model.document_file_name = controller.params[:name]
         end
       end
       

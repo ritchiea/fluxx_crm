@@ -73,6 +73,7 @@ ModelDocument.blueprint do
     User.make
   end
   document Sham.document
+  document_file_name Sham.word
 end
 
 # this helper class creates classes so your blueprint is happy
