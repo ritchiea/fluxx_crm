@@ -15,10 +15,10 @@
           = image_tag("/images/fluxx_engine/theme/default/card-icons/button_card_orgs.png", :class=> 'float_left', :width=> '18px')
           = user_org.organization.name
           - if model.primary_user_organization == user_org
-            %span= "Primary Org"
+            %span.float_right= "Primary Org"
           - else
             - if can_current_user_edit_create_organizations?
-              %span= link_to 'make primary', self.send("#{@model_name}_path", {:user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
+              %span.float_right= link_to 'make primary', self.send("#{@model_name}_path", {:user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
           <br/>
           %p.caption
             - unless user_org.department.blank?
