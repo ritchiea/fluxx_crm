@@ -1,28 +1,3 @@
-%div.partial
-  %h3
-    = "Relationships"
-    %span.actions
-      - if can_current_user_edit_create_users? 
-        = link_to 'add a relationship', new_user_organization_path(:user_organization => {:user_id => model.id}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
-  %ul
-    - if(model.user_organizations.size > 0)
-      - model.user_organizations.each do |user_org|
-        %li.relationship{:class=>"action-item"}
-          - if can_current_user_edit_create_organizations?
-            %span.actions
-              //= link_to image_tag("/images/fluxx_engine/theme/default/icons/page_edit.png"), edit_user_organization_path(user_org), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
-              = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), user_organization_path(user_org), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
-          = image_tag("/images/fluxx_engine/theme/default/card-icons/button_card_orgs.png", :class=> 'float_left', :width=> '18px')
-          = user_org.organization.name
-          - if model.primary_user_organization == user_org
-            %span= "Primary Org"
-          - else
-            - if can_current_user_edit_create_organizations?
-              %span= link_to 'make primary', self.send("#{@model_name}_path", {:user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
-          <br/>
-          %p.caption
-            - unless user_org.department.blank?
-              = user_org.title
-              -
-            - unless user_org.department.blank?
-              = user_org.department
+- partial_data_src_url = url_for(user_organizations_path({:user_id => model.id, :skip_wrapper => true}))
+%div.partial{:class => 'user-organization-partial-span', 'data-src' => partial_data_src_url}
+  = render :partial => 'user_organizations/user_organization_list', :locals => {:models => (model.user_organizations), :user => model}

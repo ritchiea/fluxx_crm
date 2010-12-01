@@ -59,6 +59,11 @@
     .pairs
       .key Birthday
       .value= model.birth_at.mdy
+
+%h3
+  = "Relationships"
+  %span.actions
+    = render :partial => "user_organizations/user_organization_add", :locals => { :model => model} 
 = render :partial => "user_organizations/list_user_organizations", :locals => { :model => model}
 = render :partial => "user_roles", :locals => { :model => model}
 = render :partial => "model_documents/list_model_documents", :locals => { :model => model}
