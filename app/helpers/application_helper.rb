@@ -1,14 +1,4 @@
 module ApplicationHelper
-  def can_current_user_edit_create_organizations?
-    # TODO ESH: override in reference implemention to add check for the correct role
-    true
-  end
-  
-  def can_current_user_edit_create_users?
-      # TODO ESH: override in reference implemention to add check for the correct role
-      true
-    end
-  
   def load_audits model
     model.audits.sort_by{|aud| aud.id * -1}
   end

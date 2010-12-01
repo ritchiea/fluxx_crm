@@ -5,7 +5,7 @@
 %h2= "Headquarters"
 = render :partial => "insta/show/contact_info", :locals => {:location => model, :detailed => true}
 - unless params[:show_satellite]
-  = render :partial => "organization_satellites", :locals => { :model => model}
+  = render :partial => "list_organization_satellites", :locals => { :model => model}
   = render :partial => "model_documents/list_model_documents", :locals => { :model => model}
   = render :partial => "group_members/list_group_members", :locals => { :model => @model, :class_type => Organization.name}
   = render :partial => "notes/list_notes", :locals => { :model => @model, :class_type => Organization.name}
