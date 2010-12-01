@@ -5,6 +5,7 @@ module ApplicationHelper
   
   # Convert mime type to a class that can be used 
   def mime_type_to_class mime_type
+    return 'file-type file-type-file' unless mime_type
     if mime_type.index('image') == 0
       'file-type file-type-image'
     elsif mime_type.index('audio') == 0

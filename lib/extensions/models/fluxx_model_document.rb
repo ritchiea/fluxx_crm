@@ -6,8 +6,11 @@ module FluxxModelDocument
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :documentable, :polymorphic => true
     base.belongs_to :model_document_type
+    base.send :attr_accessor, :model_document_actual_filename
+    
 
     base.has_attached_file :document
+    base.before_post_process :transliterate_file_name
     
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
@@ -32,6 +35,11 @@ module FluxxModelDocument
     
     def is_text?
       self.document_type == 'text'
+    end
+    
+    
+    def transliterate_file_name
+      self.document.instance_write(:file_name,   model_document_actual_filename)
     end
   end
 end
