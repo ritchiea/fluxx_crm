@@ -1,7 +1,7 @@
 %h3
   = "Satellites"
   %span.actions
-    - if can_current_user_edit_create_organizations?
+    - if current_user.has_update_for_model? model
       = link_to "add a satellite", new_organization_path(:organization => {:parent_org_id => model.id}), :class => 'to-modal', :title => "Add a Satellite", 'data-on-success' => 'refreshCaller,close'
 - if model.satellite_orgs.empty?
   %p.caption No satellite offices available
