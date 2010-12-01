@@ -2,7 +2,7 @@ source "http://gemcutter.org"
 
 gem 'rails', '3.0.3'
 gem "aasm", '2.2.0'
-gem 'acts_as_audited_rails3', '>=1.1.1.5'
+gem 'acts_as_audited_rails3', '>=1.1.2'
 gem "capybara", "0.3.7"
 gem "sqlite3-ruby", :require => "sqlite3"
 if RUBY_VERSION < '1.9'
