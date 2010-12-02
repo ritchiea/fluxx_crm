@@ -5,7 +5,7 @@
   %h4.subhead
     = primary_user_org.title
     - unless primary_user_org.title.blank?
-      = ", #{primary_user_org.organization.name}"
+      %span>= ", #{primary_user_org.organization.name}"
 %div.partial
   %h3
     Work Contact Details
@@ -19,14 +19,14 @@
           %span.address2= primary_user_org.organization.street_address2
           <br/>
         - if primary_user_org.organization.city
-          %span.city
-            = "#{primary_user_org.organization.city},"
+          %span.city>= primary_user_org.organization.city
+        - if primary_user_org.organization.city &&  primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.name
+          ,
         - if primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.name
-          %abbr{:title => primary_user_org.organization.geo_state.name}
-            - if primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.abbreviation
-              = primary_user_org.organization.geo_state.abbreviation
-          - if primary_user_org.organization.postal_code
-            %span.zipcode= primary_user_org.organization.postal_code
+          - if primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.abbreviation
+            %abbr{:title => primary_user_org.organization.geo_state.name}= primary_user_org.organization.geo_state.abbreviation
+        - if primary_user_org.organization.postal_code
+          %span.zipcode= primary_user_org.organization.postal_code
   - build_user_work_contact_details(primary_user_org, model).each do |name, value|
     - unless value.blank?
       .pairs
@@ -43,10 +43,11 @@
       %span.address2= model.personal_street_address2
       <br/>
     - if model.personal_city
-      %span.city= model.personal_city
+      %span.city>= model.personal_city
+    - if model.personal_city &&  model.personal_geo_state && model.personal_geo_state.name
+      ,
     - if model.personal_geo_state && model.personal_geo_state.name
-      %abbr{:title => model.personal_geo_state.name}
-        = ", #{model.personal_geo_state.abbreviation}"
+      %abbr{:title => model.personal_geo_state}= model.personal_geo_state.abbreviation
     - if model.personal_postal_code
       %span.zipcode= model.personal_postal_code
   - unless model.personal_phone.blank?
