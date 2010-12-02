@@ -15,7 +15,7 @@
         - if primary_user_org.organization.street_address
           %span.address1= primary_user_org.organization.street_address
           <br/>
-        - if primary_user_org.organization.street_address2
+        - unless primary_user_org.organization.street_address2.blank?
           %span.address2= primary_user_org.organization.street_address2
           <br/>
         - if primary_user_org.organization.city
@@ -39,7 +39,7 @@
     - if model.personal_street_address
       %span.address1= model.personal_street_address
       <br/>
-    - if model.personal_street_address2
+    - unless model.personal_street_address2.blank?
       %span.address2= model.personal_street_address2
       <br/>
     - if model.personal_city
