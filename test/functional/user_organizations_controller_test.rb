@@ -58,10 +58,11 @@ class UserOrganizationsControllerTest < ActionController::TestCase
   test "should destroy user_organization" do
     @org4 = Organization.make
     @user_org2 = UserOrganization.make :organization => @org4, :user => @user1
-    delete :destroy, :id => @user_org2.to_param
-    assert_not_nil @user_org2.reload().deleted_at 
+    assert_difference('UserOrganization.count', -1) do
+      delete :destroy, :id => @user_org2.to_param
+    end
     assert 201, @response.status
-    assert @response.header["Location"] =~ /#{user_organization_url(@user_org2)}$/
+    # assert @response.header["Location"] =~ /#{user_organization_url(@user_org2)}$/
   end
 
   test "should destroy user_organization and primary user organization" do
@@ -69,8 +70,9 @@ class UserOrganizationsControllerTest < ActionController::TestCase
     @user_org2 = UserOrganization.make :organization => @org4, :user => @user1
     @user1.update_attribute :primary_user_organization_id, @user_org2.id
     
-    delete :destroy, :id => @user_org2.to_param
-    assert_not_nil @user_org2.reload().deleted_at 
+    assert_difference('UserOrganization.count', -1) do
+      delete :destroy, :id => @user_org2.to_param
+    end
     assert 201, @response.status
     assert @response.header["Location"] =~ /#{user_organization_url(@user_org2)}$/
     assert_equal @user_org1.id, @user1.reload.primary_user_organization_id
