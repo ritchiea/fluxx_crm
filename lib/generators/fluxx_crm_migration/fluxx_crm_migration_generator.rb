@@ -75,6 +75,8 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     sleep 1
     handle_migration 'create_model_document_templates.rb', 'db/migrate/fluxx_crm_create_model_document_templates.rb'
     sleep 1
+    handle_migration 'remove_deleted_at_from_user_organizations.rb', 'db/migrate/fluxx_crm_remove_deleted_at_from_user_organizations.rb'
+    sleep 1
   end
   
   private

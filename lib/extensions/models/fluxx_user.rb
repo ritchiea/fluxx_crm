@@ -3,7 +3,7 @@ module FluxxUser
   SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name]
 
   def self.included(base)
-    base.has_many :user_organizations, :conditions => 'user_organizations.deleted_at IS NULL'
+    base.has_many :user_organizations
     base.has_many :organizations, :through => :user_organizations
     base.belongs_to :personal_geo_country, :class_name => 'GeoCountry', :foreign_key => :personal_geo_country_id
     base.belongs_to :personal_geo_state, :class_name => 'GeoState', :foreign_key => :personal_geo_state_id

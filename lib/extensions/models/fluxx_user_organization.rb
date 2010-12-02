@@ -1,4 +1,5 @@
 module FluxxUserOrganization
+  SEARCH_ATTRIBUTES = [:user_id]
   def self.included(base)
     base.belongs_to :user
     base.belongs_to :organization
@@ -13,7 +14,9 @@ module FluxxUserOrganization
     base.validates_uniqueness_of :organization_id, :scope => :user_id
     base.has_many :primary_user_organizations_users, :class_name => 'User', :foreign_key => :primary_user_organization_id
     
-    base.insta_search
+    base.insta_search do |insta|
+      insta.filter_fields = SEARCH_ATTRIBUTES
+    end
     base.insta_export
     base.insta_lock
     
