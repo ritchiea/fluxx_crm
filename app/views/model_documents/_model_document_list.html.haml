@@ -45,7 +45,7 @@
             <br/>           
             %span
               - if model.model_document_type
-                = model.model_document_type.name
+                %strong= model.model_document_type.name
               - if model.created_by
                 By
                 = model.created_by.full_name 
