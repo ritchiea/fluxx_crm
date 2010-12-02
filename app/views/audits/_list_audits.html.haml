@@ -15,10 +15,10 @@
           %td
             - audit_summary, audit_table = build_audit_table_and_summary model, audit
             - if audit.full_model.blank?
-              %span= raw(audit_summary + audit_table)
+              %div= raw(audit_summary + audit_table)
             - else
-              %span
-                = raw(audit_summary)
+              %div
+                %span= raw(audit_summary)
                 = raw audit_table
     %tr
-      %td
+      %td{:colspan=>"4"}
