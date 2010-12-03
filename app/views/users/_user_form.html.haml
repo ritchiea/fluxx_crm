@@ -11,9 +11,9 @@
 %fieldset.inputs
   %ol 
     = form.input :salutation, :label => "Prefix"
-    = form.input :first_name, :label => "First Name"
+    = form.input :first_name, :label => "First Name", :input_html => {"data-duplicate-lookup" => "/users.autocomplete", "data-related" => "#user_last_name"}
     = form.input :middle_initial, :label => "Middle Name"
-    = form.input :last_name, :label => "Last Name"
+    = form.input :last_name, :label => "Last Name", :input_html => {"data-duplicate-lookup" => "/users.autocomplete", "data-related" => "#user_first_name"}
 %fieldset.inputs
   %ol  
     = form.input :email, :label => "Email"
