@@ -27,7 +27,7 @@ module FluxxGeoCountry
 
   module ModelInstanceMethods
     def find_related_geo_states
-      GeoState.where(:geo_country_id => self.id).all
+      GeoState.where(:geo_country_id => self.id).order('name asc').all
     end
     
     def to_s
