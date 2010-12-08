@@ -21,7 +21,7 @@ module FluxxUserOrganization
     base.insta_lock
     
     # If the userorganization was connected as a primary organization, nil out the primary_organization of the use
-    base.before_save :clear_out_related_primary_organizations
+    base.before_destroy :clear_out_related_primary_organizations
     
     base.extend(ModelClassMethods)
     base.class_eval do

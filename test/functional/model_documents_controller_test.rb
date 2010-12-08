@@ -11,7 +11,7 @@ class ModelDocumentsControllerTest < ActionController::TestCase
   test "should create model document" do
     org = Organization.make
     assert_difference('ModelDocument.count') do
-      post :create, :model_document => {:document => Sham.document, :documentable_id => org.id, :documentable_type => org.class.name}
+      post :create, :model_document => {:document => Sham.document, :documentable_id => org.id, :documentable_type => org.class.name, :model_document_actual_filename => 'some file name'}
     end
   end
   
