@@ -21,7 +21,7 @@ module FluxxOrganization
     base.send :attr_accessor, :force_headquarters
     base.after_save :update_satellite_preference
     
-    base.acts_as_audited({:full_model_enabled => true, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
+    base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
