@@ -15,9 +15,10 @@
     %span.actions= link_to 'add role', new_role_user_path(:role_user => {:user_id => model.id}), :class => 'to-modal', 'data-on-success' => 'refreshDetail,close'
 
   - model.role_users.where(:roleable_type => 'Program').all.each do |ru|
-    - program = Program.find ru.roleable_id
+    - program = Program.find ru.roleable_id if ru.roleable_id rescue nil
     %div
       = ru.name
-      ,
-      = program.name
+      - if program
+        ,
+        = program.name
       %span.actions= link_to "delete", ru, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
