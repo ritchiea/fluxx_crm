@@ -6,6 +6,7 @@ module FluxxRoleUser
     base.belongs_to :user
     base.insta_search
     base.insta_export
+    base.validates_presence_of :roleable_id, :if => :needs_validation_roleable
 
     base.extend(ModelClassMethods)
     base.class_eval do
@@ -25,5 +26,9 @@ module FluxxRoleUser
   end
 
   module ModelInstanceMethods
+    # Force validation of roleable if roleable_type is supplied
+    def needs_validation_roleable
+      roleable_type
+    end
   end
 end
