@@ -19,14 +19,6 @@
           %td
             - if model.respond_to? :note
               = model.note
-            - else
-              %strong
-                = model.workflowable.class.state_to_english_translation model.old_state
-                &#8594;
-                = model.workflowable.class.state_to_english_translation model.new_state
-              - if !model.comment == ''
-                <br/>
-                = model.comment
             <br/>
             %span
               - if model.created_by
