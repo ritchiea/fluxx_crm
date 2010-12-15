@@ -26,6 +26,12 @@ module FluxxModelDocument
   end
 
   module ModelClassMethods
+    # ESH: hack to rename ModelDocument to Document
+    def model_name
+      u = ActiveModel::Name.new User
+      u.instance_variable_set '@human', 'Document'
+      u
+    end
   end
 
   module ModelInstanceMethods
