@@ -45,7 +45,7 @@ module FluxxModelDocument
     
     
     def transliterate_file_name
-      self.document.instance_write(:file_name, model_document_actual_filename)
+      self.document.instance_write(:file_name, CGI::unescape(model_document_actual_filename))
     end
   end
 end
