@@ -8,21 +8,22 @@ module FluxxModelDocumentsController
     end
     # The view page will want to pass in the documentable ID and Class
     base.insta_post ModelDocument do |insta|
-      insta.pre do |conf, controller|
-        if controller.params[:name]
+      insta.pre do |conf|
+        if params[:name]
           # Need to grab the file and add it to the model document
-          controller.pre_model = ModelDocument.new controller.params[:model_document]
-          controller.pre_model.model_document_actual_filename = controller.params[:name]
-          f = Tempfile.new controller.params[:name]
-          f.write controller.request.body.read
-          controller.pre_model.document = f
+          self.pre_model = ModelDocument.new params[:model_document]
+          pre_model.model_document_actual_filename = params[:name]
+          f = Tempfile.new params[:name]
+          f.write request.body.read
+          pre_model.document = f
           f.close
         end
       end
       
       insta.format do |format|
-        format.html do |controller_dsl, controller, outcome, default_block|
-          controller.render :text => outcome
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          render :text => outcome
         end
       end
       insta.icon_style = ICON_STYLE
@@ -37,8 +38,9 @@ module FluxxModelDocumentsController
     end
     base.insta_delete ModelDocument do |insta|
       insta.format do |format|
-        format.html do |controller_dsl, controller, outcome, default_block|
-          controller.render :text => outcome
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          render :text => outcome
         end
       end
       insta.icon_style = ICON_STYLE

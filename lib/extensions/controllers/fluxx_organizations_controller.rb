@@ -11,9 +11,10 @@ module FluxxOrganizationsController
       insta.template = 'organization_show'
       insta.icon_style = ICON_STYLE
       insta.format do |format|
-        format.html do |controller_dsl, controller, outcome, default_block|
-          if controller.params[:satellites] == '1'
-            controller.send :fluxx_show_card, controller_dsl, {:template => 'organizations/organization_satellites', :footer_template => 'insta/simple_footer', :layout => false}
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          if params[:satellites] == '1'
+            send :fluxx_show_card, controller_dsl, {:template => 'organizations/organization_satellites', :footer_template => 'insta/simple_footer', :layout => false}
           else
             default_block.call
           end
