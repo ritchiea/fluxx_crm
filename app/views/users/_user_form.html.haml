@@ -4,6 +4,7 @@
     - if current_user.has_role? 'admin'
       = form.input :user_profile, :label => 'Profile', :required => false, :as => :select, :include_blank => true, :collection => UserProfile.all.map{|up| [up.name, up.id]}
       = form.input :login, :label => 'Login:'
+      = form.input :test_user_flag, :label => 'Omit as a choice from drop-downs'
     - if current_user.has_role?('admin') || current_user.id == model.id 
       = form.input :password, :label => 'Password:'
       = form.input :password_confirmation, :label => 'Password Confirmation:'

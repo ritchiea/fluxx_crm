@@ -15,15 +15,6 @@ class ActionController::ControllerDslRole < ActionController::ControllerDsl
   def add_event_roles event, related_object, roles
     roles = [roles] unless roles.is_a? Array
     
-    # data structure is:
-    #  {
-    #    :event1 = {
-    #      :program1 = [:role1, :role2]
-    #    }
-    #    :event2 = {
-    #      :program2 = [:role2, :role3]
-    #    }
-    #  }
     current_related_mapping = event_role_mappings[event]
     current_related_mapping = {} unless current_related_mapping
     current_mapping = current_related_mapping[related_object]
@@ -48,6 +39,7 @@ class ActionController::ControllerDslRole < ActionController::ControllerDsl
   end
   
   def event_allowed_for_user? user, event, related_object_model=nil
+    return true if user.is_admin?
     event_mappings = event_role_mappings[event]
     event_mappings && !(event_mappings.keys.select do |related_object|
       related_object_model.class == related_object && event_mappings[related_object] && !(event_mappings[related_object].select do |role|

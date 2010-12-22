@@ -64,6 +64,20 @@ class ControllerDslRoleTest < ActiveSupport::TestCase
     assert !@controller_dsl_role.event_allowed_for_user?(user, :event2, @related_object)
   end
   
+  test "test event_allowed_for_user for admin" do
+    @controller_dsl_role.add_event_roles :event1, @related_object_class, [:role1, :role2]
+    @controller_dsl_role.add_event_roles :event2, @related_object_class, [:role2, :role3]
+    
+    akey = @controller_dsl_role.event_role_mappings[:event1].keys.first
+    user = User.make
+    user.has_role! :admin
+    
+    
+    assert @controller_dsl_role.event_allowed_for_user?(user, :event1, @related_object)
+    assert @controller_dsl_role.event_allowed_for_user?(user, :event2, @related_object)
+  end
+  
+  
   test "test that we can store the extract_related_object" do
     @controller_dsl_role.extract_related_object do
       p "ESH: hi there"
