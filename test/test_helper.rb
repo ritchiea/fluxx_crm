@@ -105,7 +105,7 @@ class ActiveSupport::TestCase
   def setup_fixtures
     unless TestHelper.loaded_meg
       TestHelper.loaded_meg = true
-      setup_multi_element_groups
+      setup_crm_multi_element_groups
     end
     super
   end
