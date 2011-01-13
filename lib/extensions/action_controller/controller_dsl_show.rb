@@ -1,6 +1,6 @@
 class ActionController::ControllerDslShow < ActionController::ControllerDsl
   def add_workflow
-    if model_class.public_method_defined?(:current_allowed_events)
+    if model_class && model_class.public_method_defined?(:current_allowed_events)
       self.footer_template = 'insta/show_buttons'
       self.post do |pair|
         controller_dsl, model = pair
