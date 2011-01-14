@@ -1,6 +1,7 @@
 module FluxxOrganization
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :created_at, :updated_at, :name, :id]
+  LIQUID_METHODS = [:name, :street_address, :street_address2, :country_name, :state_name, :postal_code, :url]  
   
   def self.included(base)
     base.has_many :user_organizations
@@ -40,6 +41,7 @@ module FluxxOrganization
       insta.add_methods [:geo_country, :geo_state]
       insta.remove_methods [:id]
     end
+    base.liquid_methods *( LIQUID_METHODS )  
 
     base.validates_presence_of     :name
     base.validates_length_of       :name,    :within => 3..100

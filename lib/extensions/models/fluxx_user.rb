@@ -1,6 +1,7 @@
 module FluxxUser
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name]
+  LIQUID_METHODS = [:salutation, :full_name, :first_name, :last_name, :title, :main_phone, :email]  
 
   def self.included(base)
     base.has_many :user_organizations
@@ -51,7 +52,7 @@ module FluxxUser
       insta.add_methods [:full_name, :main_phone]
       insta.remove_methods [:id]
     end
-    
+    base.liquid_methods *( LIQUID_METHODS )    
 
     base.extend(ModelClassMethods)
     base.class_eval do

@@ -1,4 +1,6 @@
 module FluxxGeoState
+  LIQUID_METHODS = [:name]  
+  
   def self.included(base)
     base.belongs_to :geo_country
     base.has_many :geo_cities
@@ -16,6 +18,7 @@ module FluxxGeoState
       insta.add_methods []
       insta.remove_methods [:id]
     end
+    base.liquid_methods *( LIQUID_METHODS )  
 
     base.extend(ModelClassMethods)
     base.class_eval do
