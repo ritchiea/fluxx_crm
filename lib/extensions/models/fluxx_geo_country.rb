@@ -1,5 +1,6 @@
 module FluxxGeoCountry
   SEARCH_ATTRIBUTES = [:created_at, :updated_at, :name]
+  LIQUID_METHODS = [:name]  
 
   def self.included(base)
     base.has_many :geo_states
@@ -15,6 +16,7 @@ module FluxxGeoCountry
       insta.add_methods []
       insta.remove_methods [:id]
     end
+    base.liquid_methods *( LIQUID_METHODS )  
 
     base.extend(ModelClassMethods)
     base.class_eval do
