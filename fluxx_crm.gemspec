@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fluxx_crm}
-  s.version = "0.0.16"
+  s.version = "0.0.18"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hansen"]
-  s.date = %q{2010-12-09}
+  s.date = %q{2011-01-14}
   s.email = %q{fluxx@acesfconsulting.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -204,11 +204,14 @@ Gem::Specification.new do |s|
     "lib/extensions/models/fluxx_wiki_document.rb",
     "lib/extensions/models/fluxx_wiki_document_template.rb",
     "lib/extensions/models/fluxx_workflow_event.rb",
+    "lib/extensions/test/fluxx_crm_blueprint.rb",
+    "lib/extensions/test/fluxx_crm_test_helper.rb",
     "lib/fluxx_crm.rb",
     "lib/fluxx_crm/engine.rb",
     "lib/generators/fluxx_crm_migration/fluxx_crm_migration_generator.rb",
     "lib/generators/fluxx_crm_migration/templates/add_allowed_field_to_profile_rules.rb",
     "lib/generators/fluxx_crm_migration/templates/add_description_to_project_relationships.rb",
+    "lib/generators/fluxx_crm_migration/templates/add_fields_to_organization.rb",
     "lib/generators/fluxx_crm_migration/templates/create_documents.rb",
     "lib/generators/fluxx_crm_migration/templates/create_favorites.rb",
     "lib/generators/fluxx_crm_migration/templates/create_geo_cities.rb",
@@ -236,6 +239,7 @@ Gem::Specification.new do |s|
     "lib/generators/fluxx_crm_migration/templates/create_wiki_documents.rb",
     "lib/generators/fluxx_crm_migration/templates/create_workflow_events.rb",
     "lib/generators/fluxx_crm_migration/templates/remove_deleted_at_from_user_organizations.rb",
+    "lib/generators/fluxx_crm_migration/templates/user_add_column_for_test_user_flag.rb",
     "lib/generators/fluxx_crm_public/fluxx_crm_public_generator.rb",
     "lib/tasks.rb",
     "public/images/README.txt",
@@ -301,6 +305,8 @@ Gem::Specification.new do |s|
     "test/dummy/db/migrate/20101123020723_fluxx_crm_add_description_to_project_relationships.rb",
     "test/dummy/db/migrate/20101127174035_fluxx_crm_create_model_document_templates.rb",
     "test/dummy/db/migrate/20101202004423_fluxx_crm_remove_deleted_at_from_user_organizations.rb",
+    "test/dummy/db/migrate/20101222195509_fluxx_crm_user_add_column_for_test_user_flag.rb",
+    "test/dummy/db/migrate/20110110215103_fluxx_crm_add_fields_to_organization.rb",
     "test/dummy/db/schema.rb",
     "test/fluxx_crm_test.rb",
     "test/functional/documents_controller_test.rb",
@@ -369,9 +375,10 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<machinist>, [">= 1.0.6"])
       s.add_runtime_dependency(%q<faker>, [">= 0.3.1"])
       s.add_runtime_dependency(%q<rcov>, [">= 0"])
-      s.add_runtime_dependency(%q<thinking-sphinx>, ["= 2.0.1"])
+      s.add_runtime_dependency(%q<thinking-sphinx>, [">= 2.0.1"])
       s.add_runtime_dependency(%q<paperclip>, [">= 0"])
       s.add_runtime_dependency(%q<compass>, [">= 0"])
+      s.add_runtime_dependency(%q<liquid>, [">= 0"])
     else
       s.add_dependency(%q<rails>, ["= 3.0.3"])
       s.add_dependency(%q<aasm>, ["= 2.2.0"])
@@ -387,9 +394,10 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<machinist>, [">= 1.0.6"])
       s.add_dependency(%q<faker>, [">= 0.3.1"])
       s.add_dependency(%q<rcov>, [">= 0"])
-      s.add_dependency(%q<thinking-sphinx>, ["= 2.0.1"])
+      s.add_dependency(%q<thinking-sphinx>, [">= 2.0.1"])
       s.add_dependency(%q<paperclip>, [">= 0"])
       s.add_dependency(%q<compass>, [">= 0"])
+      s.add_dependency(%q<liquid>, [">= 0"])
     end
   else
     s.add_dependency(%q<rails>, ["= 3.0.3"])
@@ -406,9 +414,10 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<machinist>, [">= 1.0.6"])
     s.add_dependency(%q<faker>, [">= 0.3.1"])
     s.add_dependency(%q<rcov>, [">= 0"])
-    s.add_dependency(%q<thinking-sphinx>, ["= 2.0.1"])
+    s.add_dependency(%q<thinking-sphinx>, [">= 2.0.1"])
     s.add_dependency(%q<paperclip>, [">= 0"])
     s.add_dependency(%q<compass>, [">= 0"])
+    s.add_dependency(%q<liquid>, [">= 0"])
   end
 end
 
