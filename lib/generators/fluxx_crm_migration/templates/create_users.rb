@@ -52,6 +52,9 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
 
     add_constraint 'organizations', 'organizations_created_by_id', 'created_by_id', 'users', 'id'
     add_constraint 'organizations', 'organizations_updated_by_id', 'updated_by_id', 'users', 'id'
+
+    add_constraint 'documents', 'documents_created_by_id', 'created_by_id', 'users', 'id'
+    add_constraint 'documents', 'documents_updated_by_id', 'updated_by_id', 'users', 'id'
   end
 
   def self.down
