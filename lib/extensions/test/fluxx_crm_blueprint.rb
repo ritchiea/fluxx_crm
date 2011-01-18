@@ -165,6 +165,9 @@ module FluxxCrmBlueprint
       category Sham.word
       document Sham.sentence
     end
+    
+    ModelDocumentType.blueprint do
+    end
   
     base.extend(ModelClassMethods)
     base.class_eval do
@@ -181,7 +184,7 @@ module FluxxCrmBlueprint
         bp_attrs[:executed_setup_multi_element_groups] = true
         MultiElementValue.delete_all
         MultiElementGroup.delete_all
-        project_type_group = MultiElementGroup.create :name => 'project_types', :description => 'ProjectType', :target_class_name => 'Project'
+        project_type_group = MultiElementGroup.create :name => 'project_type', :description => 'ProjectType', :target_class_name => 'Project'
         MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'Program'
         MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'IT'
         MultiElementValue.create :multi_element_group_id => project_type_group.id, :value => 'Grants'
@@ -191,7 +194,7 @@ module FluxxCrmBlueprint
         ProjectList.add_multi_elements
 
         # project list types 
-        project_list_type_group = MultiElementGroup.create :name => 'list_types', :description => 'ListType', :target_class_name => 'ProjectList'
+        project_list_type_group = MultiElementGroup.create :name => 'list_type', :description => 'ListType', :target_class_name => 'ProjectList'
         MultiElementValue.create :multi_element_group_id => project_list_type_group.id, :value => 'Numbers'
         MultiElementValue.create :multi_element_group_id => project_list_type_group.id, :value => 'Bulleted'
         MultiElementValue.create :multi_element_group_id => project_list_type_group.id, :value => 'To-Do'

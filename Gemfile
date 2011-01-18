@@ -22,6 +22,7 @@ gem 'thinking-sphinx', '>=2.0.1', :require => 'thinking_sphinx'
 gem 'paperclip'
 gem 'compass'
 gem 'liquid'
+gem 'writeexcel', '>=0.6.1'
 
 if RUBY_VERSION < '1.9'
   gem "ruby-debug", ">= 0.10.3"

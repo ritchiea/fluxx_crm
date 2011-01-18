@@ -8,9 +8,6 @@ class FluxxCrmCreateDocuments < ActiveRecord::Migration
       t.integer :document_file_size
       t.datetime :document_updated_at
     end
-    
-    add_constraint 'documents', 'documents_created_by_id', 'created_by_id', 'users', 'id'
-    add_constraint 'documents', 'documents_updated_by_id', 'updated_by_id', 'users', 'id'
   end
 
   def self.down
