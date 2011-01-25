@@ -18,6 +18,7 @@ module FluxxUser
     base.has_many :group_members, :as => :groupable
     base.has_many :groups, :through => :group_members
     base.has_many :role_users
+    base.has_many :bank_accounts, :foreign_key => :owner_user_id
     base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
     base.before_save :preprocess_user
     

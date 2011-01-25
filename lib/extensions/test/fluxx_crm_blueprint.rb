@@ -168,7 +168,29 @@ module FluxxCrmBlueprint
     
     ModelDocumentType.blueprint do
     end
-  
+    
+    BankAccount.blueprint do
+      bank_name Sham.words
+      account_name Sham.word
+      account_number Sham.word
+      special_instructions Sham.sentence
+      street_address Sham.words
+      street_address2 Sham.words
+      city Sham.words
+      postal_code Sham.word
+      phone  Sham.word
+      fax Sham.word
+      bank_code Sham.word
+      bank_contact_name "#{Sham.first_name} #{Sham.last_name}"
+      bank_contact_phone Sham.word
+      domestic_wire_aba_routing Sham.words
+      domestic_special_wire_instructions Sham.words
+      foreign_wire_intermediary_bank_name Sham.words
+      foreign_wire_intermediary_bank_swift Sham.sentence
+      foreign_wire_beneficiary_bank_swift Sham.sentence
+      foreign_special_wire_instructions Sham.sentence
+    end
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods

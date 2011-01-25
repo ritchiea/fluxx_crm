@@ -77,6 +77,13 @@ class OrganizationsControllerTest < ActionController::TestCase
     get :show, :id => @org1.to_param
     assert_response :success
   end
+
+  test "should show organization with bank accounts" do
+    bank_account1 = BankAccount.make(:owner_organization => @org1)
+    bank_account2 = BankAccount.make(:owner_organization => @org1)
+    get :show, :id => @org1.to_param
+    assert_response :success
+  end
   
   test "should show organization with audits" do
     Audit.make :auditable_id => @org1.to_param, :auditable_type => @org1.class.name

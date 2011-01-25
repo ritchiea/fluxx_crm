@@ -14,6 +14,7 @@ module FluxxOrganization
     base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
     base.has_many :group_members, :as => :groupable
     base.has_many :groups, :through => :group_members
+    base.has_many :bank_accounts, :foreign_key => :owner_organization_id
     base.after_save :rename_satellites
 
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'

@@ -50,6 +50,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'remove_deleted_at_from_user_organizations.rb', 'db/migrate/fluxx_crm_remove_deleted_at_from_user_organizations.rb'
     handle_migration 'user_add_column_for_test_user_flag.rb', 'db/migrate/fluxx_crm_user_add_column_for_test_user_flag.rb'
     handle_migration 'add_fields_to_organization.rb', 'db/migrate/fluxx_crm_add_fields_to_organization.rb'
+    handle_migration 'create_bank_account.rb', 'db/migrate/fluxx_crm_create_bank_account.rb'
   end
   
   private

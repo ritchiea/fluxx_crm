@@ -18,4 +18,4 @@
         %span.actions
           = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), project_list_item_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
   != order_close_element
-  %p.add-item= link_to "Add an item", new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-on-success' => 'refreshNamed,close', 'target' => '.project-list-item-partial-span', :title => "add an item"
+  %p.add-item= link_to "Add an item", new_project_list_item_path(:project_list_item => {:project_list_id => project_list.id}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close', 'target' => '.project-list-item-partial-span', :title => "add an item"
