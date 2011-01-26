@@ -12,6 +12,7 @@ namespace :fluxx_crm do
     require 'fastercsv' if RUBY_VERSION < '1.9'
     geo_dir = ENV['geo_dir'] || "#{File.dirname(__FILE__).to_s}/../db/geo"
     p "Processing countries"
+    # TODO ESH: FIX THIS; is not ruby 1.9 compatible
     FasterCSV.foreach("#{geo_dir}/countries.csv", :headers => true) do |row|
       
       name = row['Country']
@@ -68,6 +69,7 @@ namespace :fluxx_crm do
     geo_dir = ENV['geo_dir'] || "#{File.dirname(__FILE__).to_s}/../db/geo"
 
     p "Processing cities"
+    # TODO ESH: FIX THIS; is not ruby 1.9 compatible
     FasterCSV.foreach("#{geo_dir}/GeoLiteCity-Location.csv", :headers => true) do |row|
       loc_id = row['locId']
       country_name = row['country']
