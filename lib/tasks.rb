@@ -9,7 +9,7 @@ namespace :fluxx_crm do
   
   desc "load up all countries and states from the directory specified by variable geo_dir"
   task :geo => :environment do
-    require 'fastercsv'
+    require 'fastercsv' if RUBY_VERSION < '1.9'
     geo_dir = ENV['geo_dir'] || "#{File.dirname(__FILE__).to_s}/../db/geo"
     p "Processing countries"
     FasterCSV.foreach("#{geo_dir}/countries.csv", :headers => true) do |row|
@@ -64,7 +64,7 @@ namespace :fluxx_crm do
   
   desc "load up all cities from the directory specified by variable geo_dir"
   task :geo_cities => :environment do
-    require 'fastercsv'
+    require 'fastercsv' if RUBY_VERSION < '1.9'
     geo_dir = ENV['geo_dir'] || "#{File.dirname(__FILE__).to_s}/../db/geo"
 
     p "Processing cities"
