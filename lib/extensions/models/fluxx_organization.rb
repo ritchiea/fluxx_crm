@@ -1,7 +1,7 @@
 module FluxxOrganization
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :created_at, :updated_at, :name, :id]
-  LIQUID_METHODS = [:name, :street_address, :street_address2, :country_name, :state_name, :postal_code, :url, :acronym]  
+  LIQUID_METHODS = [:name, :street_address, :street_address2, :city, :state_name, :postal_code, :country_name, :url, :acronym]  
   
   def self.included(base)
     base.has_many :user_organizations
