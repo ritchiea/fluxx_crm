@@ -42,4 +42,11 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     events_to_english.clear
   end
   
+  def all_events
+    events_to_english.keys
+  end
+  
+  def all_states
+    states_to_english.keys
+  end
 end
