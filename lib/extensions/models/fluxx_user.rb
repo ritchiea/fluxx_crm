@@ -73,7 +73,7 @@ module FluxxUser
     def employees
       user_profile = UserProfile.where(:name => 'employee').first
       if user_profile
-        User.where(:user_profile_id => user_profile.id).all
+        User.where(:user_profile_id => user_profile.id, :deleted_at => nil, :test_user_flag => false).order('first_name asc, last_name asc').all
       end || []
     end
   end
