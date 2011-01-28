@@ -22,6 +22,7 @@ module FluxxUserOrganization
     
     # If the userorganization was connected as a primary organization, nil out the primary_organization of the use
     base.before_destroy :clear_out_related_primary_organizations
+    base.after_create :check_primary_relationship
     
     base.extend(ModelClassMethods)
     base.class_eval do
@@ -40,6 +41,13 @@ module FluxxUserOrganization
   end
 
   module ModelInstanceMethods
+    def check_primary_relationship
+      # Make this primary if it's the only relationship for this user
+      if UserOrganization.count(:conditions => {:user_id => user.id}) == 1
+        user.update_attributes :primary_user_organization_id => self.id
+      end
+    end
+    
     def clear_out_related_primary_organizations
       primary_user_organizations_users.each do |user|
         other_user_orgs = user.user_organizations.select {|uo| uo.id != self.id}

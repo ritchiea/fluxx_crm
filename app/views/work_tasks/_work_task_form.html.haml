@@ -1,0 +1,14 @@
+%fieldset.inputs
+  %ol
+  = form.input :name, :label => "Name"
+  = form.commit_button
+
+= form.input :taskable_id, :as => :hidden
+= form.input :taskable_type, :as => :hidden
+
+= form.input :task_text, :label => "Task Text:", :as => :text
+-# Need to have a way to get a list of related users if the entity supports that
+= form.input :assigned_user, :label => "Assign Task To:", :as => :select, :collection => (User.employees.map{|user| [user.full_name, user.id]})
+= form.input :due_at, :lable => "Date Due:"
+
+= form.commit_button

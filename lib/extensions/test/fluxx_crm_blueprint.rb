@@ -190,6 +190,13 @@ module FluxxCrmBlueprint
       foreign_wire_beneficiary_bank_swift Sham.sentence
       foreign_special_wire_instructions Sham.sentence
     end
+    
+    WorkTask.blueprint do
+      name Sham.word
+      task_text Sham.sentence
+      due_at Time.now
+      task_order 1
+    end
 
     base.extend(ModelClassMethods)
     base.class_eval do
