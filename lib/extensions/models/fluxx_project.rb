@@ -13,6 +13,7 @@ module FluxxProject
     base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
     base.has_many :group_members, :as => :groupable
     base.has_many :groups, :through => :group_members
+    base.has_many :work_tasks, :as => :taskable, :conditions => {:deleted_at => nil}
     
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
     

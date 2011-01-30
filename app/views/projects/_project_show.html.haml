@@ -14,6 +14,7 @@
     .key= 'Last Updated:'
     .value= model.updated_at.mdy if model.updated_at
 = render :partial => "project_lists/list_project_lists", :locals => { :model => model}
+= render :partial => "work_tasks/list_work_tasks", :locals => { :model => model }
 %div.partial
   %h3 
     = "Relationships"
