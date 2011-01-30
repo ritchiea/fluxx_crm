@@ -1,5 +1,5 @@
 module FluxxProject
-  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :title]
+  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :title, :project_type_id, :lead_user_id]
 
   def self.included(base)
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'

@@ -3,11 +3,14 @@ module FluxxProjectsController
   def self.included(base)
     base.insta_index Project do |insta|
       insta.template = 'project_list'
+      insta.filter_title = "Project Filter"
+      insta.filter_template = 'projects/project_filter'
       insta.order_clause = 'created_at desc'
       insta.icon_style = ICON_STYLE
     end
     base.insta_show Project do |insta|
       insta.template = 'project_show'
+      insta.footer_template = 'projects/project_footer'
       insta.icon_style = ICON_STYLE
     end
     base.insta_new Project do |insta|
