@@ -56,6 +56,17 @@ module FluxxOrganization
   
 
   module ModelClassMethods
+    def document_title_name
+      I18n.t(:Organization)
+    end
+
+    # ESH: hack to handle case of Organisation / Organization
+    def model_name
+      u = ActiveModel::Name.new Organization
+      u.instance_variable_set '@human', I18n.t(:Organization)
+      u
+    end
+    
   end
   
   module ModelInstanceMethods

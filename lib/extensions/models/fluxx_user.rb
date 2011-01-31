@@ -70,6 +70,10 @@ module FluxxUser
       u
     end
     
+    def document_title_name
+      'Person'
+    end
+    
     def employees
       user_profile = UserProfile.where(:name => 'employee').first
       if user_profile
