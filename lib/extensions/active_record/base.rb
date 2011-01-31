@@ -133,4 +133,22 @@ class ActiveRecord::Base
       end
     end
   end
+  
+  def state_past state_array, marker_state, current_state
+    state_array = state_array.map{|elem| elem.to_s}
+    marker_state = marker_state.to_s
+    current_state = current_state.to_s
+    cur_state_index = state_array.index current_state
+    marker_state_index = state_array.index marker_state
+    cur_state_index > marker_state_index if cur_state_index && marker_state_index
+  end
+  
+  def state_past_or_equal state_array, marker_state, current_state
+    state_array = state_array.map{|elem| elem.to_s}
+    marker_state = marker_state.to_s
+    current_state = current_state.to_s
+    cur_state_index = state_array.index current_state
+    marker_state_index = state_array.index marker_state
+    cur_state_index >= marker_state_index if cur_state_index && marker_state_index
+  end
 end
