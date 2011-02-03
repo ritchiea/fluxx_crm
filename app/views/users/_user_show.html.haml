@@ -21,10 +21,11 @@
         - if primary_user_org.organization.city
           %span.city>= primary_user_org.organization.city
         - if primary_user_org.organization.city &&  primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.name
-          ,
+          ,&nbsp;
         - if primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.name
           - if primary_user_org.organization.geo_state && primary_user_org.organization.geo_state.abbreviation
             %abbr{:title => primary_user_org.organization.geo_state.name}= primary_user_org.organization.geo_state.abbreviation
+            &nbsp;
         - if primary_user_org.organization.postal_code
           %span.zipcode= primary_user_org.organization.postal_code
   - build_user_work_contact_details(primary_user_org, model).each do |name, value|
