@@ -13,7 +13,7 @@
       %li.action-item
         %input{:type=>"checkbox", :class => 'as-put', 'data-on-success' => 'refreshCaller', :href => work_task_path(:id => model.id, :work_task => {:task_completed => !model.task_completed}), :checked => model.task_completed}
         = model.task_text
-        = "Due #{model.due_at.mdy}#{model.assigned_user ? ", Assigned to #{model.assigned_user.full_name}" : ''}"
+        = "Due #{model.due_at ? model.due_at.mdy : ''}#{model.assigned_user ? ", Assigned to #{model.assigned_user.full_name}" : ''}"
         %span.actions
           = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), work_task_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
   <br>
