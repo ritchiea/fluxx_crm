@@ -7,7 +7,7 @@ module FluxxProject
     base.has_many :project_lists
     base.has_many :project_users
     base.has_many :project_organizations
-    base.has_many :wiki_documents, :as => :model
+    base.has_many :wiki_documents, :as => :model, :conditions => {:deleted_at => nil}
     base.belongs_to :lead_user, :class_name => 'User', :foreign_key => :lead_user_id
     base.has_many :model_documents, :as => :documentable
     base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
