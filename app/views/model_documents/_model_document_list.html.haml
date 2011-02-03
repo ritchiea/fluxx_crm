@@ -30,7 +30,7 @@
           %p.caption=  "No Documents"
     - else
       - # Show the documents with types first in order
-      - models.sort_by{|model| [(model.model_document_type ? (model.model_document_type.name || '||') : '||'), (model.created_at ? (-1 * model.created_at.to_i) : nil)]}.each do |model|
+      - models.sort_by{|model| [(model.model_document_type ? (model.model_document_type.name || '||') : '||'), (model.created_at ? (-1 * model.created_at.to_i) : 0)]}.each do |model|
         %tr
           %td
             %span.actions
