@@ -20,7 +20,7 @@
             %span.float_right= link_to 'make primary', user_path({:id => user.id, :user => {:primary_user_organization_id => user_org.id}}), :class => 'as-put'
         <br/>
         %p.caption
-          - unless user_org.department.blank?
+          - unless user_org.title.blank?
             = user_org.title
             -
           - unless user_org.department.blank?
