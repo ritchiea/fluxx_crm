@@ -15,4 +15,4 @@
       - else
         %li= link_to 'Add As Favorite', favorites_path(:favorite => {:user_id => current_user.id, :favorable_id => @model.id, :favorable_type => @model.class}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
     %li= link_to 'Printable', '#', :target => "_blank", :class => 'btn area-url'
-
+    = render :partial => "insta/show_extra_buttons", :locals => { :model => @model, :buttons => @action_buttons}
