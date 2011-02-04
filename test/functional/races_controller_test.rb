@@ -12,7 +12,7 @@ class RacesControllerTest < ActionController::TestCase
     get :show, :id => @race.to_param
     assert_response :success
     assert assigns(:action_buttons)
-    assert_equal [[:kick_off, "Kick Off"]], assigns(:action_buttons)
+    assert assigns(:action_buttons).include?([:kick_off, "Kick Off"])
   end
   
   test "should update user" do
@@ -22,6 +22,15 @@ class RacesControllerTest < ActionController::TestCase
     assert 201, @response.status
     assert @response.header["Location"] =~ /#{race_path(assigns(:race))}$/
     assert_equal 'beginning', @race.reload.state
+  end
+  
+  test "test reject" do
+    assert_equal 'new', @race.state
+    put :update, :id => @race.to_param, :event_action => 'reject', :race => {}
+    assert flash[:info]
+    assert 201, @response.status
+    assert @response.header["Location"] =~ /#{race_path(assigns(:race))}$/
+    assert_equal 'rejected', @race.reload.state
   end
   
   test "should generate a workflow event" do

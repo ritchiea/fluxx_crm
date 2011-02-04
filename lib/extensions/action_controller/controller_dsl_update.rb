@@ -15,7 +15,7 @@ class ActionController::ControllerDslUpdate < ActionController::ControllerDsl
           end
 
           if event_allowed
-            if cur_model.valid? && cur_model.send(event_action)
+            if (cur_model.is_non_validating_event?(event_action) || cur_model.valid?) && cur_model.send(event_action)
               cur_model.save(:validate => false)
               # Go on with life, the state transition happened uneventfully
             else

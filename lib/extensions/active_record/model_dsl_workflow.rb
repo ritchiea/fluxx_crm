@@ -5,6 +5,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   attr_accessor :states_to_english
   # A mapping from symbol to english word for events
   attr_accessor :events_to_english
+  # A list of events to skip validating on when changing state
+  attr_accessor :non_validating_events
   # If this is true, the workflow updates will not execute
   attr_accessor :workflow_disabled
 
@@ -12,6 +14,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     super model_class
     self.states_to_english = HashWithIndifferentAccess.new
     self.events_to_english = HashWithIndifferentAccess.new
+    self.non_validating_events = []
   end
   
   def state_to_english state_name
@@ -34,6 +37,10 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     events_to_english[new_event.to_sym] = event_name
   end
 
+  def add_non_validating_event event
+    non_validating_events << event.to_sym
+  end
+  
   def clear_states_to_english
     states_to_english.clear
   end

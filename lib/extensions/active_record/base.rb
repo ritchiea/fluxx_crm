@@ -75,6 +75,10 @@ class ActiveRecord::Base
         end
       end
       
+      define_method :is_non_validating_event? do |event_name|
+        local_workflow_object.non_validating_events.include? event_name.to_sym
+      end
+      
       define_method :state_in do |states|
         self_state = self.state
         # Note that before the model is created, it may have a blank state; for now consider that to be the initial state
