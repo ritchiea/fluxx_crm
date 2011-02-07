@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :modules
+
   resources :work_tasks
 
   resources :bank_accounts

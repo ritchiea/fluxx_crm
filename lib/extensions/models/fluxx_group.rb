@@ -16,6 +16,10 @@ module FluxxGroup
     def all_sorted_groups
       Group.find(:all, :conditions => {:deprecated => false}).sort_by{|group| (group.name || '').downcase}
     end
+    
+    def load_all
+      Group.find(:all).sort_by{|group| (group.name || '').downcase}
+    end
   end
 
   module ModelInstanceMethods
