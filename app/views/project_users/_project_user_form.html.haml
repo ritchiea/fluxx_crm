@@ -1,6 +1,6 @@
 = form.input :project_id, :as => :hidden
 
-= form.input :user, :label => "User:", :as => :select, :include_blank => nil, :collection => (User.employees.map{|user| [user.full_name, user.id]} || [])
+= form.input :user, :label => "Person:", :as => :autocomplete, :autocomplete_url => users_path(:format => :autocomplete), :related_attribute_name => :full_name
 = form.input :description, :as => :text
 
 = form.commit_button
