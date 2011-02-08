@@ -144,8 +144,8 @@ class ActiveRecord::Base
     state_array = state_array.map{|elem| elem.to_s}
     marker_state = marker_state.to_s
     current_state = current_state.to_s
-    cur_state_index = state_array.index current_state
-    marker_state_index = state_array.index marker_state
+    cur_state_index = state_array.index(current_state) || -1
+    marker_state_index = state_array.index(marker_state) || -1
     cur_state_index > marker_state_index if cur_state_index && marker_state_index
   end
   
@@ -153,8 +153,8 @@ class ActiveRecord::Base
     state_array = state_array.map{|elem| elem.to_s}
     marker_state = marker_state.to_s
     current_state = current_state.to_s
-    cur_state_index = state_array.index current_state
-    marker_state_index = state_array.index marker_state
+    cur_state_index = state_array.index(current_state) || -1
+    marker_state_index = state_array.index(marker_state) || -1
     cur_state_index >= marker_state_index if cur_state_index && marker_state_index
   end
 end
