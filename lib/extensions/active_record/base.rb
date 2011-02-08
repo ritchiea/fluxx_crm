@@ -21,6 +21,8 @@ class ActiveRecord::Base
       write_inheritable_attribute :workflow_object, local_workflow_object
       yield local_workflow_object if block_given?
       
+      self.send :attr_accessor, :promotion_event
+      
       def update_attribute_without_log_with_specific key, value
         if self.class.respond_to?(:without_workflow)
           self.class.without_workflow do
