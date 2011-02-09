@@ -17,6 +17,11 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     self.non_validating_events = []
   end
   
+  # Note that this can be overridden to swap in different state machine systems
+  def fire_event model, event_name
+    model.send(event_name)
+  end
+  
   def state_to_english state_name
     if !state_name.blank? && states_to_english && states_to_english.is_a?(Hash)
       states_to_english[state_name.to_sym]
