@@ -14,7 +14,6 @@
 = form.input :geo_state, :label => 'State/Province: ', :as => :select, :input_html => {:class => 'geo-state-select', 'data-param'.to_sym => 'geo_state[geo_country_id]', 'data-src'.to_sym => geo_states_path(:format => 'autocomplete'), 'data-cache'.to_sym => 'geo_state_select'}, :collection => state_collection.map {|state| [state.name, state.id]}
 = form.input :postal_code, :label => "Postal Code"
 = form.input :phone, :label => "Phone"
-= form.input :other_contact, :label => "Other Contact"
 = form.input :fax, :label => "Fax"
 = form.input :email, :label => "Email"
 = form.input :url, :label => "URL"

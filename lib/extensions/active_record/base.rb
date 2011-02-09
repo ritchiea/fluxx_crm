@@ -21,6 +21,8 @@ class ActiveRecord::Base
       write_inheritable_attribute :workflow_object, local_workflow_object
       yield local_workflow_object if block_given?
       
+      self.send :attr_accessor, :promotion_event
+      
       def update_attribute_without_log_with_specific key, value
         if self.class.respond_to?(:without_workflow)
           self.class.without_workflow do
@@ -73,6 +75,10 @@ class ActiveRecord::Base
         def workflow_events
           workflow_object.all_events
         end
+      end
+      
+      define_method :insta_fire_event do |event_name|
+        local_workflow_object.fire_event self, event_name
       end
       
       define_method :is_non_validating_event? do |event_name|
@@ -142,8 +148,8 @@ class ActiveRecord::Base
     state_array = state_array.map{|elem| elem.to_s}
     marker_state = marker_state.to_s
     current_state = current_state.to_s
-    cur_state_index = state_array.index current_state
-    marker_state_index = state_array.index marker_state
+    cur_state_index = state_array.index(current_state) || -1
+    marker_state_index = state_array.index(marker_state) || -1
     cur_state_index > marker_state_index if cur_state_index && marker_state_index
   end
   
@@ -151,8 +157,8 @@ class ActiveRecord::Base
     state_array = state_array.map{|elem| elem.to_s}
     marker_state = marker_state.to_s
     current_state = current_state.to_s
-    cur_state_index = state_array.index current_state
-    marker_state_index = state_array.index marker_state
+    cur_state_index = state_array.index(current_state) || -1
+    marker_state_index = state_array.index(marker_state) || -1
     cur_state_index >= marker_state_index if cur_state_index && marker_state_index
   end
 end
