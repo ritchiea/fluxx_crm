@@ -1,7 +1,7 @@
 module FluxxUser
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name]
-  LIQUID_METHODS = [:salutation, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax]  
+  LIQUID_METHODS = [:salutation, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization]  
 
   def self.included(base)
     base.has_many :user_organizations
