@@ -112,9 +112,9 @@ module FluxxUser
 
     # In the implementation, you can override this method or alias_method_chain to put it aside and call it as well 
     def merge_associations dup
-      my_role_users = RoleUser.where(:user_id => self.id).all
-      RoleUser.where(:user_id => dup.id).all.each do |ru|
-        existing_ru = my_role_users.select {|mru| mru.name == ru.name && mru.roleable == ru.roleable}
+      my_role_users = RoleUser.joins(:role).where(:user_id => self.id).all
+      RoleUser.joins(:role).where(:user_id => dup.id).all.each do |ru|
+        existing_ru = my_role_users.select {|mru| mru.role.name == ru.role.name && mru.roleable_id == ru.roleable_id}
         ru.destroy unless existing_ru.empty?
       end
       
@@ -151,7 +151,16 @@ module FluxxUser
     end
     
     def add_role role_name, related_object = nil
-      role_users.create :name => role_name, :roleable => related_object
+      role = if related_object
+        Role.where(:name => role_name, :roleable_type => related_object.class.name).first || Role.create(:name => role_name, :roleable_type => related_object.class.name)
+      else
+        Role.where(:name => role_name).first || Role.create(:name => role_name)
+      end
+      if related_object
+        role_users.create :role_id => role.id, :roleable_id => related_object.id if role
+      else
+        role_users.create :role_id => role.id if role
+      end
     end
     
     def remove_role role_name, related_object = nil
@@ -161,12 +170,12 @@ module FluxxUser
     
     # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
     def has_role_user? role_name, related_object = nil
-      role_user = if related_object
-        roles = role_users.where(:name => role_name, :roleable_id => related_object.id, :roleable_type => related_object.class.name).all
-        roles = role_users.where(:name => role_name, :roleable_id => related_object.parent_id, :roleable_type => related_object.class.name).all if roles.empty? && related_object.respond_to?('parent_id')
+      if related_object
+        roles = role_users.joins(:role).where(:roleable_id => related_object.id, :roles => {:roleable_type => related_object.class.name, :name => role_name}).all
+        roles = role_users.joins(:role).where(:roleable_id => related_object.parent_id, :roles => {:roleable_type => related_object.class.name, :name => role_name}).all if roles.empty? && related_object.respond_to?('parent_id')
         roles
       else
-        role_users.where(:name => role_name)
+        role_users.joins(:role).where(:roles => {:name => role_name})
       end.first
     end
     

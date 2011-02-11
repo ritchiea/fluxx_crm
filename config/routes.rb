@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :roles
+
   resources :modules
 
   resources :work_tasks

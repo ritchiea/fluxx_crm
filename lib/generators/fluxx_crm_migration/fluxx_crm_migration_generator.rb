@@ -53,6 +53,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'create_bank_account.rb', 'db/migrate/fluxx_crm_create_bank_account.rb'
     handle_migration 'create_work_task.rb', 'db/migrate/fluxx_crm_create_work_task.rb'
     handle_migration 'add_worktask_completed_at_date.rb', 'db/migrate/fluxx_crm_add_worktask_completed_at_date.rb'
+    handle_migration 'create_role.rb', 'db/migrate/fluxx_crm_create_role.rb'
   end
   
   private

@@ -52,7 +52,7 @@ class UserOrganizationsControllerTest < ActionController::TestCase
     @user_org2 = UserOrganization.make :organization => @org4, :user => @user1
     put :update, :id => @user_org2.id, :user_organization => {:organization_id => @org2.id, :user_id => @user1.id}
     
-    assert_equal @org4.id, assigns(:user_organization).reload.organization_id
+    assert_equal @org2.id, assigns(:user_organization).reload.organization_id
   end
 
   test "should destroy user_organization" do

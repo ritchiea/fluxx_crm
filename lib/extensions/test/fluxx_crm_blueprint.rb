@@ -197,6 +197,8 @@ module FluxxCrmBlueprint
       due_at Time.now
       task_order 1
     end
+    Role.blueprint do
+    end
 
     base.extend(ModelClassMethods)
     base.class_eval do
@@ -211,6 +213,7 @@ module FluxxCrmBlueprint
     def setup_crm_multi_element_groups
       unless bp_attrs[:executed_setup_multi_element_groups]
         bp_attrs[:executed_setup_multi_element_groups] = true
+        
         MultiElementValue.delete_all
         MultiElementGroup.delete_all
         project_type_group = MultiElementGroup.create :name => 'project_type', :description => 'ProjectType', :target_class_name => 'Project'

@@ -3,7 +3,7 @@ class FluxxCrmCreateRoleUsers < ActiveRecord::Migration
     create_table :role_users do |t|
       t.timestamps
       t.integer :created_by_id, :updated_by_id, :null => true, :limit => 12
-      t.string :name, :null => false
+      t.string :name, :null => true
       t.integer :user_id, :null => true, :limit => 12
       t.string :roleable_type, :null => true
       t.integer :roleable_id, :null => true, :limit => 12
