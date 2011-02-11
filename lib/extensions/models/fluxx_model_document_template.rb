@@ -22,6 +22,10 @@ module FluxxModelDocumentTemplate
   end
 
   module ModelClassMethods
+    def for_type_and_category(model_type, category)
+      where(:model_type => model_type, :category => category)
+    end
+    
     # STOP! use only for dev purposes
     def reload_all_templated_model_documents
       ModelDocumentTemplate.reload_all_doc_templates
