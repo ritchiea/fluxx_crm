@@ -5,7 +5,7 @@ class RoleUsersControllerTest < ActionController::TestCase
   def setup
     @user1 = User.make
     login_as @user1
-    @role_user = RoleUser.make :user => @user1
+    @role_user = RoleUser.make :user => @user1, :role => Role.make
   end
   
   test "should get index" do
@@ -27,7 +27,8 @@ class RoleUsersControllerTest < ActionController::TestCase
 
   test "should create role_user" do
     assert_difference('RoleUser.count') do
-      post :create, :role_user => { :user_id => @user1.to_param, :name => 'role_name' }
+      new_role = Role.make
+      post :create, :role_user => { :user_id => @user1.to_param, :role_id => new_role.id }
     end
 
     assert 201, @response.status

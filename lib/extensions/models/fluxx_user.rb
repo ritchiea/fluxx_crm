@@ -83,6 +83,13 @@ module FluxxUser
   end
 
   module ModelInstanceMethods
+    def login=(value)
+      write_attribute :login, (value.blank? ? nil : value)
+    end
+
+    def email=(value)
+      write_attribute :email, (value.blank? ? nil : value)
+    end
     
     def main_phone
       work = self.work_phone

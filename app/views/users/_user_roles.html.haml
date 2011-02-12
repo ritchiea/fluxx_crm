@@ -18,7 +18,7 @@
     - model.role_users.joins(:role).where(:roles => {:roleable_type => 'Program'}).all.each do |ru|
       - program = Program.find ru.roleable_id if ru.roleable_id rescue nil
       %div
-        = ru.name
+        = ru.role.name if ru && ru.role
         - if program
           ,
           = program.name

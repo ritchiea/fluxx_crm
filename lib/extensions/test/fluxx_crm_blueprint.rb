@@ -108,7 +108,6 @@ module FluxxCrmBlueprint
     end
 
     RoleUser.blueprint do
-      name Sham.word
     end
 
     UserProfile.blueprint do
