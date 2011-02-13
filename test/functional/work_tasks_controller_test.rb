@@ -11,7 +11,7 @@ class WorkTasksControllerTest < ActionController::TestCase
   test "should get index" do
     get :index
     assert_response :success
-    assert_not_nil assigns(:work_tasks)
+  assert_not_nil assigns(:work_tasks)
   end
 
   test "autocomplete" do

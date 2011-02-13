@@ -18,6 +18,7 @@ module FluxxUser
     base.has_many :group_members, :as => :groupable
     base.has_many :groups, :through => :group_members
     base.has_many :role_users
+    base.has_many :user_permissions
     base.has_many :bank_accounts, :foreign_key => :owner_user_id
     base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
     base.before_save :preprocess_user
@@ -157,6 +158,7 @@ module FluxxUser
       Favorite.update_all ['favorable_id = ?', self.id], ['favorable_type = ? AND favorable_id = ?', 'User', dup.id]
     end
     
+    ######################################### ROLES
     def add_role role_name, related_object = nil
       role = if related_object
         Role.where(:name => role_name, :roleable_type => related_object.class.name).first || Role.create(:name => role_name, :roleable_type => related_object.class.name)
@@ -177,6 +179,7 @@ module FluxxUser
     
     # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
     def has_role_user? role_name, related_object = nil
+      return true if is_admin?
       if related_object
         roles = role_users.joins(:role).where(:roleable_id => related_object.id, :roles => {:roleable_type => related_object.class.name, :name => role_name}).all
         roles = role_users.joins(:role).where(:roleable_id => related_object.parent_id, :roles => {:roleable_type => related_object.class.name, :name => role_name}).all if roles.empty? && related_object.respond_to?('parent_id')
@@ -188,26 +191,15 @@ module FluxxUser
     
     # Add a role if none exists; if related_object is a class, generated a role_name that includes the class
     def has_role! role_name, related_object = nil, remove_role=false
-      role = if related_object.is_a? Class
-        has_role_for_object? role_name, related_object
-      elsif related_object.is_a? String
-        has_role_for_object? role_name, related_object
-      else
-        has_role?(role_name, related_object)
-      end
+      role = has_role?(role_name, related_object)
+
       if remove_role
         role.destroy
       else
         if role
           role
         else
-          role = if related_object.is_a? Class
-            add_role "#{role_name}_#{class_perm_name related_object}"
-          elsif related_object.is_a? String
-            add_role "#{role_name}_#{related_object.to_s}"
-          else
-            add_role role_name, related_object
-          end
+          role = add_role role_name, related_object
         end
       end
     end
@@ -216,23 +208,76 @@ module FluxxUser
       has_role! role_name, related_object, true
     end
     
-    # Check to see if this users profile includes the role_name
-    def user_profile_include? role_name
-      if user_profile
-        user_profile.has_rule? role_name
+    # Check for a role associated with this user
+    def has_role? role_name, related_object = nil
+      return true if is_admin?
+      has_role_user?(role_name, related_object)
+    end
+
+######################################### PERMISSIONS
+
+    def add_permission permission_name, related_object = nil
+      if related_object
+        user_permissions.create :name => permission_name, :model_type => derive_class_name(related_object) if related_object
+      else
+        user_permissions.create :name => permission_name
+      end
+    end
+
+    def remove_permission permission_name, related_object = nil
+      user_permission = has_permission? permission_name, related_object
+      user_permission.destroy if user_permission
+    end
+
+    # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
+    def has_user_permission? permission_name, related_object = nil
+      if related_object
+        user_permissions.where(:model_type => derive_class_name(related_object), :name => permission_name).all
+      else
+        user_permissions.where(:name => permission_name).all
+      end.first
+    end
+
+    # Add a permission if none exists
+    def has_permission! permission_name, related_object = nil, remove_permission=false
+      permission = has_permission? permission_name, derive_class_name(related_object)
+      if remove_permission
+        permission.destroy
+      else
+        if permission
+          permission
+        else
+          permission = add_permission permission_name, related_object
+        end
       end
     end
     
-    # Check for either a simple role or a profile rule for the role associated with this user
-    # always_return_object says that if a user_profile_rule is found (and not a role_user), return the rule that was found.  This is because sometimes a rule will be present and be marked not allowed
-    def has_role? role_name, related_object = nil, always_return_object=false
-      user_profile_role = self.user_profile_include?(role_name) # related object doesn't matter for user_profile_roles
-      has_role_user?(role_name, related_object) || (always_return_object ? user_profile_role : (user_profile_role && user_profile_role.allowed?))
+    def derive_class_name related_object
+      if related_object.is_a? Class
+        related_object.name
+      elsif related_object.is_a? String
+        related_object
+      elsif related_object
+        related_object.class.name
+      end
+    end
+
+    def clear_permission permission_name, related_object = nil
+      has_permission! permission_name, related_object, true
+    end
+
+    # Check for either a simple permission or a profile rule for the permission associated with this user
+    # always_return_object says that if a user_profile_rule is found (and not a user_permission), return the rule that was found.  This is because sometimes a rule will be present and be marked not allowed
+    def has_permission? permission_name, related_object = nil, always_return_object=false
+      user_profile_permission = self.user_profile_include?(permission_name, related_object)
+      has_user_permission?(permission_name, related_object) || (always_return_object ? user_profile_permission : (user_profile_permission && user_profile_permission.allowed?))
     end
     
-    # Calculate the tableized name of a model_class
-    def class_perm_name model_class
-      model_class.name.tableize.singularize.downcase
+    # Check to see if this users profile includes the permission_name
+    def user_profile_include? permission_name, related_object = nil
+      if user_profile
+        user_profile.has_rule?(permission_name, derive_class_name(related_object))
+      end
     end
     
     def user_related_to_model? model
@@ -240,12 +285,12 @@ module FluxxUser
     end
     
     def is_admin?
-      self.has_role?('admin')
+      self.has_permission?('admin')
     end
     
-    # role_name: name of role to check for this user
+    # permission_name: name of permission to check for this user
     # model: accept either a class, string or model
-    def has_role_for_object? role_name, model
+    def has_permission_for_object? permission_name, model
       cur_model = if model.is_a? Class
         model
       elsif model.is_a? String
@@ -253,13 +298,9 @@ module FluxxUser
       else
         model.class
       end
-      role_found = false
-      while cur_model && !role_found
-        role_found = if cur_model.is_a? Class
-          has_role?("#{role_name}_#{class_perm_name(cur_model)}", nil, true)
-        else
-          has_role?("#{role_name}_#{cur_model.to_s}", nil, true)
-        end
+      permission_found = false
+      while cur_model && !permission_found
+        permission_found = has_permission?(permission_name, cur_model, true)
         if cur_model.is_a? Class
           cur_model = cur_model.superclass
           cur_model = nil if cur_model == ActiveRecord::Base || cur_model == Object
@@ -268,51 +309,51 @@ module FluxxUser
         end
       end
 
-      if role_found && role_found.is_a?(UserProfileRule)
-        role_found.allowed
-      elsif role_found
-        role_found
-      elsif ['create', 'update', 'delete', 'view', 'listview'].include? role_name.to_s
-        has_role?("create_all")
+      if permission_found && permission_found.is_a?(UserProfileRule)
+        permission_found.allowed
+      elsif permission_found
+        permission_found
+      elsif ['create', 'update', 'delete', 'view', 'listview'].include? permission_name.to_s
+        has_permission?("create_all")
       else
-        role_found
+        permission_found
       end
     end
 
     def has_create_for_own_model? model_class
-      has_role_for_object?("create_own", model_class)
+      has_permission_for_object?("create_own", model_class)
     end
     
     def has_create_for_model? model_class
-      is_admin? || has_role_for_object?("create", model_class)
+      is_admin? || has_permission_for_object?("create", model_class)
     end
     
     def has_update_for_own_model? model
-      has_role_for_object?("update_own", model) && user_related_to_model?(model)
+      has_permission_for_object?("update_own", model) && user_related_to_model?(model)
     end
 
     def has_update_for_model? model_class
-      is_admin? || has_role_for_object?("update", model_class)
+      is_admin? || has_permission_for_object?("update", model_class)
     end
     
     def has_delete_for_own_model? model
-      has_role_for_object?("delete_own", model) && user_related_to_model?(model)
+      has_permission_for_object?("delete_own", model) && user_related_to_model?(model)
     end
 
     def has_delete_for_model? model_class
-      is_admin? || has_role_for_object?("delete", model_class)
+      is_admin? || has_permission_for_object?("delete", model_class)
     end
     
     def has_listview_for_model? model_class
-      is_admin? || has_role_for_object?("listview", model_class)
+      is_admin? || has_permission_for_object?("listview", model_class)
     end
     
     def has_view_for_own_model? model
-      has_role_for_object?("view_own", model) && user_related_to_model?(model)
+      has_permission_for_object?("view_own", model) && user_related_to_model?(model)
     end
 
     def has_view_for_model? model_class
-      is_admin? || has_role_for_object?("view", model_class)
+      is_admin? || has_permission_for_object?("view", model_class)
     end
     
     def full_name

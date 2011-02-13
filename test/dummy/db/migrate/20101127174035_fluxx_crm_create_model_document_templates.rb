@@ -17,8 +17,8 @@ class FluxxCrmCreateModelDocumentTemplates < ActiveRecord::Migration
     add_index :model_document_templates, :category
     add_index :model_document_templates, :model_type
         
-    add_constraint 'model_document_templates', 'wikdoctemplate_created_by_id', 'created_by_id', 'users', 'id'
-    add_constraint 'model_document_templates', 'wikdoctemplate_updated_by_id', 'updated_by_id', 'users', 'id'
+    add_constraint 'model_document_templates', 'modeldoctemplate_created_by_id', 'created_by_id', 'users', 'id'
+    add_constraint 'model_document_templates', 'modeldoctemplate_updated_by_id', 'updated_by_id', 'users', 'id'
     
     add_column :model_documents, :document_type, :string, :default => 'file'
     add_column :model_documents, :document_text, :text

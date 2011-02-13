@@ -148,94 +148,95 @@ class UserTest < ActiveSupport::TestCase
     
     assert !user.has_create_for_model?(Organization)
     
-    UserProfileRule.make :user_profile => user_profile, :role_name => 'create_organization'
+    UserProfileRule.make :user_profile => user_profile, :permission_name => 'create', :model_class => Organization
     assert user.reload.has_create_for_model?(Organization)
   end
   
   test "check that a create_all privilege is respected" do
     employee_profile = UserProfile.make :name => 'Employee'
-    UserProfileRule.make :user_profile => employee_profile, :role_name => 'create_all'
+    UserProfileRule.make :user_profile => employee_profile, :permission_name => 'create_all'
     user = User.make :user_profile => employee_profile
     assert user.reload.has_create_for_model?(Organization)
   end
   test "check that has_create_for_own_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('create_own', TestModel)
+    user.has_permission!('create_own', TestModel)
     assert user.reload.has_create_for_own_model?(TestModel)
   end
 
   test "check that has_create_for_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('create', TestModel)
+    user.has_permission!('create', TestModel)
+    p "ESH: permissions = #{UserPermission.all.inspect}"
     assert user.has_create_for_model?(TestModel)
   end
 
   test "check that has_create_for_model works for a user using a string" do
     user_profile, user = setup_user_profile
     string_perm = 'some_crazy_model_type'
-    user.has_role!('create', string_perm)
+    user.has_permission!('create', string_perm)
     assert user.has_create_for_model?(string_perm)
   end
 
   test "check that has_update_for_own_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('update_own', TestModel)
+    user.has_permission!('update_own', TestModel)
     assert user.has_update_for_own_model?(TestModel.new)
   end
 
   test "check that has_update_for_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('update', TestModel)
+    user.has_permission!('update', TestModel)
     assert user.has_update_for_model?(TestModel.new)
   end
 
   test "check that has_delete_for_own_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('delete_own', TestModel)
+    user.has_permission!('delete_own', TestModel)
     assert user.has_delete_for_own_model?(TestModel.new)
   end
 
   test "check that has_delete_for_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('delete', TestModel)
+    user.has_permission!('delete', TestModel)
     assert user.has_delete_for_model?(TestModel.new)
   end
 
   test "check that has_listview_for_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('listview', TestModel)
+    user.has_permission!('listview', TestModel)
     assert user.has_listview_for_model?(TestModel)
   end
   
   test "check that has_view_for_own_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('view_own', TestModel)
+    user.has_permission!('view_own', TestModel)
     assert user.has_view_for_own_model?(TestModel.new)
   end
 
   test "check that has_view_for_model works for a user" do
     user_profile, user = setup_user_profile
-    user.has_role!('view', TestModel)
+    user.has_permission!('view', TestModel)
     assert user.has_view_for_model?(TestModel.new)
   end
 
   test "check that has_view_for_own_model works for a user with subclass" do
     user_profile, user = setup_user_profile
-    user.has_role!('view_own', TestModel)
+    user.has_permission!('view_own', TestModel)
     assert user.has_view_for_own_model?(SubTestModel.new)
   end
 
   test "check that has_view_for_model works for a user with subclass" do
     user_profile, user = setup_user_profile
-    user.has_role!('view', TestModel)
+    user.has_permission!('view', TestModel)
     assert user.has_view_for_model?(SubTestModel.new)
   end
   
   test "check that we can add a user_rule with create_all and NOT create Organization and have it respect that.  Should still be able to create a TestModel" do
     user_profile, user = setup_user_profile
-    UserProfileRule.create :user_profile => user_profile, :role_name => 'create_all'
+    UserProfileRule.create :user_profile => user_profile, :permission_name => 'create_all'
     assert user.reload.has_create_for_model?(Organization)
-    UserProfileRule.create :user_profile => user_profile, :role_name => 'create_organization', :allowed => false
+    UserProfileRule.create :user_profile => user_profile, :permission_name => 'create', :model_class => Organization, :allowed => false
     user.reload
     assert !user.reload.has_create_for_model?(Organization)
     assert user.reload.has_create_for_model?(TestModel)

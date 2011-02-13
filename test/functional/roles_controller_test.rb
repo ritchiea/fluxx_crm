@@ -86,8 +86,7 @@ class RolesControllerTest < ActionController::TestCase
   end
 
   test "should destroy role" do
-    assert_difference('Role.count', -1) do
-      delete :destroy, :id => @Role.to_param
-    end
+    delete :destroy, :id => @Role.to_param
+    assert @Role.reload.deleted_at
   end
 end

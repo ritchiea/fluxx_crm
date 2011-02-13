@@ -16,8 +16,8 @@ module FluxxUserProfile
   end
 
   module ModelInstanceMethods
-    def has_rule? role_name
-      self.user_profile_rules.select {|rule| rule.role_name == role_name}.first
+    def has_rule? permission_name, model_type
+      self.user_profile_rules.select {|rule| rule.permission_name == permission_name && rule.model_type == model_type}.first
     end
   end
 end

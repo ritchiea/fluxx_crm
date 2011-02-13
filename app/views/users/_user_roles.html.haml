@@ -1,8 +1,8 @@
 %div.partial
   %h3
     = "Roles"
-    - if current_user.has_role? 'admin'
-      - user_admin_role = model.has_role? 'admin'
+    - if current_user.is_admin?
+      - user_admin_role = model.is_admin?
       %span.caption
         - if user_admin_role
           %span.caption= "(Admin)"
@@ -10,7 +10,7 @@
         - else
           %span.actions= link_to 'add admin role', role_users_path(:role_user => {:user_id => model.id, :role_id => Role.admin_role.id}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
 
-  - if current_user.has_role? 'admin'
+  - if current_user.is_admin?
     %h4
       = "Program Roles"
       %span.actions= link_to 'add role', new_role_user_path(:role_user => {:user_id => model.id}), :class => 'to-modal', 'data-on-success' => 'refreshDetail,close'

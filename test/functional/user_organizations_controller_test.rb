@@ -17,7 +17,7 @@ class UserOrganizationsControllerTest < ActionController::TestCase
   
   test "should create user organization" do
     assert_difference('UserOrganization.count') do
-      post :create, :user_organization => {:organization_id => @org1.id, :user_id => @user1}
+      post :create, :user_organization => {:organization_id => @org1.id, :user_id => @user1.id}
     end
 
     assert 201, @response.status

@@ -11,8 +11,8 @@ module FluxxCrmBlueprint
     User.blueprint do
       first_name Sham.first_name
       last_name Sham.last_name
-      login(Sham.login + 'abcdef')
-      email Sham.email
+      login {"#{rand(999999)}_#{Faker::Internet.user_name}"}
+      email {"#{rand(999999)}_#{Faker::Internet.email}"}
       created_at 5.days.ago.to_s(:db)
       state 'active'
     end
@@ -79,7 +79,7 @@ module FluxxCrmBlueprint
     end
 
     Group.blueprint do
-      name Sham.word
+      name random_word
     end
 
     GroupMember.blueprint do
@@ -197,6 +197,8 @@ module FluxxCrmBlueprint
       task_order 1
     end
     Role.blueprint do
+    end
+    UserPermission.blueprint do
     end
 
     base.extend(ModelClassMethods)

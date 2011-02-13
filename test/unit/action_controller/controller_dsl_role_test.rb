@@ -69,7 +69,7 @@ class ControllerDslRoleTest < ActiveSupport::TestCase
     
     akey = @controller_dsl_role.event_role_mappings[:event1].keys.first
     user = User.make
-    user.has_role! :admin
+    user.has_permission! :admin
     
     assert @controller_dsl_role.event_allowed_for_user?(user, :event1, @related_object)
     assert @controller_dsl_role.event_allowed_for_user?(user, :event2, @related_object)

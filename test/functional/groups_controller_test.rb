@@ -17,14 +17,13 @@ class GroupsControllerTest < ActionController::TestCase
   test "autocomplete" do
     get :index, :name => @group.name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
-    p "ESH: have @response.body = #{@response.body.inspect}"
-    assert_equal @group.id, a.last['value']
+    assert a.map{|elem| elem['value']}.include?(@group.id)
   end
 
   test "should confirm that name_exists" do
     get :index, :name => @group.name, :format => :autocomplete
     a = @response.body.de_json # try to deserialize the JSON to an array
-    assert_equal @group.id, a.first['value']
+    assert a.map{|elem| elem['value']}.include?(@group.id)
   end
 
   test "should get new" do
