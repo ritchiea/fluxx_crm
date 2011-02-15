@@ -202,6 +202,7 @@ module FluxxOrganization
     end
   end
   
+  # Return a hash of information about and organization using the Charity Check service
   def self.charity_check ein
     hash = {}
     if (defined?(CHARITY_CHECK_USERNAME) && defined?(CHARITY_CHECK_PASSWORD) && !ein.nil?)
@@ -220,4 +221,11 @@ module FluxxOrganization
     end
     hash
   end
+  
+  # Return an array of grants related to an organization
+  def self.foundation_center_grants ein, pagenum
+    response = HTTPI.get "http://gis.foundationcenter.org/web_services/fluxx/getRecipientGrants.php?ein=#{ein}#{pagenum.empty? ? '' : '&pagenum=' + pagenum.to_s}"
+    Crack::JSON.parse(response.body)
+  end
+  
 end
