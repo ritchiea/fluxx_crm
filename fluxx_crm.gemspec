@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fluxx_crm}
-  s.version = "0.0.18"
+  s.version = "0.0.19"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hansen"]
-  s.date = %q{2011-01-14}
+  s.date = %q{2011-02-15}
   s.email = %q{fluxx@acesfconsulting.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "app/controllers/application_controller.rb",
+    "app/controllers/bank_accounts_controller.rb",
     "app/controllers/documents_controller.rb",
     "app/controllers/favorites_controller.rb",
     "app/controllers/geo_cities_controller.rb",
@@ -35,11 +36,15 @@ Gem::Specification.new do |s|
     "app/controllers/project_users_controller.rb",
     "app/controllers/projects_controller.rb",
     "app/controllers/role_users_controller.rb",
+    "app/controllers/roles_controller.rb",
     "app/controllers/user_organizations_controller.rb",
+    "app/controllers/user_permissions_controller.rb",
     "app/controllers/users_controller.rb",
     "app/controllers/wiki_document_templates_controller.rb",
     "app/controllers/wiki_documents_controller.rb",
+    "app/controllers/work_tasks_controller.rb",
     "app/helpers/application_helper.rb",
+    "app/models/bank_account.rb",
     "app/models/document.rb",
     "app/models/favorite.rb",
     "app/models/geo_city.rb",
@@ -58,16 +63,23 @@ Gem::Specification.new do |s|
     "app/models/project_list_item.rb",
     "app/models/project_organization.rb",
     "app/models/project_user.rb",
+    "app/models/role.rb",
     "app/models/role_user.rb",
     "app/models/user.rb",
     "app/models/user_organization.rb",
+    "app/models/user_permission.rb",
     "app/models/user_profile.rb",
     "app/models/user_profile_rule.rb",
     "app/models/wiki_document.rb",
     "app/models/wiki_document_template.rb",
+    "app/models/work_task.rb",
     "app/models/workflow_event.rb",
     "app/stylesheets/theme/default/style.sass",
     "app/views/audits/_list_audits.html.haml",
+    "app/views/bank_accounts/_bank_account_form.html.haml",
+    "app/views/bank_accounts/_bank_account_list.html.haml",
+    "app/views/bank_accounts/_bank_account_show.html.haml",
+    "app/views/bank_accounts/_list_bank_accounts.html.haml",
     "app/views/favorites/_favorite_form.html.haml",
     "app/views/favorites/_favorite_list.html.haml",
     "app/views/favorites/_favorite_show.html.haml",
@@ -84,8 +96,13 @@ Gem::Specification.new do |s|
     "app/views/group_members/_group_member_list.html.haml",
     "app/views/group_members/_group_member_show.html.haml",
     "app/views/group_members/_list_group_members.html.haml",
+    "app/views/groups/_group_form.html.haml",
+    "app/views/groups/_group_list.html.haml",
+    "app/views/groups/_group_show.html.haml",
+    "app/views/groups/_list_groups.html.haml",
     "app/views/insta/_show_action_buttons.html.haml",
     "app/views/insta/_show_buttons.html.haml",
+    "app/views/insta/_show_extra_buttons.html.haml",
     "app/views/layouts/printable_show.html.haml",
     "app/views/model_document_templates/_model_document_template_form.html.haml",
     "app/views/model_document_templates/_model_document_template_list.html.haml",
@@ -124,17 +141,25 @@ Gem::Specification.new do |s|
     "app/views/project_users/_project_user_form.html.haml",
     "app/views/project_users/_project_user_list.html.haml",
     "app/views/project_users/_project_user_show.html.haml",
+    "app/views/projects/_project_filter.html.haml",
+    "app/views/projects/_project_footer.html.haml",
     "app/views/projects/_project_form.html.haml",
     "app/views/projects/_project_list.html.haml",
     "app/views/projects/_project_show.html.haml",
     "app/views/role_users/_role_user_form.html.haml",
     "app/views/role_users/_role_user_list.html.haml",
     "app/views/role_users/_role_user_show.html.haml",
+    "app/views/roles/_role_form.html.haml",
+    "app/views/roles/_role_list.html.haml",
+    "app/views/roles/_role_show.html.haml",
     "app/views/user_organizations/_list_user_organizations.html.haml",
     "app/views/user_organizations/_user_organization_add.html.haml",
     "app/views/user_organizations/_user_organization_form.html.haml",
     "app/views/user_organizations/_user_organization_list.html.haml",
     "app/views/user_organizations/_user_organization_show.html.haml",
+    "app/views/user_permissions/_user_permission_form.html.haml",
+    "app/views/user_permissions/_user_permission_list.html.haml",
+    "app/views/user_permissions/_user_permission_show.html.haml",
     "app/views/users/_admin_user.html.haml",
     "app/views/users/_related_users.html.haml",
     "app/views/users/_user_form.html.haml",
@@ -149,6 +174,11 @@ Gem::Specification.new do |s|
     "app/views/wiki_documents/_wiki_document_form.html.haml",
     "app/views/wiki_documents/_wiki_document_list.html.haml",
     "app/views/wiki_documents/_wiki_document_show.html.haml",
+    "app/views/work_tasks/_list_work_tasks.html.haml",
+    "app/views/work_tasks/_work_task_filter.html.haml",
+    "app/views/work_tasks/_work_task_form.html.haml",
+    "app/views/work_tasks/_work_task_list.html.haml",
+    "app/views/work_tasks/_work_task_show.html.haml",
     "config/routes.rb",
     "lib/extensions/action_controller/base.rb",
     "lib/extensions/action_controller/controller_dsl_role.rb",
@@ -156,6 +186,7 @@ Gem::Specification.new do |s|
     "lib/extensions/action_controller/controller_dsl_update.rb",
     "lib/extensions/active_record/base.rb",
     "lib/extensions/active_record/model_dsl_workflow.rb",
+    "lib/extensions/controllers/fluxx_bank_accounts_controller.rb",
     "lib/extensions/controllers/fluxx_documents_controller.rb",
     "lib/extensions/controllers/fluxx_favorites_controller.rb",
     "lib/extensions/controllers/fluxx_geo_cities_controller.rb",
@@ -166,6 +197,7 @@ Gem::Specification.new do |s|
     "lib/extensions/controllers/fluxx_model_document_templates_controller.rb",
     "lib/extensions/controllers/fluxx_model_document_types_controller.rb",
     "lib/extensions/controllers/fluxx_model_documents_controller.rb",
+    "lib/extensions/controllers/fluxx_modules_controller.rb",
     "lib/extensions/controllers/fluxx_notes_controller.rb",
     "lib/extensions/controllers/fluxx_organizations_controller.rb",
     "lib/extensions/controllers/fluxx_project_list_items_controller.rb",
@@ -174,10 +206,14 @@ Gem::Specification.new do |s|
     "lib/extensions/controllers/fluxx_project_users_controller.rb",
     "lib/extensions/controllers/fluxx_projects_controller.rb",
     "lib/extensions/controllers/fluxx_role_users_controller.rb",
+    "lib/extensions/controllers/fluxx_roles_controller.rb",
     "lib/extensions/controllers/fluxx_user_organizations_controller.rb",
+    "lib/extensions/controllers/fluxx_user_permissions_controller.rb",
     "lib/extensions/controllers/fluxx_users_controller.rb",
     "lib/extensions/controllers/fluxx_wiki_document_templates_controller.rb",
     "lib/extensions/controllers/fluxx_wiki_documents_controller.rb",
+    "lib/extensions/controllers/fluxx_work_tasks_controller.rb",
+    "lib/extensions/models/fluxx_bank_account.rb",
     "lib/extensions/models/fluxx_document.rb",
     "lib/extensions/models/fluxx_favorite.rb",
     "lib/extensions/models/fluxx_geo_city.rb",
@@ -196,13 +232,16 @@ Gem::Specification.new do |s|
     "lib/extensions/models/fluxx_project_list_item.rb",
     "lib/extensions/models/fluxx_project_organization.rb",
     "lib/extensions/models/fluxx_project_user.rb",
+    "lib/extensions/models/fluxx_role.rb",
     "lib/extensions/models/fluxx_role_user.rb",
     "lib/extensions/models/fluxx_user.rb",
     "lib/extensions/models/fluxx_user_organization.rb",
+    "lib/extensions/models/fluxx_user_permission.rb",
     "lib/extensions/models/fluxx_user_profile.rb",
     "lib/extensions/models/fluxx_user_profile_rule.rb",
     "lib/extensions/models/fluxx_wiki_document.rb",
     "lib/extensions/models/fluxx_wiki_document_template.rb",
+    "lib/extensions/models/fluxx_work_task.rb",
     "lib/extensions/models/fluxx_workflow_event.rb",
     "lib/extensions/test/fluxx_crm_blueprint.rb",
     "lib/extensions/test/fluxx_crm_test_helper.rb",
@@ -212,6 +251,8 @@ Gem::Specification.new do |s|
     "lib/generators/fluxx_crm_migration/templates/add_allowed_field_to_profile_rules.rb",
     "lib/generators/fluxx_crm_migration/templates/add_description_to_project_relationships.rb",
     "lib/generators/fluxx_crm_migration/templates/add_fields_to_organization.rb",
+    "lib/generators/fluxx_crm_migration/templates/add_worktask_completed_at_date.rb",
+    "lib/generators/fluxx_crm_migration/templates/create_bank_account.rb",
     "lib/generators/fluxx_crm_migration/templates/create_documents.rb",
     "lib/generators/fluxx_crm_migration/templates/create_favorites.rb",
     "lib/generators/fluxx_crm_migration/templates/create_geo_cities.rb",
@@ -230,13 +271,16 @@ Gem::Specification.new do |s|
     "lib/generators/fluxx_crm_migration/templates/create_project_organizations.rb",
     "lib/generators/fluxx_crm_migration/templates/create_project_users.rb",
     "lib/generators/fluxx_crm_migration/templates/create_projects.rb",
+    "lib/generators/fluxx_crm_migration/templates/create_role.rb",
     "lib/generators/fluxx_crm_migration/templates/create_role_users.rb",
     "lib/generators/fluxx_crm_migration/templates/create_user_organizations.rb",
+    "lib/generators/fluxx_crm_migration/templates/create_user_permission.rb",
     "lib/generators/fluxx_crm_migration/templates/create_user_profile_rules.rb",
     "lib/generators/fluxx_crm_migration/templates/create_user_profiles.rb",
     "lib/generators/fluxx_crm_migration/templates/create_users.rb",
     "lib/generators/fluxx_crm_migration/templates/create_wiki_document_templates.rb",
     "lib/generators/fluxx_crm_migration/templates/create_wiki_documents.rb",
+    "lib/generators/fluxx_crm_migration/templates/create_work_task.rb",
     "lib/generators/fluxx_crm_migration/templates/create_workflow_events.rb",
     "lib/generators/fluxx_crm_migration/templates/remove_deleted_at_from_user_organizations.rb",
     "lib/generators/fluxx_crm_migration/templates/user_add_column_for_test_user_flag.rb",
@@ -277,7 +321,7 @@ Gem::Specification.new do |s|
     "test/dummy/db/migrate/20100712164111_fluxx_engine_create_multi_element_values.rb",
     "test/dummy/db/migrate/20100712164112_fluxx_engine_create_multi_element_choices.rb",
     "test/dummy/db/migrate/20100712164113_fluxx_engine_create_client_stores.rb",
-    "test/dummy/db/migrate/20100712182238_fluxx_crm_create_favorites.rb",
+    "test/dummy/db/migrate/20100712182239_fluxx_crm_create_groups.rb",
     "test/dummy/db/migrate/20100712182240_fluxx_crm_create_group_members.rb",
     "test/dummy/db/migrate/20100713221659_fluxx_crm_create_organizations.rb",
     "test/dummy/db/migrate/20100713221700_fluxx_crm_create_user_organizations.rb",
@@ -285,7 +329,6 @@ Gem::Specification.new do |s|
     "test/dummy/db/migrate/20100713221702_fluxx_crm_create_notes.rb",
     "test/dummy/db/migrate/20100713221842_fluxx_crm_create_model_documents.rb",
     "test/dummy/db/migrate/20100715163024_fluxx_crm_create_geo_cities.rb",
-    "test/dummy/db/migrate/20100720033741_fluxx_crm_create_groups.rb",
     "test/dummy/db/migrate/20100723040020_fluxx_crm_create_workflow_events.rb",
     "test/dummy/db/migrate/20100725015340_create_races.rb",
     "test/dummy/db/migrate/20100804140632_fluxx_crm_create_role_users.rb",
@@ -307,8 +350,15 @@ Gem::Specification.new do |s|
     "test/dummy/db/migrate/20101202004423_fluxx_crm_remove_deleted_at_from_user_organizations.rb",
     "test/dummy/db/migrate/20101222195509_fluxx_crm_user_add_column_for_test_user_flag.rb",
     "test/dummy/db/migrate/20110110215103_fluxx_crm_add_fields_to_organization.rb",
+    "test/dummy/db/migrate/20110124205725_fluxx_crm_create_bank_account.rb",
+    "test/dummy/db/migrate/20110128035232_fluxx_crm_create_work_task.rb",
+    "test/dummy/db/migrate/20110130003839_fluxx_crm_add_worktask_completed_at_date.rb",
+    "test/dummy/db/migrate/20110211005307_fluxx_crm_create_role.rb",
+    "test/dummy/db/migrate/20110211005308_fluxx_crm_create_favorites.rb",
+    "test/dummy/db/migrate/20110212190339_fluxx_crm_create_user_permission.rb",
     "test/dummy/db/schema.rb",
     "test/fluxx_crm_test.rb",
+    "test/functional/bank_accounts_controller_test.rb",
     "test/functional/documents_controller_test.rb",
     "test/functional/favorites_controller_test.rb",
     "test/functional/geo_cities_controller_test.rb",
@@ -327,15 +377,19 @@ Gem::Specification.new do |s|
     "test/functional/projects_controller_test.rb",
     "test/functional/races_controller_test.rb",
     "test/functional/role_users_controller_test.rb",
+    "test/functional/roles_controller_test.rb",
     "test/functional/user_organizations_controller_test.rb",
+    "test/functional/user_permissions_controller_test.rb",
     "test/functional/users_controller_test.rb",
     "test/functional/wiki_document_templates_controller_test.rb",
     "test/functional/wiki_documents_controller_test.rb",
+    "test/functional/work_tasks_controller_test.rb",
     "test/integration/navigation_test.rb",
     "test/support/integration_case.rb",
     "test/test_helper.rb",
     "test/unit/action_controller/controller_dsl_role_test.rb",
     "test/unit/active_record/model_dsl_workflow_test.rb",
+    "test/unit/bank_account_test.rb",
     "test/unit/models/favorite_test.rb",
     "test/unit/models/geo_city_test.rb",
     "test/unit/models/geo_country_test.rb",
@@ -353,7 +407,10 @@ Gem::Specification.new do |s|
     "test/unit/models/user_organization_test.rb",
     "test/unit/models/user_test.rb",
     "test/unit/models/wiki_document_test.rb",
-    "test/unit/models/workflow_event_test.rb"
+    "test/unit/models/workflow_event_test.rb",
+    "test/unit/role_test.rb",
+    "test/unit/user_permission_test.rb",
+    "test/unit/work_task_test.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -366,6 +423,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<acts_as_audited_rails3>, [">= 1.1.2"])
       s.add_runtime_dependency(%q<capybara>, ["= 0.3.7"])
       s.add_runtime_dependency(%q<sqlite3-ruby>, [">= 0"])
+      s.add_runtime_dependency(%q<mysql>, [">= 0"])
       s.add_runtime_dependency(%q<formtastic>, ["~> 1.1.0"])
       s.add_runtime_dependency(%q<haml>, [">= 3"])
       s.add_runtime_dependency(%q<will_paginate>, ["~> 3.0.pre2"])
@@ -379,12 +437,16 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<paperclip>, [">= 0"])
       s.add_runtime_dependency(%q<compass>, [">= 0"])
       s.add_runtime_dependency(%q<liquid>, [">= 0"])
+      s.add_runtime_dependency(%q<writeexcel>, [">= 0.6.1"])
+      s.add_runtime_dependency(%q<httpi>, [">= 0"])
+      s.add_runtime_dependency(%q<crack>, [">= 0"])
     else
       s.add_dependency(%q<rails>, ["= 3.0.3"])
       s.add_dependency(%q<aasm>, ["= 2.2.0"])
       s.add_dependency(%q<acts_as_audited_rails3>, [">= 1.1.2"])
       s.add_dependency(%q<capybara>, ["= 0.3.7"])
       s.add_dependency(%q<sqlite3-ruby>, [">= 0"])
+      s.add_dependency(%q<mysql>, [">= 0"])
       s.add_dependency(%q<formtastic>, ["~> 1.1.0"])
       s.add_dependency(%q<haml>, [">= 3"])
       s.add_dependency(%q<will_paginate>, ["~> 3.0.pre2"])
@@ -398,6 +460,9 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<paperclip>, [">= 0"])
       s.add_dependency(%q<compass>, [">= 0"])
       s.add_dependency(%q<liquid>, [">= 0"])
+      s.add_dependency(%q<writeexcel>, [">= 0.6.1"])
+      s.add_dependency(%q<httpi>, [">= 0"])
+      s.add_dependency(%q<crack>, [">= 0"])
     end
   else
     s.add_dependency(%q<rails>, ["= 3.0.3"])
@@ -405,6 +470,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<acts_as_audited_rails3>, [">= 1.1.2"])
     s.add_dependency(%q<capybara>, ["= 0.3.7"])
     s.add_dependency(%q<sqlite3-ruby>, [">= 0"])
+    s.add_dependency(%q<mysql>, [">= 0"])
     s.add_dependency(%q<formtastic>, ["~> 1.1.0"])
     s.add_dependency(%q<haml>, [">= 3"])
     s.add_dependency(%q<will_paginate>, ["~> 3.0.pre2"])
@@ -418,6 +484,9 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<paperclip>, [">= 0"])
     s.add_dependency(%q<compass>, [">= 0"])
     s.add_dependency(%q<liquid>, [">= 0"])
+    s.add_dependency(%q<writeexcel>, [">= 0.6.1"])
+    s.add_dependency(%q<httpi>, [">= 0"])
+    s.add_dependency(%q<crack>, [">= 0"])
   end
 end
 
