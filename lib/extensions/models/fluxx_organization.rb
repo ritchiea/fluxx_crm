@@ -201,4 +201,23 @@ module FluxxOrganization
       end
     end
   end
+  
+  def self.charity_check ein
+    hash = {}
+    if (defined?(CHARITY_CHECK_USERNAME) && defined?(CHARITY_CHECK_PASSWORD) && !ein.nil?)
+      # Authenticate and retrieve the cookie
+      response = HTTPI.post "https://www2.guidestar.org/WebServiceLogin.asmx/Login", "userName=#{CHARITY_CHECK_USERNAME}&password=#{CHARITY_CHECK_PASSWORD}"
+      cookie = response.headers["Set-Cookie"] 
+    
+      # Call the GetCCInfo webservice
+      request = HTTPI::Request.new "https://www2.guidestar.org/WebService.asmx/GetCCInfo"
+      request.body =  "ein=#{ein}"
+      request.headers["Cookie"] = cookie
+      response = HTTPI.post request
+      xml = Crack::XML.parse(response.body)["string"]
+      # Charity Check seems to incorrectly return the XML encoding as utf-16
+      hash = Crack::XML.parse(xml.sub('<?xml version="1.0" encoding="utf-16"?>', '<?xml version="1.0" encoding="utf-8"?>'))
+    end
+    hash
+  end
 end
