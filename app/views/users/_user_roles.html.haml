@@ -2,13 +2,13 @@
   %h3
     = "Roles"
     - if current_user.is_admin?
-      - user_admin_role = model.is_admin?
+      - user_admin_permission = model.is_admin?
       %span.caption
-        - if user_admin_role
+        - if user_admin_permission
           %span.caption= "(Admin)"
-          %span.actions= link_to 'remove admin role', user_admin_role, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+          %span.actions= link_to 'remove admin role', user_admin_permission, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
         - else
-          %span.actions= link_to 'add admin role', role_users_path(:role_user => {:user_id => model.id, :role_id => Role.admin_role.id}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
+          %span.actions= link_to 'add admin role', user_permissions_path(:user_permission => {:user_id => model.id, :name => 'admin'}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
 
   - if current_user.is_admin?
     %h4
