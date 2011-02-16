@@ -24,8 +24,6 @@ gem 'paperclip'
 gem 'compass'
 gem 'liquid'
 gem 'writeexcel', '>=0.6.1'
-gem 'httpi'
-gem 'crack'
 
 if RUBY_VERSION < '1.9'
   gem "ruby-debug", ">= 0.10.3"
