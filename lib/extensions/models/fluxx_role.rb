@@ -31,8 +31,8 @@ module FluxxRole
   
 
   module ModelClassMethods
-    def admin_role
-      Role.where(:name => 'admin', :roleable_type => nil)
+    def all_roles
+      Role.where(:deleted_at => nil).order('name asc').all
     end
   end
   
