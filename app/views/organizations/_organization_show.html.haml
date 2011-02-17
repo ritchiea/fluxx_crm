@@ -7,6 +7,7 @@
 - unless params[:show_satellite]
   = render :partial => "list_organization_satellites", :locals => { :model => model}
   = render :partial => "bank_accounts/list_bank_accounts", :locals => { :model => model, :organization_id => model.id}
+  = render :partial => 'organizations/display_charity_check_details', :locals => {:model => model, :show_recheck => true}
   = render :partial => "model_documents/list_model_documents", :locals => { :model => model}
   = render :partial => "group_members/list_group_members", :locals => { :model => @model, :class_type => Organization.name}
   = render :partial => "notes/list_notes", :locals => { :model => @model, :class_type => Organization.name}
