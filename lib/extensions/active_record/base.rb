@@ -86,14 +86,7 @@ class ActiveRecord::Base
       end
       
       define_method :state_in do |states|
-        self_state = self.state
-        # Note that before the model is created, it may have a blank state; for now consider that to be the initial state
-        self_state = self.class.aasm_initial_state if self_state.blank?
-        if states.is_a?(Array)
-          !states.select{|cur_state| cur_state.to_s == self_state.to_s}.empty?
-        else
-          states.to_s == self_state
-        end
+        local_workflow_object.state_in self, states
       end
 
       define_method :track_workflow_create do
@@ -107,19 +100,7 @@ class ActiveRecord::Base
       end
     
       define_method :track_workflow_changes do |force, change_type|
-        # If state changed, track a WorkflowEvent
-        if force || (changed_attributes['state'] != state && !changed_attributes['state'].blank?)
-         unless workflow_object.workflow_disabled
-            wfe = WorkflowEvent.create :comment => self.workflow_note, :change_type => change_type, :ip_address => self.workflow_ip_address.to_s, :workflowable_type => self.class.to_s, 
-              :workflowable_id => self.id, :old_state   => changed_attributes['state'] || '', :new_state => self.state || '', :created_by  => self.updated_by, :updated_by => self.updated_by
-            # p "ESH: creating new wfe=#{wfe.inspect}"
-            # begin
-            #   rails Exception.new 'stack trace'
-            # rescue Exception => exception
-            #   p "ESH: have an exception #{exception.backtrace.inspect}"
-            # end
-          end
-        end
+        local_workflow_object.track_workflow_changes self, force, change_type
       end
     
       define_method :state_to_english do
@@ -129,17 +110,7 @@ class ActiveRecord::Base
       # Allow a parameter possible_events which is an array of legal event names that are being looked for
       define_method :current_allowed_events do |*optional|
         possible_events, *ignored = *optional
-        all_events = self.aasm_events_for_current_state
-        
-        permitted_events = if possible_events
-          all_events & possible_events
-        else
-          all_events
-        end || []
-        
-        permitted_events.map do |event_name|
-          [event_name, self.class.event_to_english(event_name)]
-        end
+        local_workflow_object.current_allowed_events self, possible_events
       end
     end
   end

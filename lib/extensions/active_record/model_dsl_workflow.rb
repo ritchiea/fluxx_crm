@@ -22,6 +22,50 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     model.send(event_name)
   end
   
+  # Note that this can be overridden to swap in different functionality to determine the allowed events
+  def current_allowed_events model, possible_events
+    all_events = model.aasm_events_for_current_state
+    
+    permitted_events = if possible_events
+      all_events & possible_events
+    else
+      all_events
+    end || []
+    
+    permitted_events.map do |event_name|
+      [event_name, model.class.event_to_english(event_name)]
+    end
+    
+  end
+  
+  def state_in model, states
+    self_state = model.state
+    # Note that before the model is created, it may have a blank state; for now consider that to be the initial state
+    self_state = model.class.aasm_initial_state if self_state.blank?
+    if states.is_a?(Array)
+      !states.select{|cur_state| cur_state.to_s == self_state.to_s}.empty?
+    else
+      states.to_s == self_state
+    end
+  end
+  
+  def track_workflow_changes model, force, change_type
+    # If state changed, track a WorkflowEvent
+    if force || (model.send(:changed_attributes)['state'] != model.state && !(model.send(:changed_attributes)['state']).blank?)
+     unless workflow_disabled
+        wfe = WorkflowEvent.create :comment => model.workflow_note, :change_type => change_type, :ip_address => model.workflow_ip_address.to_s, :workflowable_type => model.class.to_s, 
+          :workflowable_id => model.id, :old_state => (model.send(:changed_attributes)['state']) || '', :new_state => model.state || '', :created_by  => model.updated_by, :updated_by => model.updated_by
+        # p "ESH: creating new wfe=#{wfe.inspect}"
+        # begin
+        #   rails Exception.new 'stack trace'
+        # rescue Exception => exception
+        #   p "ESH: have an exception #{exception.backtrace.inspect}"
+        # end
+      end
+    end
+  end
+  
+  
   def state_to_english state_name
     if !state_name.blank? && states_to_english && states_to_english.is_a?(Hash)
       states_to_english[state_name.to_sym]

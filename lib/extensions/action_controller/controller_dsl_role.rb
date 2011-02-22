@@ -38,6 +38,15 @@ class ActionController::ControllerDslRole < ActionController::ControllerDsl
     event_role_mappings[event] = nil
   end
   
+  def check_if_events_allowed? user, events, related_object_model
+    events_available = events.select do |event| 
+      event = event.first if event.is_a? Array
+      event_allowed_for_user?(user, event, related_object_model)
+    end
+    events_available.empty? ? nil : events_available
+  end
+  
+  
   def event_allowed_for_user? user, event, related_object_model=nil
     return true if user.is_admin?
     event_mappings = event_role_mappings[event]

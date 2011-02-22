@@ -32,14 +32,8 @@ class ActionController::Base
       
       define_method :event_allowed? do |events, model|
         events = [events] unless events.is_a?(Array)
-        
         related_object_model = extract_related_model model
-        
-        events_available = events.select do |event| 
-          event = event.first if event.is_a? Array
-          role_object.event_allowed_for_user?(fluxx_current_user, event, related_object_model)
-        end
-        events_available.empty? ? nil : events_available
+        role_object.check_if_events_allowed?(fluxx_current_user, events, related_object_model)
       end
     end
   end

@@ -148,7 +148,7 @@ class UserTest < ActiveSupport::TestCase
     
     assert !user.has_create_for_model?(Organization)
     
-    UserProfileRule.make :user_profile => user_profile, :permission_name => 'create', :model_class => Organization
+    UserProfileRule.make :user_profile => user_profile, :permission_name => 'create', :model_type => Organization.name
     assert user.reload.has_create_for_model?(Organization)
   end
   
@@ -236,7 +236,7 @@ class UserTest < ActiveSupport::TestCase
     user_profile, user = setup_user_profile
     UserProfileRule.create :user_profile => user_profile, :permission_name => 'create_all'
     assert user.reload.has_create_for_model?(Organization)
-    UserProfileRule.create :user_profile => user_profile, :permission_name => 'create', :model_class => Organization, :allowed => false
+    UserProfileRule.create :user_profile => user_profile, :permission_name => 'create', :model_type => Organization.name, :allowed => false
     user.reload
     assert !user.reload.has_create_for_model?(Organization)
     assert user.reload.has_create_for_model?(TestModel)
