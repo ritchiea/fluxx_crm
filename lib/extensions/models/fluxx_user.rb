@@ -18,6 +18,7 @@ module FluxxUser
     base.has_many :group_members, :as => :groupable
     base.has_many :groups, :through => :group_members
     base.has_many :role_users
+    base.has_many :roles, :through => :role_users
     base.has_many :user_permissions
     base.has_many :bank_accounts, :foreign_key => :owner_user_id
     base.acts_as_audited({:full_model_enabled => true, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
@@ -161,7 +162,8 @@ module FluxxUser
     ######################################### ROLES
     def add_role role_name, related_object = nil
       role = if related_object
-        Role.where(:name => role_name, :roleable_type => related_object.class.name).first || Role.create(:name => role_name, :roleable_type => related_object.class.name)
+        related_object_class = related_object.is_a?(Class) ? related_object : related_object.class
+        Role.where(:name => role_name, :roleable_type => related_object_class.name).first || Role.create(:name => role_name, :roleable_type => related_object_class.name)
       else
         Role.where(:name => role_name).first || Role.create(:name => role_name)
       end
@@ -182,6 +184,7 @@ module FluxxUser
       return true if is_admin?
       if related_object
         roles = role_users.joins(:role).where(:roleable_id => related_object.id, :roles => {:roleable_type => related_object.class.name, :name => role_name}).all
+        prms = {:roleable_id => related_object.id, :roles => {:roleable_type => related_object.class.name, :name => role_name}}
         roles = role_users.joins(:role).where(:roleable_id => related_object.parent_id, :roles => {:roleable_type => related_object.class.name, :name => role_name}).all if roles.empty? && related_object.respond_to?('parent_id')
         roles
       else

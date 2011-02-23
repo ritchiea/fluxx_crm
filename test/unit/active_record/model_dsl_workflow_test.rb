@@ -42,7 +42,8 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
     assert workflow.states_to_english.empty?
     workflow.add_state_to_english :a_new_state, 'A New State'
     assert_equal workflow.states_to_english.size, 1
-    assert_equal workflow.state_to_english('a_new_state'), 'A New State'
+    race.state = 'a_new_state'
+    assert_equal workflow.state_to_english(race), 'A New State'
   end
 
 end

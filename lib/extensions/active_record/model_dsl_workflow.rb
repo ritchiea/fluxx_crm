@@ -17,6 +17,10 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     self.non_validating_events = []
   end
   
+  def prepare_model model
+    # placeholder for adding workflow-related methods
+  end
+  
   # Note that this can be overridden to swap in different state machine systems
   def fire_event model, event_name
     model.send(event_name)
@@ -55,7 +59,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
      unless workflow_disabled
         wfe = WorkflowEvent.create :comment => model.workflow_note, :change_type => change_type, :ip_address => model.workflow_ip_address.to_s, :workflowable_type => model.class.to_s, 
           :workflowable_id => model.id, :old_state => (model.send(:changed_attributes)['state']) || '', :new_state => model.state || '', :created_by  => model.updated_by, :updated_by => model.updated_by
-        # p "ESH: creating new wfe=#{wfe.inspect}"
+        # p "ESH: creating new wfe=#{wfe.inspect}, errors=#{wfe.errors.inspect}"
         # begin
         #   rails Exception.new 'stack trace'
         # rescue Exception => exception
@@ -66,7 +70,11 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   
-  def state_to_english state_name
+  def state_to_english model
+    state_to_english_from_state_name model.state
+  end
+  
+  def state_to_english_from_state_name state_name
     if !state_name.blank? && states_to_english && states_to_english.is_a?(Hash)
       states_to_english[state_name.to_sym]
     end || state_name

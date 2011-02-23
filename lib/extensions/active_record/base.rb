@@ -23,6 +23,8 @@ class ActiveRecord::Base
       
       self.send :attr_accessor, :promotion_event
       
+      local_workflow_object.prepare_model self
+      
       def update_attribute_without_log_with_specific key, value
         if self.class.respond_to?(:without_workflow)
           self.class.without_workflow do
@@ -65,7 +67,7 @@ class ActiveRecord::Base
         end
         
         def state_to_english_translation state_name
-          workflow_object.state_to_english state_name
+          workflow_object.state_to_english_from_state_name state_name
         end
         
         def workflow_states
@@ -104,7 +106,11 @@ class ActiveRecord::Base
       end
     
       define_method :state_to_english do
-        local_workflow_object.state_to_english self.state
+        local_workflow_object.state_to_english self
+      end
+    
+      define_method :event_to_english do |event_name|
+        local_workflow_object.event_to_english event_name
       end
     
       # Allow a parameter possible_events which is an array of legal event names that are being looked for
