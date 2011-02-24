@@ -77,7 +77,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   
   # TODO ESH: change the below to use metadata added to describe the type of state when calling add_state_to_english for example
   def in_new_state? model
-    model.state.to_s =~ /^new/
+    model.state.to_s =~ /^new/ || model.state.blank?
   end
 
   def in_reject_state? model
