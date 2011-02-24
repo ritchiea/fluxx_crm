@@ -3,6 +3,10 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   attr_accessor :sql_query
   # A mapping from symbol to english word for states
   attr_accessor :states_to_english
+  # A mapping from symbol to category
+  attr_accessor :states_to_category
+  # An ordered list of states
+  attr_accessor :ordered_states
   # A mapping from symbol to english word for events
   attr_accessor :events_to_english
   # A list of events to skip validating on when changing state
@@ -13,7 +17,9 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   def initialize model_class
     super model_class
     self.states_to_english = HashWithIndifferentAccess.new
+    self.states_to_category = HashWithIndifferentAccess.new
     self.events_to_english = HashWithIndifferentAccess.new
+    self.ordered_states = []
     self.non_validating_events = []
   end
   
@@ -69,6 +75,22 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     end
   end
   
+  # TODO ESH: change the below to use metadata added to describe the type of state when calling add_state_to_english for example
+  def in_new_state? model
+    model.state.to_s =~ /^new/
+  end
+
+  def in_reject_state? model
+    model.state.to_s =~ /^reject/
+  end
+
+  def in_workflow_state? model
+    !(model.in_new_state || model.in_reject_state || model.in_sentback_state)
+  end
+
+  def in_sentback_state? model
+    model.state.to_s =~ /sent_back/
+  end
   
   def state_to_english model
     state_to_english_from_state_name model.state
@@ -86,8 +108,19 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     end || event_name
   end
   
-  def add_state_to_english new_state, state_name
+  def add_state_to_english new_state, state_name, category_names=nil
     states_to_english[new_state.to_sym] = state_name
+    if category_names
+      category_states = states_to_category[new_state.to_sym]
+      category_states = [] unless category_states
+      if category_names.is_a? Array
+        category_states.each{|cn| category_states << cn.to_s}
+      else
+        category_states << category_names.to_s 
+      end
+      states_to_category[new_state.to_sym] = category_states
+    end
+    ordered_states << new_state
   end
 
   def add_event_to_english new_event, event_name
@@ -99,6 +132,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def clear_states_to_english
+    ordered_states.clear
+    states_to_category.clear
     states_to_english.clear
   end
 
@@ -111,6 +146,73 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def all_states
-    states_to_english.keys
+    ordered_states
+  end
+
+  def all_states_with_category category
+    if category
+      ordered_states.select do |state_name| 
+        if state_name
+          cur_categories = states_to_category[state_name.to_sym]
+          if cur_categories
+            !cur_categories.select{|cur_category| cur_category.to_s == category.to_s}.empty?
+          end
+        end
+      end
+    end || []
+  end
+  
+  def is_reject_state? state_name
+     state_name.to_s =~ /reject/ || state_name.to_s =~ /cancel/
+  end
+  def is_new_state? state_name
+    state_name.to_s =~ /^new/
+  end
+  def is_sent_back_state? state_name
+    state_name.to_s =~ /sent_back/
+  end
+  
+  def all_workflow_states
+    all_states - all_rejected_states - all_sent_back_states
+  end
+  
+  def all_rejected_states
+    ordered_states.select{|st| is_reject_state? st.to_s }
+  end
+
+  def all_new_states
+    ordered_states.select{|st| is_new_state? st.to_s }
+  end
+
+  def all_sent_back_states
+    ordered_states.select{|st| is_sent_back_state? st.to_s }
+  end
+  
+  def extract_all_event_types model_class
+    model_class.aasm_events.keys.map do |event_name|
+      event_to_state = model_class.aasm_events[event_name].instance_variable_get('@transitions').first.instance_variable_get '@to' rescue nil
+      [event_name, event_to_state]
+    end
+  end
+
+  def all_events model_class
+    extract_all_event_types(model_class).map{|pair| pair.first}
+  end
+  
+  def all_workflow_events model_class
+    all_events = extract_all_event_types(model_class).map{|pair| pair.first}
+    all_events - all_rejected_events(model_class) - all_new_events(model_class) - all_sent_back_events(model_class)
+  end
+
+  def all_rejected_events model_class
+    extract_all_event_types(model_class).select{|pair| is_reject_state?(pair[1])}.map{|pair| pair.first}
+  end
+  
+  def all_new_events model_class
+    extract_all_event_types(model_class).select{|pair| is_new_state?(pair[1])}.map{|pair| pair.first}
+  end
+
+  def all_sent_back_events model_class
+    extract_all_event_types(model_class).select{|pair| is_sent_back_state?(pair[1])}.map{|pair| pair.first}
   end
 end

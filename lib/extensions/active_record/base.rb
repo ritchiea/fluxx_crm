@@ -70,13 +70,51 @@ class ActiveRecord::Base
           workflow_object.state_to_english_from_state_name state_name
         end
         
-        def workflow_states
+        def all_states_with_category category
+          workflow_object.all_states_with_category category
+        end
+        
+        def all_states
           workflow_object.all_states
         end
         
-        def workflow_events
-          workflow_object.all_events
+        def all_workflow_states
+          workflow_object.all_workflow_states
         end
+
+        def all_rejected_states
+          workflow_object.all_rejected_states
+        end
+        
+        def all_new_states
+          workflow_object.all_new_states
+        end
+
+        def all_sent_back_states
+          workflow_object.all_sent_back_states
+        end
+        
+        
+        def all_events
+          workflow_object.all_events self
+        end
+        
+        def all_workflow_events
+          workflow_object.all_workflow_events self
+        end
+
+        def all_rejected_events
+          workflow_object.all_rejected_events self
+        end
+        
+        def all_new_events
+          workflow_object.all_new_events self
+        end
+
+        def all_sent_back_events
+          workflow_object.all_sent_back_events self
+        end
+        
       end
       
       define_method :insta_fire_event do |event_name|
@@ -89,6 +127,22 @@ class ActiveRecord::Base
       
       define_method :state_in do |states|
         local_workflow_object.state_in self, states
+      end
+
+      define_method :in_new_state? do
+        local_workflow_object.in_new_state? self
+      end
+
+      define_method :in_reject_state? do
+        local_workflow_object.in_reject_state? self
+      end
+
+      define_method :in_workflow_state? do
+        local_workflow_object.in_workflow_state? self
+      end
+
+      define_method :in_sentback_state? do
+        local_workflow_object.in_sentback_state? self
       end
 
       define_method :track_workflow_create do
