@@ -24,6 +24,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   
   # Note that this can be overridden to swap in different functionality to determine the allowed events
   def current_allowed_events model, possible_events
+    return [] if model.state.blank?
+    
     all_events = model.aasm_events_for_current_state
     
     permitted_events = if possible_events
