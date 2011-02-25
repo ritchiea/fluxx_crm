@@ -115,6 +115,9 @@ class ActiveRecord::Base
           workflow_object.all_sent_back_events self
         end
         
+        def all_events_with_category category
+          workflow_object.all_events_with_category category
+        end
       end
       
       define_method :insta_fire_event do |event_name|
@@ -143,6 +146,10 @@ class ActiveRecord::Base
 
       define_method :in_sentback_state? do
         local_workflow_object.in_sentback_state? self
+      end
+
+      define_method :in_state_with_category? do |category|
+        local_workflow_object.in_state_with_category? self, category
       end
 
       define_method :track_workflow_create do

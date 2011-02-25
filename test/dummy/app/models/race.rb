@@ -2,8 +2,8 @@ class Race < ActiveRecord::Base
   belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
 
   insta_workflow do |insta|
-    insta.add_state_to_english :new, 'New'
-    insta.add_state_to_english :beginning, 'Beginning'
+    insta.add_state_to_english :new, 'New', 'new'
+    insta.add_state_to_english :beginning, 'Beginning', ['fun', 'angry']
     insta.add_state_to_english :middle, 'Middle'
     insta.add_state_to_english :final, 'Final'
 

@@ -92,6 +92,10 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     model.state.to_s =~ /sent_back/
   end
   
+  def in_state_with_category? model, category
+    all_states_with_category(category).include?(model.state)
+  end
+  
   def state_to_english model
     state_to_english_from_state_name model.state
   end
@@ -111,14 +115,14 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   def add_state_to_english new_state, state_name, category_names=nil
     states_to_english[new_state.to_sym] = state_name
     if category_names
-      category_states = states_to_category[new_state.to_sym]
+      category_states = self.states_to_category[new_state.to_sym]
       category_states = [] unless category_states
       if category_names.is_a? Array
-        category_states.each{|cn| category_states << cn.to_s}
+        category_names.each{|cn| category_states << cn.to_s}
       else
         category_states << category_names.to_s 
       end
-      states_to_category[new_state.to_sym] = category_states
+      self.states_to_category[new_state.to_sym] = category_states
     end
     ordered_states << new_state
   end
@@ -132,9 +136,9 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def clear_states_to_english
-    ordered_states.clear
-    states_to_category.clear
-    states_to_english.clear
+    self.ordered_states.clear
+    self.states_to_category.clear
+    self.states_to_english.clear
   end
 
   def clear_events_to_english
@@ -148,7 +152,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   def all_states
     ordered_states
   end
-
+  
   def all_states_with_category category
     if category
       ordered_states.select do |state_name| 
@@ -205,14 +209,19 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
 
   def all_rejected_events model_class
-    extract_all_event_types(model_class).select{|pair| is_reject_state?(pair[1])}.map{|pair| pair.first}
+    extract_all_event_types(model_class).select{|pair| is_reject_state?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
   end
   
   def all_new_events model_class
-    extract_all_event_types(model_class).select{|pair| is_new_state?(pair[1])}.map{|pair| pair.first}
+    extract_all_event_types(model_class).select{|pair| is_new_state?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
   end
 
   def all_sent_back_events model_class
-    extract_all_event_types(model_class).select{|pair| is_sent_back_state?(pair[1])}.map{|pair| pair.first}
+    extract_all_event_types(model_class).select{|pair| is_sent_back_state?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
+  end
+  
+  def all_events_with_category category_name
+    category_states = all_states_with_category category_name
+    extract_all_event_types(model_class).select{|pair| category_states.include?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
   end
 end

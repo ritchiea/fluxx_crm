@@ -45,5 +45,15 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
     race.state = 'a_new_state'
     assert_equal workflow.state_to_english(race), 'A New State'
   end
+  
+  test 'category test new' do
+    states = Race.all_states_with_category 'new'
+    assert_equal [:new], states
+  end
+  
+  test 'category test fun' do
+    states = Race.all_states_with_category 'fun'
+    assert_equal [:beginning], states
+  end
 
 end
