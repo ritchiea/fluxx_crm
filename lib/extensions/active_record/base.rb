@@ -22,6 +22,7 @@ class ActiveRecord::Base
       yield local_workflow_object if block_given?
       
       self.send :attr_accessor, :promotion_event
+      self.send :attr_accessor, :running_timeline
       
       local_workflow_object.prepare_model self
       
@@ -94,7 +95,6 @@ class ActiveRecord::Base
           workflow_object.all_sent_back_states
         end
         
-        
         def all_events
           workflow_object.all_events self
         end
@@ -117,6 +117,10 @@ class ActiveRecord::Base
         
         def all_events_with_category category
           workflow_object.all_events_with_category category
+        end
+        
+        def all_state_categories_with_descriptions
+          workflow_object.all_state_categories_with_descriptions
         end
       end
       

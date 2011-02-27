@@ -167,6 +167,12 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
       end
     end || []
   end
+
+  def all_state_categories_with_descriptions
+    states_to_category.values.map do |category|
+      [category.to_s.humanize, category]
+    end
+  end
   
   def is_reject_state? state_name
      state_name.to_s =~ /reject/ || state_name.to_s =~ /cancel/
