@@ -6,10 +6,14 @@ class Race < ActiveRecord::Base
     insta.add_state_to_english :beginning, 'Beginning', ['fun', 'angry']
     insta.add_state_to_english :middle, 'Middle'
     insta.add_state_to_english :final, 'Final'
+    insta.add_state_to_english :rejected, 'Reject'
+    insta.add_state_to_english :sent_back_starting_line, 'Sent Back to Starting Line'
 
     insta.add_event_to_english :kick_off, 'Kick Off'
     insta.add_event_to_english :sprint, 'Sprint'
     insta.add_event_to_english :final_sprint, 'Final Sprint'
+    insta.add_event_to_english :reject, 'Reject'
+    insta.add_event_to_english :send_back_starting_line, 'Send Back to Starting Line'
     
     insta.add_non_validating_event :reject
   end
@@ -25,6 +29,7 @@ class Race < ActiveRecord::Base
   aasm_state :beginning
   aasm_state :middle
   aasm_state :final
+  aasm_state :sent_back_starting_line
   
   aasm_event :reject do
     transitions :from => [:new, :beginning, :middle, :final], :to => :rejected
@@ -36,6 +41,10 @@ class Race < ActiveRecord::Base
 
   aasm_event :sprint do
     transitions :from => :beginning, :to => :middle
+  end
+
+  aasm_event :send_back_starting_line do
+    transitions :from => [:middle, :final], :to => :sent_back_starting_line
   end
 
   aasm_event :final_sprint do

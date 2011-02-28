@@ -72,27 +72,27 @@ class ActiveRecord::Base
         end
         
         def all_states_with_category category
-          workflow_object.all_states_with_category category
+          workflow_object.all_states_with_category self, category
         end
         
         def all_states
-          workflow_object.all_states
+          workflow_object.all_states self
         end
         
         def all_workflow_states
-          workflow_object.all_workflow_states
+          workflow_object.all_workflow_states self
         end
 
         def all_rejected_states
-          workflow_object.all_rejected_states
+          workflow_object.all_rejected_states self
         end
         
         def all_new_states
-          workflow_object.all_new_states
+          workflow_object.all_new_states self
         end
 
         def all_sent_back_states
-          workflow_object.all_sent_back_states
+          workflow_object.all_sent_back_states self
         end
         
         def all_events
@@ -116,11 +116,11 @@ class ActiveRecord::Base
         end
         
         def all_events_with_category category
-          workflow_object.all_events_with_category category
+          workflow_object.all_events_with_category self, category
         end
         
-        def all_state_categories_with_descriptions
-          workflow_object.all_state_categories_with_descriptions
+        def all_state_categories_with_descriptions 
+          workflow_object.all_state_categories_with_descriptions self
         end
       end
       

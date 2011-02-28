@@ -7,6 +7,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   attr_accessor :states_to_category
   # An ordered list of states
   attr_accessor :ordered_states
+  # An ordered list of events
+  attr_accessor :ordered_events
   # A mapping from symbol to english word for events
   attr_accessor :events_to_english
   # A list of events to skip validating on when changing state
@@ -20,6 +22,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     self.states_to_category = HashWithIndifferentAccess.new
     self.events_to_english = HashWithIndifferentAccess.new
     self.ordered_states = []
+    self.ordered_events = []
     self.non_validating_events = []
   end
   
@@ -103,8 +106,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def state_to_english_from_state_name state_name
-    if !state_name.blank? && states_to_english && states_to_english.is_a?(Hash)
-      states_to_english[state_name.to_sym]
+    if !state_name.blank? && self.states_to_english && self.states_to_english.is_a?(Hash)
+      self.states_to_english[state_name.to_sym]
     end || state_name
   end
   
@@ -115,7 +118,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def add_state_to_english new_state, state_name, category_names=nil
-    states_to_english[new_state.to_sym] = state_name
+    self.states_to_english[new_state.to_sym] = state_name
     if category_names
       category_states = self.states_to_category[new_state.to_sym]
       category_states = [] unless category_states
@@ -131,6 +134,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
 
   def add_event_to_english new_event, event_name
     events_to_english[new_event.to_sym] = event_name
+    ordered_events << new_event
   end
 
   def add_non_validating_event event
@@ -145,17 +149,18 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
 
   def clear_events_to_english
     events_to_english.clear
+    ordered_events.clear
   end
   
-  def all_events
-    events_to_english.keys
+  def all_events model_class
+    ordered_events
   end
   
-  def all_states
+  def all_states model_class
     ordered_states
   end
   
-  def all_states_with_category category
+  def all_states_with_category model_class, category
     if category
       ordered_states.select do |state_name| 
         if state_name
@@ -168,7 +173,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     end || []
   end
 
-  def all_state_categories_with_descriptions
+  def all_state_categories_with_descriptions model_class
     states_to_category.values.map do |category|
       [category.to_s.humanize, category]
     end
@@ -184,24 +189,24 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     state_name.to_s =~ /sent_back/
   end
   
-  def all_workflow_states
-    all_states - all_rejected_states - all_sent_back_states
+  def all_workflow_states model_class
+    all_states(self) - all_rejected_states(self) - all_sent_back_states(self)
   end
   
-  def all_rejected_states
+  def all_rejected_states model_class
     ordered_states.select{|st| is_reject_state? st.to_s }
   end
 
-  def all_new_states
+  def all_new_states model_class
     ordered_states.select{|st| is_new_state? st.to_s }
   end
 
-  def all_sent_back_states
+  def all_sent_back_states model_class
     ordered_states.select{|st| is_sent_back_state? st.to_s }
   end
   
   def extract_all_event_types model_class
-    model_class.aasm_events.keys.map do |event_name|
+    (ordered_events & model_class.aasm_events.keys).map do |event_name|
       event_to_state = model_class.aasm_events[event_name].instance_variable_get('@transitions').first.instance_variable_get '@to' rescue nil
       [event_name, event_to_state]
     end
@@ -228,8 +233,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     extract_all_event_types(model_class).select{|pair| is_sent_back_state?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
   end
   
-  def all_events_with_category category_name
-    category_states = all_states_with_category category_name
+  def all_events_with_category model_class, category_name
+    category_states = all_states_with_category model_class, category_name
     extract_all_event_types(model_class).select{|pair| category_states.include?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
   end
 end
