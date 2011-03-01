@@ -35,6 +35,26 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     model.send(event_name)
   end
   
+  def event_timeline model
+    model.running_timeline = true
+    old_state = model.state
+    model.state = all_new_states(model.class).first
+    cycle_count = 0
+    timeline = model.class.suspended_delta(false)  do
+      working_timeline = [model.state.to_s]
+
+      while cycle_count < 500 && (cur_event = (model.aasm_events_for_current_state & (model.class.all_workflow_events)).last)
+        model.send cur_event
+        working_timeline << model.state
+        cycle_count += 1
+      end
+      working_timeline
+    end || []
+    model.state = old_state
+    model.running_timeline = false
+    timeline
+  end
+  
   # Note that this can be overridden to swap in different functionality to determine the allowed events
   def current_allowed_events model, possible_events
     return [] if model.state.blank?

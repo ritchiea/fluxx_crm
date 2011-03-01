@@ -183,6 +183,12 @@ class ActiveRecord::Base
         possible_events, *ignored = *optional
         local_workflow_object.current_allowed_events self, possible_events
       end
+      
+      # Find out all the states a request of this type can pass through from the time it is new doing normal promotion
+      define_method :event_timeline do
+        local_workflow_object.event_timeline self
+      end
+      
     end
   end
   

@@ -104,4 +104,9 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
     assert_equal [["Funangry", ["fun", "angry"]], ["New", ["new"]]], Race.all_state_categories_with_descriptions 
   end
   
+  test 'event_timeline' do
+    race = Race.make
+    assert_equal(['new', 'beginning', 'middle', 'final'], race.event_timeline)
+  end
+  
 end
