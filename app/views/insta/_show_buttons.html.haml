@@ -5,9 +5,9 @@
 %ul.buttons
   - if @model
     - if !current_user.respond_to?(:has_update_for_model) || current_user.has_update_for_model?(@model)
-      %li= link_to 'Edit', send("edit_#{@model_name}_path", @model), :class => 'to-self', :link_class => 'btn' if @edit_enabled
+      %li= link_to 'Edit', current_edit_path(@model.id), :class => 'to-self', :link_class => 'btn' if @edit_enabled
     - if !current_user.respond_to?(:has_delete_for_model) || current_user.has_delete_for_model?(@model)
-      %li= link_to 'Delete', @model, :class => 'as-delete', :link_class => 'btn' if @delete_enabled
+      %li= link_to 'Delete', current_delete_path(@model.id), :class => 'as-delete', :link_class => 'btn' if @delete_enabled
     - if @model.respond_to?(:is_favorite_for?)
       - favorite = @model.is_favorite_for? current_user
       - if favorite
