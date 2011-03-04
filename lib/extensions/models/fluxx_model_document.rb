@@ -13,7 +13,7 @@ module FluxxModelDocument
       base.has_attached_file :document,
          :storage => :s3,
          :s3_credentials => "#{Rails.root}/config/amazon_s3.yml",
-         :path => "fluxx-#{Rails.env}/documents/:id/:filename"
+         :path => "/documents/:id/:filename"
     else
       base.has_attached_file :document
     end
