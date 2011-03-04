@@ -9,7 +9,14 @@ module FluxxModelDocument
     base.send :attr_accessor, :model_document_actual_filename
     
 
-    base.has_attached_file :document
+    if defined?(USE_MODEL_DOCUMENT_S3) && USE_MODEL_DOCUMENT_S3
+      base.has_attached_file :document,
+         :storage => :s3,
+         :s3_credentials => "#{RAILS_ROOT}/config/amazon_s3.yml",
+         :path => "fluxx-#{Rails.env}/documents/:id/:filename"
+    else
+      base.has_attached_file :document
+    end
     base.before_post_process :transliterate_file_name
     
     base.insta_search do |insta|
