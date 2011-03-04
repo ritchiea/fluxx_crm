@@ -286,9 +286,13 @@ module FluxxUser
     def user_related_to_model? model
       (model.respond_to?(:relates_to_user?) && model.relates_to_user?(self))
     end
-    
+
     def is_admin?
       self.has_permission?('admin')
+    end
+    
+    def is_grantee?
+      self.user_profile == UserProfile.where(:name => 'grantee').first
     end
     
     # permission_name: name of permission to check for this user
