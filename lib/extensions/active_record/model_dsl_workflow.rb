@@ -118,7 +118,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def in_state_with_category? model, category
-    all_states_with_category(category).include?(model.state)
+    all_states_with_category(model, category).include?(model.state)
   end
   
   def state_to_english model
