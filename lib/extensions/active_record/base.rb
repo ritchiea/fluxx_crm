@@ -188,7 +188,6 @@ class ActiveRecord::Base
       define_method :event_timeline do
         local_workflow_object.event_timeline self
       end
-      
     end
   end
   
