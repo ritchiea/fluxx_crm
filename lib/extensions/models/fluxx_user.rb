@@ -291,10 +291,6 @@ module FluxxUser
       self.has_permission?('admin')
     end
     
-    def is_grantee?
-      self.user_profile == UserProfile.where(:name => 'grantee').first
-    end
-    
     # permission_name: name of permission to check for this user
     # model: accept either a class, string or model
     def has_permission_for_object? permission_name, model
