@@ -43,7 +43,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     timeline = model.class.suspended_delta(false)  do
       working_timeline = [model.state.to_s]
 
-      while cycle_count < 500 && (cur_event = (model.aasm_events_for_current_state & (model.class.all_workflow_events)).last)
+      while cycle_count < 500 && (cur_event = (aasm_events_for_state_with_guard(model) & (model.class.all_workflow_events)).last)
         model.send cur_event
         working_timeline << model.state
         cycle_count += 1
@@ -55,11 +55,16 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     timeline
   end
   
+  def aasm_events_for_state_with_guard model
+    events = model.class.aasm_events.values.select {|event| event.transitions_from_state_with_guard?(model, model.state) }
+    events.map {|event| event.name}
+  end
+  
   # Note that this can be overridden to swap in different functionality to determine the allowed events
   def current_allowed_events model, possible_events
     return [] if model.state.blank?
     
-    all_events = model.aasm_events_for_current_state
+    all_events = aasm_events_for_state_with_guard(model)
     
     permitted_events = if possible_events
       all_events & possible_events
@@ -256,5 +261,27 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   def all_events_with_category model_class, category_name
     category_states = all_states_with_category model_class, category_name
     extract_all_event_types(model_class).select{|pair| category_states.include?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
+  end
+end
+
+
+# Make it so that we check the guard method before advising that we can transition with this state for this model
+class AASM::SupportingClasses::Event
+  def transitions_from_state_with_guard?(model, state_name)
+    state = state_name.to_sym
+    @transitions.any? { |t| t.from == state && t.perform(model) }
+  end
+end
+
+class AASM::SupportingClasses::StateTransition
+  def perform(obj)
+    case @guard
+      when Symbol, String
+        obj.send(@guard)
+      when Proc
+        @guard.call(obj)
+      else
+        true
+    end
   end
 end
