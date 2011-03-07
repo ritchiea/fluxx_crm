@@ -32,7 +32,7 @@ class ActionController::ControllerDslUpdate < ActionController::ControllerDsl
         
         if controller
           if event_allowed
-            if (model.is_non_validating_event?(event_action) || model.valid?) && model.insta_fire_event(event_action)
+            if (model.is_non_validating_event?(event_action) || model.valid?) && model.insta_fire_event(event_action, fluxx_current_user)
               model.save(:validate => false)
               # Go on with life, the state transition happened uneventfully
             else

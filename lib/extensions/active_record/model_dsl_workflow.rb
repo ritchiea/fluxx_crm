@@ -31,7 +31,15 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   # Note that this can be overridden to swap in different state machine systems
-  def fire_event model, event_name
+  def fire_event model, event_name, user
+    unless model.respond_to?(:fire_event_override) && (override_fire_response = model.fire_event_override(event_name, user))
+      actually_fire_event model, event_name, user
+    else
+      override_fire_response
+    end
+  end
+
+  def actually_fire_event model, event_name, user
     model.send(event_name)
   end
   
@@ -268,8 +276,10 @@ end
 # Make it so that we check the guard method before advising that we can transition with this state for this model
 class AASM::SupportingClasses::Event
   def transitions_from_state_with_guard?(model, state_name)
-    state = state_name.to_sym
-    @transitions.any? { |t| t.from == state && t.perform(model) }
+    if state_name
+      state = state_name.to_sym
+      @transitions.any? { |t| t.from == state && t.perform(model) }
+    end
   end
 end
 

@@ -22,7 +22,6 @@
                 = link_to model.note, edit_note_path(:id => model.id, :as_modal => '1'), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
               - else
                 = model.note
-              - end
             <br/>
             %span
               - if model.created_by

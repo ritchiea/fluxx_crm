@@ -74,8 +74,7 @@ class UserOrganizationsControllerTest < ActionController::TestCase
       delete :destroy, :id => @user_org2.to_param
     end
     assert 201, @response.status
-
-    assert @response.header["Location"] =~ /#{user_organizations_url}$/
+    assert @response.header["Location"] =~ /#{@user_org2.id}$/
     assert_equal @user_org1.id, @user1.reload.primary_user_organization_id
   end
 

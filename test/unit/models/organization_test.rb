@@ -20,7 +20,7 @@ class OrganizationTest < ActiveSupport::TestCase
   end
   
   test "Adding organizations to users" do
-    u = User.make :first_name => 'Eric', :login => 'ericfluxx', :email => 'fred@acesfconsulting.com'
+    u = User.make :first_name => 'Eric', :login => random_login, :email => random_email
     org = Organization.make :name => 'freddie mac'
     assert_equal 0, u.organizations.size
     assert_equal 0, org.users.size
@@ -48,9 +48,9 @@ class OrganizationTest < ActiveSupport::TestCase
     org1, org2, org3 = Organization.make, Organization.make, Organization.make
     org1_duplicate = Organization.make(:name => org1.name)
     # build users
-    u1 = User.make :first_name => 'Marcelo', :login => 'marklazz', :email => 'marklazz.uy@gmail.com'
-    u2 = User.make :first_name => 'Eric', :login => 'ericfluxx', :email => 'fred@acesfconsulting.com'
-    u3 = User.make :first_name => 'Michael', :login => 'michaelfluxx', :email => 'michael@acesfconsulting.com'
+    u1 = User.make :first_name => 'Marcelo', :login => random_login, :email => random_email
+    u2 = User.make :first_name => 'Eric', :login => random_login, :email => random_email
+    u3 = User.make :first_name => 'Michael', :login => random_login, :email => random_email
     # set associations between orgs and users
     u1.organizations << org1
     u1.update_attribute(:primary_user_organization_id, u1.user_organizations.first.id)

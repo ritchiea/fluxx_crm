@@ -124,8 +124,8 @@ class ActiveRecord::Base
         end
       end
       
-      define_method :insta_fire_event do |event_name|
-        local_workflow_object.fire_event self, event_name
+      define_method :insta_fire_event do |event_name, user|
+        local_workflow_object.fire_event self, event_name, user
       end
       
       define_method :is_non_validating_event? do |event_name|
