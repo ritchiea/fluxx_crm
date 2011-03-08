@@ -1,5 +1,5 @@
 %h1.minimize-detail-pull= [model.first_name, model.middle_initial, model.last_name].join ' '
-= current_user.user_profile.name if current_user.user_profile
+= model.user_profile.name if model.user_profile
 - primary_user_org = model.primary_user_organization
 - if primary_user_org
   %h4.subhead
