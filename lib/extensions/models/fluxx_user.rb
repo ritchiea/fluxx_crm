@@ -9,7 +9,6 @@ module FluxxUser
     base.belongs_to :personal_geo_country, :class_name => 'GeoCountry', :foreign_key => :personal_geo_country_id
     base.belongs_to :personal_geo_state, :class_name => 'GeoState', :foreign_key => :personal_geo_state_id
     base.belongs_to :primary_user_organization, :class_name => 'UserOrganization', :foreign_key => :primary_user_organization_id
-    base.belongs_to :primary_organization, :class_name => 'Organization', :include => :primary_user_organization, :foreign_key => 'organization_id'
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :user_profile
@@ -365,6 +364,10 @@ module FluxxUser
     
     def to_s
       full_name
+    end
+    
+    def primary_organization
+      primary_user_organization.organization if primary_user_organization
     end
   end
 end
