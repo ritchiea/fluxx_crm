@@ -131,7 +131,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def in_state_with_category? model, category
-    all_states_with_category(model, category).include?(model.state.to_sym)
+    model.state.nil? ? false : all_states_with_category(model, category).map {|s| s.to_sym}.include?(model.state.to_sym)
   end
   
   def state_to_english model
