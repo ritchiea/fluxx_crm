@@ -1,6 +1,5 @@
 module FluxxRole
   SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id]
-  ALL_ROLEABLE_TYPES = []
   
   def self.included(base)
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
@@ -36,13 +35,6 @@ module FluxxRole
       Role.where(:deleted_at => nil).order('name asc').all
     end
     
-    def all_roleable_types
-      ALL_ROLEABLE_TYPES
-    end
-    
-    def add_roleable_type name, type
-      ALL_ROLEABLE_TYPES << [name, type]
-    end
   end
   
   module ModelInstanceMethods

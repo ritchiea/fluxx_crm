@@ -6,7 +6,7 @@ module FluxxUserOrganization
     base.belongs_to :user
     base.belongs_to :organization
     base.belongs_to :locked_by, :class_name => 'User', :foreign_key => 'locked_by_id'
-    base.acts_as_audited({:full_model_enabled => true, :except => [:created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta]})
+    base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :locked_until, :locked_by_id, :delta]})
     
     base.send :attr_accessor, :organization_lookup
     

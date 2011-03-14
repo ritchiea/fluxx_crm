@@ -19,6 +19,7 @@ gem 'machinist', '>=1.0.6'
 gem 'faker', '>=0.3.1'
 gem 'rcov'
 gem 'thinking-sphinx', '>=2.0.1', :require => 'thinking_sphinx'
+gem "authlogic"
 
 gem 'paperclip'
 gem 'compass'
