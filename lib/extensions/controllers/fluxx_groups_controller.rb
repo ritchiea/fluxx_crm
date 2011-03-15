@@ -1,12 +1,17 @@
 module FluxxGroupsController
-  ICON_STYLE = 'style-groups'
+  ICON_STYLE = 'style-admin-cards'
   def self.included(base)
     base.insta_index Group do |insta|
       insta.template = 'group_list'
       insta.filter_title = "Groups Filter"
       insta.filter_template = 'groups/group_filter'
-      insta.order_clause = 'updated_at desc'
+      insta.order_clause = 'name asc'
       insta.icon_style = ICON_STYLE
+      insta.search_conditions = (lambda do |params, controller_dsl, controller|
+        if params[:group] && params[:group][:not_retired]
+          '(groups.deprecated is null or groups.deprecated = 0)'
+        end
+      end)
     end
     base.insta_show Group do |insta|
       insta.template = 'group_show'

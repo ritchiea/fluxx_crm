@@ -3,6 +3,8 @@ module FluxxGroup
     base.has_many :group_members
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
+    base.validates_length_of       :name,    :within => 2..250
+    base.validates_uniqueness_of   :name
     
     base.insta_search
 
