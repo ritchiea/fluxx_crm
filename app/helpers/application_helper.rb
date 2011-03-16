@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def mdy_date_format value
-    (value && value.is_a?(Time)) ? value.to_s(:mdy) : value
+    (value && value.is_a?(Time)) ? value.mdy : value
   end
 
   def show_path_for_model model, options={}

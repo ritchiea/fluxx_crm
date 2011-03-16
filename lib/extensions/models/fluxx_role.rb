@@ -34,7 +34,6 @@ module FluxxRole
     def all_roles
       Role.where(:deleted_at => nil).order('name asc').all
     end
-    
   end
   
   module ModelInstanceMethods
