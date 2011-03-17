@@ -24,6 +24,9 @@ gem "authlogic"
 gem 'paperclip'
 gem 'compass'
 gem 'liquid'
+gem "delocalize"
+gem 'pdfkit'
+
 gem 'writeexcel', '>=0.6.1'
 
 if RUBY_VERSION < '1.9'
