@@ -327,7 +327,7 @@ module FluxxUser
     end
     
     def has_create_for_model? model_class
-      is_admin? || has_permission_for_object?("create", model_class)
+      is_admin? || has_permission_for_object?("create", model_class) || has_create_for_own_model?(model_class)
     end
     
     def has_update_for_own_model? model
@@ -335,7 +335,7 @@ module FluxxUser
     end
 
     def has_update_for_model? model_class
-      is_admin? || has_permission_for_object?("update", model_class)
+      is_admin? || has_permission_for_object?("update", model_class) || has_update_for_own_model?(model_class)
     end
     
     def has_delete_for_own_model? model
@@ -343,7 +343,7 @@ module FluxxUser
     end
 
     def has_delete_for_model? model_class
-      is_admin? || has_permission_for_object?("delete", model_class)
+      is_admin? || has_permission_for_object?("delete", model_class)  || has_delete_for_own_model?(model_class)
     end
     
     def has_listview_for_model? model_class
@@ -355,7 +355,7 @@ module FluxxUser
     end
 
     def has_view_for_model? model_class
-      is_admin? || has_permission_for_object?("view", model_class)
+      is_admin? || has_permission_for_object?("view", model_class) || has_view_for_own_model?(model_class)
     end
     
     def full_name
