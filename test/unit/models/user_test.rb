@@ -241,6 +241,25 @@ class UserTest < ActiveSupport::TestCase
     assert !user.reload.has_create_for_model?(Organization)
     assert user.reload.has_create_for_model?(TestModel)
   end
+  
+  test "check that we can add a user, remove it, then add a user with the same email" do
+    an_email_address = random_email
+    user = User.make :email => an_email_address
+    user.delete
+    user2 = User.make :email => an_email_address
+    assert user2.id
+    assert user.id != user2.id
+  end
+  
+  test "check that we can add a user, remove it, then add a user with the same login" do
+    a_login = random_login
+    user = User.make :login => a_login
+    user.delete
+    user2 = User.make :login => a_login
+    assert user2.id
+    assert user.id != user2.id
+  end
+  
 end
 
 class TestModel
