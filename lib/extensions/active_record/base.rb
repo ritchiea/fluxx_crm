@@ -140,6 +140,10 @@ class ActiveRecord::Base
         local_workflow_object.in_new_state? self
       end
 
+      define_method :in_draft_state? do
+        local_workflow_object.in_draft_state? self
+      end
+
       define_method :in_reject_state? do
         local_workflow_object.in_reject_state? self
       end

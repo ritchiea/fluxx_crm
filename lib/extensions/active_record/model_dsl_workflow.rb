@@ -118,6 +118,10 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     model.state.to_s =~ /^new/ || model.state.blank?
   end
 
+  def in_draft_state? model
+    model.in_state_with_category?("draft")
+  end
+
   def in_reject_state? model
     model.state.to_s =~ /^reject/
   end
