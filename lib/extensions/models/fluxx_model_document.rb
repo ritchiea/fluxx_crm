@@ -54,5 +54,10 @@ module FluxxModelDocument
     def transliterate_file_name
       self.document.instance_write(:file_name, CGI::unescape(model_document_actual_filename)) if model_document_actual_filename
     end
+
+    def relates_to_user? user
+      (self.documentable.class.name == 'RequestReport') ?
+        (user.primary_organization.id == self.documentable.request.program_organization_id) || (user.primary_organization.id == self.documentable.request.fiscal_organization_id) : false
+    end
   end
 end
