@@ -220,7 +220,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
      state_name.to_s =~ /reject/ || state_name.to_s =~ /cancel/
   end
   def is_new_state? state_name
-    state_name.to_s =~ /^new/
+    initial_state = self.model_class && self.model_class.respond_to?(:aasm_initial_state) ? self.model_class.aasm_initial_state.to_s : nil
+    (initial_state && initial_state == state_name.to_s) || state_name.to_s =~ /^new/
   end
   def is_sent_back_state? state_name
     state_name.to_s =~ /sent_back/

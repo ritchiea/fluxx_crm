@@ -21,7 +21,7 @@
   %h2= model.task_text
   %h4= "Assigned to: #{model.assigned_user.full_name}" if model.assigned_user
   - if model.task_completed
-    %h4= "Task Completed #{model.completed_at.mdy}" if model.completed_at
+    %h4= "Task Completed #{model.completed_at.mdy if model.completed_at}" 
   - else
     %h4= "Due at #{model.due_at.mdy}" if model.due_at
   
