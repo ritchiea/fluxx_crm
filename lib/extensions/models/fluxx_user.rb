@@ -98,6 +98,12 @@ module FluxxUser
       mobile = self.personal_mobile
       work || org || mobile
     end
+
+    def main_fax
+      work = self.work_fax
+      org = primary_user_organization && primary_user_organization.organization ? primary_user_organization.organization.fax : nil
+      work || org
+    end
     
     def preprocess_user
       self.login = nil if login == ''
