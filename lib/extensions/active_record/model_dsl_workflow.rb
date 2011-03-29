@@ -131,7 +131,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
 
   def in_sentback_state? model
-    model.state.to_s =~ /sent_back/
+    model.state.to_s =~ /sent_back/ || model.state.to_s =~ /send_back/
   end
   
   def in_state_with_category? model, category
