@@ -56,6 +56,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'create_role.rb', 'db/migrate/fluxx_crm_create_role.rb'
     handle_migration 'create_user_permission.rb', 'db/migrate/fluxx_crm_create_user_permission.rb'
     handle_migration 'remove_unique_email_login_on_user.rb', 'db/migrate/fluxx_crm_remove_unique_email_login_on_user.rb'
+    handle_migration 'add_vendor_id_to_organization.rb', 'db/migrate/fluxx_crm_add_vendor_id_to_organization.rb'
   end
   
   private

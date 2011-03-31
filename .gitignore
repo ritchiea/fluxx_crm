@@ -5,7 +5,8 @@ tmp/**/*
 test/dummy/public/system/documents/**/*
 coverage/
 test/dummy/log
-test/dummy/db
+test/dummy/db/development.sqlite3
+test/dummy/db/test.sqlite3
 db/geo/GeoLiteCity-Location.csv
 db/geo/GeoLiteCity-Location.original.csv
 db/geo/countries.csv
