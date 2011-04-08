@@ -45,7 +45,7 @@ module FluxxOrganization
     base.liquid_methods *( LIQUID_METHODS )  
 
     base.validates_presence_of     :name
-    base.validates_length_of       :name,    :within => 3..100
+    base.validates_length_of       :name,    :within => 3..255
     base.insta_favorite
     
     base.extend(ModelClassMethods)
