@@ -20,6 +20,7 @@ gem 'faker', '>=0.3.1'
 gem 'rcov'
 gem 'thinking-sphinx', '>=2.0.1', :require => 'thinking_sphinx'
 gem "authlogic"
+gem 'ruby-net-ldap'
 
 gem 'paperclip'
 gem 'compass'

@@ -1,3 +1,4 @@
+require 'net/ldap'
 module FluxxUser
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name]
@@ -22,6 +23,14 @@ module FluxxUser
     base.has_many :bank_accounts, :foreign_key => :owner_user_id
     base.acts_as_audited({:full_model_enabled => false, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
     base.before_save :preprocess_user
+    
+    base.acts_as_authentic do |c|
+      # c.my_config_option = my_value # for available options see documentation in: Authlogic::ActsAsAuthentic
+      c.act_like_restful_authentication = true
+      c.validate_login_field=false
+      c.validate_password_field=false
+      c.validate_email_field=false
+    end # block optional
     
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
@@ -81,6 +90,48 @@ module FluxxUser
         User.where(:user_profile_id => user_profile.id, :deleted_at => nil, :test_user_flag => false).order('first_name asc, last_name asc').all
       end || []
     end
+    
+    # Tries to find a User first by looking into the database and then by creating a User if there's an LDAP entry for the given login
+    def find_or_create_from_ldap(login)
+      find_by_login(login) || create_from_ldap_if_valid(login)
+    end  
+
+    ######################################### LDAP
+    # Creates a User record in the database if there is an entry in LDAP with the given login
+    def create_from_ldap_if_valid(login)
+      return nil unless FLUXX_CONFIGURATION[:ldap_enabled]
+      ldap_user = User.ldap_find(login)
+      if ldap_user
+        logger.info "Creating new user from ldap data: #{login}"
+        user = User.new(:login => login)
+        user.first_name = ldap_user[LDAP_CONFIG[:first_name_attr]].first
+        user.last_name = ldap_user[LDAP_CONFIG[:last_name_attr]].first
+        user.email = ldap_user[LDAP_CONFIG[:email_attr]].first
+        user.user_profile = UserProfile.find_by_name 'employee'
+        user.save
+        return user
+      end
+      nil
+    end
+
+    def ldap_find(login)
+      return nil unless FLUXX_CONFIGURATION[:ldap_enabled]
+      # see http://net-ldap.rubyforge.org/Net/LDAP.html
+      ldap = Net::LDAP.new
+      ldap.host = LDAP_CONFIG[:host]
+      ldap.port = LDAP_CONFIG[:port]
+      ldap.base = LDAP_CONFIG[:base]
+      ldap.encryption LDAP_CONFIG[:encryption] if LDAP_CONFIG[:encryption]
+      ldap.auth LDAP_CONFIG[:bind_dn], LDAP_CONFIG[:password]
+      filter = Net::LDAP::Filter.eq(LDAP_CONFIG[:login_attr], login) 
+      ldap.search(:filter => filter) do |entry|
+        logger.info "found #{entry.dn}"
+        return entry
+      end
+      logger.info { "NOT FOUND IN LDAP:  #{login}" }
+      nil
+    end    
+    
   end
 
   module ModelInstanceMethods
@@ -374,6 +425,32 @@ module FluxxUser
     
     def primary_organization
       primary_user_organization.organization if primary_user_organization
+    end
+    
+    ######################################### AUTHLOGIC / LDAP
+    
+    # check db cred(normal authlogic pw check), then check ldap cred
+    def valid_credentials?(password)
+      valid_password?(password) || ldap_authenticate?(password)
+    end
+
+    def ldap_authenticate?(password)
+      return false unless FLUXX_CONFIGURATION[:ldap_enabled]
+      ldap = Net::LDAP.new
+      ldap.host = LDAP_CONFIG[:host]
+      ldap.port = LDAP_CONFIG[:port]
+      ldap.base = LDAP_CONFIG[:base]
+      ldap.encryption LDAP_CONFIG[:encryption] if LDAP_CONFIG[:encryption]
+      ldap.auth LDAP_CONFIG[:bind_dn], LDAP_CONFIG[:password]
+      filter = Net::LDAP::Filter.eq(LDAP_CONFIG[:login_attr], login) 
+      result = ldap.bind_as(:filter => filter, :password => password)
+      if result
+        logger.info "LDAP Authentication SUCCESSFUL for: #{login}"
+        return true
+      else
+        logger.info "LDAP Authentication FAILED for: #{login}"
+      end    
+      false
     end
   end
 end

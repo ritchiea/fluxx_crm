@@ -2,6 +2,11 @@ class UserSession < Authlogic::Session::Base
   def to_key
      new_record? ? nil : [ self.send(self.class.primary_key) ]
   end
+
+  # override default authlogic to use custom lookup & pw methods defined in fluxx_user.rb
+  # so we can support both db and ldap users/authentication
+  find_by_login_method :find_or_create_from_ldap
+  verify_password_method :valid_credentials?
   
   private
   # NOTE ESH: Copied this method straight from authlogic's lib/authlogic/session/cookies.rb
