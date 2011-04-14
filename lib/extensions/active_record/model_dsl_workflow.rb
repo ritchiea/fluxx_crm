@@ -139,10 +139,10 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def state_to_english model
-    state_to_english_from_state_name model.state
+    state_to_english_from_state_name model.state, model.class
   end
   
-  def state_to_english_from_state_name state_name
+  def state_to_english_from_state_name state_name, klass
     if !state_name.blank? && self.states_to_english && self.states_to_english.is_a?(Hash)
       self.states_to_english[state_name.to_sym]
     end || state_name

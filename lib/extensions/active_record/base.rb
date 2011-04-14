@@ -68,7 +68,7 @@ class ActiveRecord::Base
         end
         
         def state_to_english_translation state_name
-          workflow_object.state_to_english_from_state_name state_name
+          workflow_object.state_to_english_from_state_name state_name, self
         end
         
         def all_states_with_category category

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110331195946) do
+ActiveRecord::Schema.define(:version => 20110411210154) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -574,13 +574,26 @@ ActiveRecord::Schema.define(:version => 20110331195946) do
     t.integer  "locked_by_id"
     t.integer  "user_profile_id"
     t.boolean  "test_user_flag",                               :default => false
+    t.string   "crypted_password",             :limit => 128,  :default => "",                           :null => false
+    t.string   "password_salt",                                :default => "",                           :null => false
+    t.string   "persistence_token"
+    t.datetime "single_access_token"
+    t.datetime "confirmation_sent_at"
+    t.integer  "login_count",                                  :default => 0
+    t.integer  "failed_login_count",                           :default => 0
+    t.datetime "current_login_at"
+    t.datetime "last_login_at"
+    t.string   "current_login_ip"
+    t.string   "last_login_ip"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :length => {"email"=>"255"}
   add_index "users", ["login"], :name => "index_users_on_login"
+  add_index "users", ["persistence_token"], :name => "index_users_on_persistence_token"
   add_index "users", ["personal_geo_country_id"], :name => "users_personal_country_id"
   add_index "users", ["personal_geo_state_id"], :name => "users_personal_geo_state_id"
   add_index "users", ["primary_user_organization_id"], :name => "users_primary_user_org_id"
+  add_index "users", ["single_access_token"], :name => "index_users_on_single_access_token"
   add_index "users", ["user_profile_id"], :name => "users_user_profile_id"
 
   create_table "wiki_document_templates", :force => true do |t|
