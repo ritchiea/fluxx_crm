@@ -34,11 +34,7 @@ module FluxxWorkTasksController
       insta.template = 'work_task_form'
       insta.icon_style = ICON_STYLE
     end
-    base.insta_related WorkTask do |insta|
-      insta.add_related do |related|
-      end
-    end
-    
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
