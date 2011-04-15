@@ -102,14 +102,7 @@ module FluxxUser
       return nil unless FLUXX_CONFIGURATION[:ldap_enabled]
       ldap_user = User.ldap_find(login)
       if ldap_user
-        logger.info "Creating new user from ldap data: #{login}"
-        user = User.new(:login => login)
-        user.first_name = ldap_user[LDAP_CONFIG[:first_name_attr]].first
-        user.last_name = ldap_user[LDAP_CONFIG[:last_name_attr]].first
-        user.email = ldap_user[LDAP_CONFIG[:email_attr]].first
-        user.user_profile = UserProfile.find_by_name 'employee'
-        user.save
-        return user
+        return User.create_or_update_user_from_ldap_entry(login, ldap_user)
       end
       nil
     end
@@ -131,6 +124,19 @@ module FluxxUser
       logger.info { "NOT FOUND IN LDAP:  #{login}" }
       nil
     end    
+    
+    def create_or_update_user_from_ldap_entry(login, entry)
+      user = User.find_by_login login
+      user = User.new(:login => login) unless user
+      logger.info "#{user.new_record? ? 'Creating' : 'Updating'} user from ldap entry: #{login}"
+      user.first_name = entry[LDAP_CONFIG[:first_name_attr]].first
+      user.last_name  = entry[LDAP_CONFIG[:last_name_attr]].first
+      user.email      = entry[LDAP_CONFIG[:email_attr]].first
+      user.user_profile = UserProfile.find_by_name 'employee' if user.new_record?
+      user.save
+      logger.info { "user.errors = #{user.errors.inspect}" }
+      return user
+    end
     
   end
 
@@ -446,6 +452,7 @@ module FluxxUser
       result = ldap.bind_as(:filter => filter, :password => password)
       if result
         logger.info "LDAP Authentication SUCCESSFUL for: #{login}"
+        User.create_or_update_user_from_ldap_entry(login, result.first)
         return true
       else
         logger.info "LDAP Authentication FAILED for: #{login}"
