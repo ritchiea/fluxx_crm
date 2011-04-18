@@ -1,4 +1,4 @@
-require 'net/ldap'
+#require 'net/ldap'
 module FluxxUser
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name]
