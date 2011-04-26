@@ -30,9 +30,9 @@ module FluxxWorkTask
 
     base.insta_favorite
     base.insta_utc do |insta|
-      insta.time_attributes = [] 
+      insta.time_attributes = [:due_at]
     end
-    
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
