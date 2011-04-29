@@ -17,7 +17,7 @@
       %tr
         %th
           = "#{documentable.class.respond_to?(:document_title_name) ? documentable.class.document_title_name : documentable.class.name.humanize} Documents"
-          %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), model_documents_path(:model_document => {:documentable_id => documentable.id, :documentable_type => documentable.class.name}), :class => 'to-upload', 'data-on-success' => 'refreshCaller,close', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif,xls,doc,xlsx,docx,ppt,pptx", :title => "Add Document", 'data-document-type-url' => model_document_types_path(:model_type => documentable.class.name, :name => 'associated_request_documents', :format => :json), 'data-document-type-param' => 'model_document[model_document_type_id]'
+          %span.actions= link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), model_documents_path(:model_document => {:documentable_id => documentable.id, :documentable_type => documentable.class.name}), :class => 'to-upload', 'data-on-success' => 'refreshCaller,close', 'data-extensions'.to_sym=>"txt,zip,gz,pdf,png,jpg,gif,xls,doc,xlsx,docx,ppt,pptx", :title => "Add Document", 'data-document-type-url' => model_document_types_path(:model_type => documentable.class.name, :name => 'associated_request_documents', :model_id => documentable.id, :format => :json), 'data-document-type-param' => 'model_document[model_document_type_id]'
   %tbody
     - unless required_doc_ids.empty?
       - missing_docs.each do |missing|
