@@ -5,6 +5,7 @@ module FluxxRole
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.has_many :role_users
+    base.validates_uniqueness_of :name, :scope => [:roleable_type, :deleted_at]
 
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
