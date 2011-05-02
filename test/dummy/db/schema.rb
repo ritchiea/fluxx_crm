@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110411210154) do
+ActiveRecord::Schema.define(:version => 20110502172130) do
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -247,6 +247,7 @@ ActiveRecord::Schema.define(:version => 20110411210154) do
     t.integer  "model_document_template_id"
   end
 
+  add_index "model_documents", ["documentable_id", "documentable_type"], :name => "index_model_documents_on_documentable_id_and_documentable_type"
   add_index "model_documents", ["model_document_template_id"], :name => "model_documents_template_id"
   add_index "model_documents", ["model_document_type_id"], :name => "model_documents_model_document_type_id"
 

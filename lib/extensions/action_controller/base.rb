@@ -60,7 +60,7 @@ class ActionController::Base
   end
 
   def current_user
-    User.suspended_delta do
+    User.suspended_delta(false) do
       User.without_realtime do
         User.without_auditing do
           if defined?(@current_user)

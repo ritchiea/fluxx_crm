@@ -137,7 +137,6 @@ module FluxxUser
       logger.info { "user.errors = #{user.errors.inspect}" }
       return user
     end
-    
   end
 
   module ModelInstanceMethods
@@ -293,13 +292,21 @@ module FluxxUser
       user_permission = has_permission? permission_name, related_object
       user_permission.destroy if user_permission
     end
+    
+    def all_user_permissions
+      @cached_all_user_permissions = UserPermission.all unless @cached_all_user_permissions
+      @cached_all_user_permissions
+    end
 
     # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
     def has_user_permission? permission_name, related_object = nil
+      # Load up all user_permissions
+      
       if related_object
-        user_permissions.where(:model_type => derive_class_name(related_object), :name => permission_name).all
+        related_object_classname = derive_class_name(related_object)
+        all_user_permissions.select{|up| up.model_type == related_object_classname && up.name == permission_name}
       else
-        user_permissions.where(:name => permission_name).all
+        all_user_permissions.select{|up| up.name == permission_name}
       end.first
     end
 
@@ -340,8 +347,8 @@ module FluxxUser
     
     # Check to see if this users profile includes the permission_name
     def user_profile_include? permission_name, related_object = nil
-      if user_profile
-        user_profile.has_rule?(permission_name, derive_class_name(related_object))
+      if user_profile_id && UserProfile.all_user_profile_map[user_profile_id]
+        UserProfile.all_user_profile_map[user_profile_id].has_rule?(permission_name, derive_class_name(related_object))
       end
     end
     
