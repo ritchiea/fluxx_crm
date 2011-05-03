@@ -23,7 +23,7 @@ gem "authlogic"
 gem 'ruby-net-ldap'
 
 gem 'paperclip'
-gem 'compass'
+#gem 'compass'
 gem 'liquid'
 gem "delocalize"
 gem 'pdfkit'

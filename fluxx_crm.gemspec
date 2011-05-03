@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hansen"]
-  s.date = %q{2011-02-15}
+  s.date = %q{2011-05-03}
   s.email = %q{fluxx@acesfconsulting.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -70,6 +70,7 @@ Gem::Specification.new do |s|
     "app/models/user_permission.rb",
     "app/models/user_profile.rb",
     "app/models/user_profile_rule.rb",
+    "app/models/user_session.rb",
     "app/models/wiki_document.rb",
     "app/models/wiki_document_template.rb",
     "app/models/work_task.rb",
@@ -96,6 +97,7 @@ Gem::Specification.new do |s|
     "app/views/group_members/_group_member_list.html.haml",
     "app/views/group_members/_group_member_show.html.haml",
     "app/views/group_members/_list_group_members.html.haml",
+    "app/views/groups/_group_filter.html.haml",
     "app/views/groups/_group_form.html.haml",
     "app/views/groups/_group_list.html.haml",
     "app/views/groups/_group_show.html.haml",
@@ -116,6 +118,7 @@ Gem::Specification.new do |s|
     "app/views/notes/_note_form.html.haml",
     "app/views/notes/_note_list.html.haml",
     "app/views/notes/_note_show.html.haml",
+    "app/views/organizations/_extra_organization_show.html.haml",
     "app/views/organizations/_list_organization_satellites.html.haml",
     "app/views/organizations/_organization_form.html.haml",
     "app/views/organizations/_organization_list.html.haml",
@@ -251,6 +254,8 @@ Gem::Specification.new do |s|
     "lib/generators/fluxx_crm_migration/templates/add_allowed_field_to_profile_rules.rb",
     "lib/generators/fluxx_crm_migration/templates/add_description_to_project_relationships.rb",
     "lib/generators/fluxx_crm_migration/templates/add_fields_to_organization.rb",
+    "lib/generators/fluxx_crm_migration/templates/add_missing_index_from_model_documents.rb",
+    "lib/generators/fluxx_crm_migration/templates/add_vendor_id_to_organization.rb",
     "lib/generators/fluxx_crm_migration/templates/add_worktask_completed_at_date.rb",
     "lib/generators/fluxx_crm_migration/templates/create_bank_account.rb",
     "lib/generators/fluxx_crm_migration/templates/create_documents.rb",
@@ -283,6 +288,7 @@ Gem::Specification.new do |s|
     "lib/generators/fluxx_crm_migration/templates/create_work_task.rb",
     "lib/generators/fluxx_crm_migration/templates/create_workflow_events.rb",
     "lib/generators/fluxx_crm_migration/templates/remove_deleted_at_from_user_organizations.rb",
+    "lib/generators/fluxx_crm_migration/templates/remove_unique_email_login_on_user.rb",
     "lib/generators/fluxx_crm_migration/templates/user_add_column_for_test_user_flag.rb",
     "lib/generators/fluxx_crm_public/fluxx_crm_public_generator.rb",
     "lib/tasks.rb",
@@ -356,6 +362,11 @@ Gem::Specification.new do |s|
     "test/dummy/db/migrate/20110211005307_fluxx_crm_create_role.rb",
     "test/dummy/db/migrate/20110211005308_fluxx_crm_create_favorites.rb",
     "test/dummy/db/migrate/20110212190339_fluxx_crm_create_user_permission.rb",
+    "test/dummy/db/migrate/20110318162418_fluxx_crm_remove_unique_email_login_on_user.rb",
+    "test/dummy/db/migrate/20110323202555_fluxx_crm_add_additional_details_to_tasks.rb",
+    "test/dummy/db/migrate/20110331195946_fluxx_crm_add_vendor_id_to_organization.rb",
+    "test/dummy/db/migrate/20110411210154_authlogic_update_users.rb",
+    "test/dummy/db/migrate/20110502172130_fluxx_crm_add_missing_index_from_model_documents.rb",
     "test/dummy/db/schema.rb",
     "test/fluxx_crm_test.rb",
     "test/functional/bank_accounts_controller_test.rb",
@@ -423,6 +434,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<acts_as_audited_rails3>, [">= 1.1.2"])
       s.add_runtime_dependency(%q<capybara>, ["= 0.3.7"])
       s.add_runtime_dependency(%q<sqlite3-ruby>, [">= 0"])
+      s.add_runtime_dependency(%q<fastercsv>, [">= 1.5.3"])
       s.add_runtime_dependency(%q<mysql>, [">= 0"])
       s.add_runtime_dependency(%q<formtastic>, ["~> 1.1.0"])
       s.add_runtime_dependency(%q<haml>, [">= 3"])
@@ -434,18 +446,21 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<faker>, [">= 0.3.1"])
       s.add_runtime_dependency(%q<rcov>, [">= 0"])
       s.add_runtime_dependency(%q<thinking-sphinx>, [">= 2.0.1"])
+      s.add_runtime_dependency(%q<authlogic>, [">= 0"])
+      s.add_runtime_dependency(%q<ruby-net-ldap>, [">= 0"])
       s.add_runtime_dependency(%q<paperclip>, [">= 0"])
-      s.add_runtime_dependency(%q<compass>, [">= 0"])
       s.add_runtime_dependency(%q<liquid>, [">= 0"])
+      s.add_runtime_dependency(%q<delocalize>, [">= 0"])
+      s.add_runtime_dependency(%q<pdfkit>, [">= 0"])
       s.add_runtime_dependency(%q<writeexcel>, [">= 0.6.1"])
-      s.add_runtime_dependency(%q<httpi>, [">= 0"])
-      s.add_runtime_dependency(%q<crack>, [">= 0"])
+      s.add_runtime_dependency(%q<ruby-debug>, [">= 0.10.3"])
     else
       s.add_dependency(%q<rails>, ["= 3.0.3"])
       s.add_dependency(%q<aasm>, ["= 2.2.0"])
       s.add_dependency(%q<acts_as_audited_rails3>, [">= 1.1.2"])
       s.add_dependency(%q<capybara>, ["= 0.3.7"])
       s.add_dependency(%q<sqlite3-ruby>, [">= 0"])
+      s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
       s.add_dependency(%q<mysql>, [">= 0"])
       s.add_dependency(%q<formtastic>, ["~> 1.1.0"])
       s.add_dependency(%q<haml>, [">= 3"])
@@ -457,12 +472,14 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<faker>, [">= 0.3.1"])
       s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<thinking-sphinx>, [">= 2.0.1"])
+      s.add_dependency(%q<authlogic>, [">= 0"])
+      s.add_dependency(%q<ruby-net-ldap>, [">= 0"])
       s.add_dependency(%q<paperclip>, [">= 0"])
-      s.add_dependency(%q<compass>, [">= 0"])
       s.add_dependency(%q<liquid>, [">= 0"])
+      s.add_dependency(%q<delocalize>, [">= 0"])
+      s.add_dependency(%q<pdfkit>, [">= 0"])
       s.add_dependency(%q<writeexcel>, [">= 0.6.1"])
-      s.add_dependency(%q<httpi>, [">= 0"])
-      s.add_dependency(%q<crack>, [">= 0"])
+      s.add_dependency(%q<ruby-debug>, [">= 0.10.3"])
     end
   else
     s.add_dependency(%q<rails>, ["= 3.0.3"])
@@ -470,6 +487,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<acts_as_audited_rails3>, [">= 1.1.2"])
     s.add_dependency(%q<capybara>, ["= 0.3.7"])
     s.add_dependency(%q<sqlite3-ruby>, [">= 0"])
+    s.add_dependency(%q<fastercsv>, [">= 1.5.3"])
     s.add_dependency(%q<mysql>, [">= 0"])
     s.add_dependency(%q<formtastic>, ["~> 1.1.0"])
     s.add_dependency(%q<haml>, [">= 3"])
@@ -481,12 +499,14 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<faker>, [">= 0.3.1"])
     s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<thinking-sphinx>, [">= 2.0.1"])
+    s.add_dependency(%q<authlogic>, [">= 0"])
+    s.add_dependency(%q<ruby-net-ldap>, [">= 0"])
     s.add_dependency(%q<paperclip>, [">= 0"])
-    s.add_dependency(%q<compass>, [">= 0"])
     s.add_dependency(%q<liquid>, [">= 0"])
+    s.add_dependency(%q<delocalize>, [">= 0"])
+    s.add_dependency(%q<pdfkit>, [">= 0"])
     s.add_dependency(%q<writeexcel>, [">= 0.6.1"])
-    s.add_dependency(%q<httpi>, [">= 0"])
-    s.add_dependency(%q<crack>, [">= 0"])
+    s.add_dependency(%q<ruby-debug>, [">= 0.10.3"])
   end
 end
 
