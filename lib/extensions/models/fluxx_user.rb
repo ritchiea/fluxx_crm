@@ -303,10 +303,9 @@ module FluxxUser
       # Load up all user_permissions
       
       if related_object
-        related_object_classname = derive_class_name(related_object)
-        all_user_permissions.select{|up| up.model_type == related_object_classname && up.name == permission_name}
+        user_permissions.where(:model_type => derive_class_name(related_object), :name => permission_name).all
       else
-        all_user_permissions.select{|up| up.name == permission_name}
+        user_permissions.where(:name => permission_name).all
       end.first
     end
 
