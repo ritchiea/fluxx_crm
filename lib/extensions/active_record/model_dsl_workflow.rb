@@ -171,7 +171,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
 
   def add_event_to_english new_event, event_name
     events_to_english[new_event.to_sym] = event_name
-    ordered_events << new_event
+    ordered_events << new_event.to_sym
   end
 
   def add_non_validating_event event
