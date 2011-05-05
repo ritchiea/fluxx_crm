@@ -245,7 +245,6 @@ module FluxxUser
       return true if is_admin?
       if related_object
         roles = role_users.joins(:role).where(:roleable_id => related_object.id, :roles => {:roleable_type => related_object.class.name, :name => role_name}).all
-        prms = {:roleable_id => related_object.id, :roles => {:roleable_type => related_object.class.name, :name => role_name}}
         roles = role_users.joins(:role).where(:roleable_id => related_object.parent_id, :roles => {:roleable_type => related_object.class.name, :name => role_name}).all if roles.empty? && related_object.respond_to?('parent_id')
         roles
       else
