@@ -244,7 +244,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def extract_all_event_types model_class
-    (ordered_events & model_class.aasm_events.keys).map do |event_name|
+    (ordered_events.map{|ev| ev.to_sym} & model_class.aasm_events.keys.map{|k| k.to_sym}).map do |event_name|
       event_to_state = model_class.aasm_events[event_name].instance_variable_get('@transitions').first.instance_variable_get '@to' rescue nil
       [event_name, event_to_state]
     end
