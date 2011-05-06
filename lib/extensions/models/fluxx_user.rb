@@ -91,6 +91,12 @@ module FluxxUser
       end || []
     end
     
+    def users_with_profile profile_name
+      if profile_name && (user_profile = UserProfile.all_user_profile_map_by_name[profile_name])
+        User.where(:user_profile_id => user_profile.id, :deleted_at => nil, :test_user_flag => false).order('first_name asc, last_name asc').all
+      end || []
+    end
+    
     # Tries to find a User first by looking into the database and then by creating a User if there's an LDAP entry for the given login
     def find_or_create_from_ldap(login)
       find_by_login(login) || create_from_ldap_if_valid(login)

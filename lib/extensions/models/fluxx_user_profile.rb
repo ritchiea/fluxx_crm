@@ -31,7 +31,9 @@ module FluxxUserProfile
       UserProfile.cached_all_user_profile_hash
     end
     
-    
+    def all_user_profile_map_by_name
+      UserProfile.all_user_profile_map.values.inject({}) {|acc, up| acc[up.name] = up; acc}
+    end
   end
 
   module ModelInstanceMethods
