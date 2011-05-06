@@ -212,4 +212,15 @@ class ActiveRecord::Base
     marker_state_index = state_array.index(marker_state) || -1
     cur_state_index >= marker_state_index if cur_state_index && marker_state_index
   end
+  def actions
+    event_pairs = current_allowed_events    # Find all events
+    event_names = event_pairs.map {|event| event.first}
+    allowed_event_names = if respond_to? :event_allowed?
+      event_allowed?(event_names, self) # Limit them by role
+      event_names
+    else
+      event_names
+    end
+    allowed_event_names && event_pairs.select{|event_pair| allowed_event_names.include?(event_pair.first)}
+  end
 end
