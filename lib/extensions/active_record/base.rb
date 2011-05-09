@@ -12,6 +12,45 @@ class ActiveRecord::Base
     
   end
   
+  
+  def self.insta_role
+    if respond_to?(:role_object) && role_object
+      yield role_object if block_given?
+    else
+      local_role_object = ActiveRecord::ModelDslRole.new( self )
+      class_inheritable_reader :role_object
+      write_inheritable_attribute :role_object, local_role_object
+      yield local_role_object if block_given?
+      
+      define_method :extract_related_model do 
+        related_object_model = if role_object.extract_related_object_proc
+          role_object.extract_related_object_proc.call self
+        else
+          self
+        end
+      end
+      
+      define_method :event_allowed? do |events, user|
+        events = [events] unless events.is_a?(Array)
+        related_object_model = extract_related_model self
+        role_object.check_if_events_allowed?(user, events, related_object_model)
+      end
+      
+      define_method :actions do |user|
+        event_pairs = current_allowed_events    # Find all events
+        event_names = event_pairs.map {|event| event.first}
+        allowed_event_names = if respond_to? :event_allowed?
+          event_allowed?(event_names, user) # Limit them by role
+        else
+          event_names
+        end || []
+        allowed_event_names && event_pairs.select{|event_pair| allowed_event_names.include?(event_pair.first)}
+      end
+      
+    end
+  end
+  
+  
   def self.insta_workflow
     if respond_to?(:workflow_object) && workflow_object
       yield workflow_object if block_given?
@@ -211,17 +250,5 @@ class ActiveRecord::Base
     cur_state_index = state_array.index(current_state) || -1
     marker_state_index = state_array.index(marker_state) || -1
     cur_state_index >= marker_state_index if cur_state_index && marker_state_index
-  end
-
-  def actions
-    event_pairs = current_allowed_events    # Find all events
-    event_names = event_pairs.map {|event| event.first}
-    allowed_event_names = if respond_to? :event_allowed?
-      event_allowed?(event_names, self) # Limit them by role
-      event_names
-    else
-      event_names
-    end
-    allowed_event_names && event_pairs.select{|event_pair| allowed_event_names.include?(event_pair.first)}
   end
 end

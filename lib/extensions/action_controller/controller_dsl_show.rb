@@ -7,8 +7,8 @@ class ActionController::ControllerDslShow < ActionController::ControllerDsl
         action_buttons = if model
           event_pairs = model.current_allowed_events    # Find all events
           event_names = event_pairs.map {|event| event.first}
-          allowed_event_names = if respond_to? :event_allowed?
-            event_allowed?(event_names, model) # Limit them by role
+          allowed_event_names = if model.respond_to? :event_allowed?
+            model.event_allowed?(event_names, fluxx_current_user) # Limit them by role
           else
             event_names
           end

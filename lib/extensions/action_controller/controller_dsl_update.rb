@@ -24,8 +24,8 @@ class ActionController::ControllerDslUpdate < ActionController::ControllerDsl
     if @check_for_workflow
       event_action = params[:event_action]
       if event_action
-        event_allowed = if controller.respond_to?(:event_allowed?)
-          controller.event_allowed?(event_action, model) # Limit them by role
+        event_allowed = if model.respond_to?(:event_allowed?)
+          model.event_allowed?(event_action, fluxx_current_user) # Limit them by role
         else
           true
         end

@@ -1,4 +1,4 @@
-class ActionController::ControllerDslRole < ActionController::ControllerDsl
+class ActiveRecord::ModelDslRole < ActiveRecord::ModelDsl
   # A mapping of events to roles
   attr_accessor :event_role_mappings
   attr_accessor :extract_related_object_proc
