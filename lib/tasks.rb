@@ -1,6 +1,18 @@
 require 'fluxx_engine'
 
 namespace :fluxx_crm do
+  desc "Generates emails for all pending alerts"
+  task :enqueue_alert_notifications => :environment do
+    Alert.with_triggered_alerts! { |alert, rtus| 
+      rtu.each { |rtu| AlertEmail.enqueue(:alert, :alert => alert, :realtime_update => rtu) }
+    }
+  end
+
+  desc "Sends all enqueued emails with alerts"
+  task :deliver_enqueued_alert_emails => :enqueue_alert_notifications do
+    AlertEmail.deliver_all
+  end
+
   desc "Reload all document templates from their respective files"
   task :reload_doc_templates => :environment do
     WikiDocumentTemplate.reload_all_doc_templates
