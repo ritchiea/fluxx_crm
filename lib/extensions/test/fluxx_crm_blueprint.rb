@@ -7,7 +7,16 @@ module FluxxCrmBlueprint
 
   def self.included(base)
     base.send :include, ::FluxxEngineBlueprint
-  
+
+    AlertEmailTemplate.blueprint do
+      subject "the subject for {{recipient.email}}"
+      body "the body for {{recipient.email}}"
+    end
+
+    Alert.blueprint do
+      model_type User.name
+    end
+
     User.blueprint do
       first_name Sham.first_name
       last_name Sham.last_name

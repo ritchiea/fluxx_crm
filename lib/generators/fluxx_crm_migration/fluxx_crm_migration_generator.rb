@@ -58,6 +58,10 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'remove_unique_email_login_on_user.rb', 'db/migrate/fluxx_crm_remove_unique_email_login_on_user.rb'
     handle_migration 'add_vendor_id_to_organization.rb', 'db/migrate/fluxx_crm_add_vendor_id_to_organization.rb'
     handle_migration 'add_missing_index_from_model_documents.rb', 'db/migrate/fluxx_crm_add_missing_index_from_model_documents.rb'
+    handle_migration 'create_alert.rb', 'db/migrate/fluxx_crm_create_alert.rb'
+    handle_migration 'create_alert_emails.rb', 'db/migrate/fluxx_crm_create_alert_emails.rb'
+    handle_migration 'create_alert_recipients.rb', 'db/migrate/fluxx_crm_create_alert_recipients.rb'
+    handle_migration 'create_alert_email_templates.rb', 'db/migrate/fluxx_crm_create_alert_email_templates.rb'
   end
   
   private

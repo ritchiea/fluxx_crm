@@ -41,7 +41,5 @@ class FluxxCrmCreateRole < ActiveRecord::Migration
       t.drop :role_id
     end
     drop_table "roles"
-
-
   end
 end
