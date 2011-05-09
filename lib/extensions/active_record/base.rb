@@ -60,7 +60,7 @@ class ActiveRecord::Base
         def without_workflow(&block)
           workflow_was_disabled = workflow_object.workflow_disabled
           workflow_object.workflow_disabled = true
-          returning(block.call) { workflow_object.workflow_disabled = false unless workflow_was_disabled }
+          block.call.tap { workflow_object.workflow_disabled = false unless workflow_was_disabled }
         end
         
         def event_to_english event_name
@@ -212,6 +212,7 @@ class ActiveRecord::Base
     marker_state_index = state_array.index(marker_state) || -1
     cur_state_index >= marker_state_index if cur_state_index && marker_state_index
   end
+
   def actions
     event_pairs = current_allowed_events    # Find all events
     event_names = event_pairs.map {|event| event.first}
