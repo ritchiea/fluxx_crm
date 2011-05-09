@@ -1,0 +1,13 @@
+%fieldset.inputs
+  %ol
+    = semantic_form_for :alert, @model, :url => new_alert_path do |form|
+      = form.semantic_errors
+      = form.inputs do
+        = form.input :type, :as => :hidden
+        = form.input :name
+        = form.input :subject
+        = form.input :body
+        = form.input :recipients
+        = render :partial => "#{@model.class.name.underscore}_form", :locals => { :form => form }
+
+      = form.buttons :commit

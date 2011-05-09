@@ -152,4 +152,12 @@ module ApplicationHelper
       ['Assisant Email:', model.assistant_email ],
     ]
   end
+
+  def render_alert_field(field, options = {}, &block)
+    if field.blank?
+      options.fetch(:empty, "Any")
+    else
+      field.map(&block).join(options.fetch(:join, " or ")) unless field.blank?
+    end
+  end
 end

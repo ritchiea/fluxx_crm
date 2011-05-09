@@ -64,8 +64,12 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'create_alert_email_templates.rb', 'db/migrate/fluxx_crm_create_alert_email_templates.rb'
     handle_migration 'fix_user_profile_rules.rb', 'db/migrate/fluxx_crm_fix_user_profile_rules.rb'
     handle_migration 'add_related_workflowable_to_notes.rb', 'db/migrate/fluxx_crm_add_related_workflowable_to_notes.rb'
+    handle_migration 'drop_alert_email_templates.rb', 'db/migrate/fluxx_crm_drop_alert_email_templates.rb'
+    handle_migration 'add_subject_and_body_to_alerts.rb', 'db/migrate/fluxx_crm_add_subject_and_body_to_alerts.rb'
+    handle_migration 'change_alert_model_type_to_type.rb', 'db/migrate/fluxx_crm_change_alert_model_type_to_type.rb'
+    handle_migration 'add_name_to_alerts.rb', 'db/migrate/fluxx_crm_add_name_to_alerts.rb'
   end
-  
+
   private
   def handle_migration name, filename
     begin

@@ -34,5 +34,6 @@ Rails.application.routes.draw do
   resources :wiki_documents
   resources :wiki_document_templates
   resources :model_document_templates
+  resources :alerts
 end
 
