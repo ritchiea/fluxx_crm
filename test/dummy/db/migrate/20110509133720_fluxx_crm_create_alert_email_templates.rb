@@ -1,4 +1,4 @@
-class FluxxGrantCreateAlertEmailTemplates < ActiveRecord::Migration
+class FluxxCrmCreateAlertEmailTemplates < ActiveRecord::Migration
   def self.up
     create_table :alert_email_templates do |t|
       t.string :name
