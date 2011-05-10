@@ -440,6 +440,10 @@ module FluxxUser
       full_name
     end
     
+    def title
+      primary_user_organization ? primary_user_organization.title : ''
+    end
+    
     def primary_organization
       primary_user_organization.organization if primary_user_organization
     end
