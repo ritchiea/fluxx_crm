@@ -26,7 +26,7 @@ module FluxxUserProfile
     
     def all_user_profile_map
       unless UserProfile.cached_all_user_profile_hash
-        UserProfile.cached_all_user_profile_hash = UserProfile.all.inject({}) {|acc, up| acc[up.id] = up; acc} 
+        UserProfile.cached_all_user_profile_hash = UserProfile.all.inject(HashWithIndifferentAccess.new) {|acc, up| acc[up.id] = up; acc} 
       end
       UserProfile.cached_all_user_profile_hash
     end

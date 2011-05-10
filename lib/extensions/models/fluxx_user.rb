@@ -432,6 +432,18 @@ module FluxxUser
       is_admin? || has_permission_for_object?("view", model_class) || has_view_for_own_model?(model_class)
     end
     
+    def is_employee?
+      has_named_user_profile? 'Employee'
+    end
+
+    def is_board_member?
+      has_named_user_profile? 'Board'
+    end
+
+    def is_consultant?
+      has_named_user_profile? 'Consultant'
+    end
+
     def full_name
       [first_name, last_name].join ' '
     end
