@@ -432,6 +432,11 @@ module FluxxUser
       is_admin? || has_permission_for_object?("view", model_class) || has_view_for_own_model?(model_class)
     end
     
+    def has_named_user_profile? name
+      user_profile = UserProfile.all_user_profile_map_by_name[name]
+      user_profile && self.user_profile_id == user_profile.id
+    end
+    
     def is_employee?
       has_named_user_profile? 'Employee'
     end
