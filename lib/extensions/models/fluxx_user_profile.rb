@@ -23,7 +23,7 @@ module FluxxUserProfile
       UserProfile.cached_all_user_profile_rules
     end
     
-    
+
     def all_user_profile_map
       unless UserProfile.cached_all_user_profile_hash
         UserProfile.cached_all_user_profile_hash = UserProfile.all.inject(HashWithIndifferentAccess.new) {|acc, up| acc[up.id] = up; acc} 
@@ -39,7 +39,7 @@ module FluxxUserProfile
   module ModelInstanceMethods
     
     def has_rule? permission_name, model_type
-      UserProfile.all_user_profile_rules.select{|rule| rule.user_profile_id = self.id && rule.permission_name == permission_name && rule.model_type == model_type}.first
+      UserProfile.all_user_profile_rules.select{|rule| rule.user_profile_id == self.id && rule.permission_name == permission_name && rule.model_type == model_type}.first
     end
   end
 end
