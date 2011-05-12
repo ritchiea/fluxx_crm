@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110509133720) do
+ActiveRecord::Schema.define(:version => 20110512015554) do
 
   create_table "alert_email_templates", :force => true do |t|
     t.string "name"
@@ -684,12 +684,11 @@ ActiveRecord::Schema.define(:version => 20110509133720) do
     t.datetime "due_at"
     t.integer  "task_order"
     t.integer  "assigned_user_id"
-    t.boolean  "task_completed",     :default => false
+    t.boolean  "task_completed",   :default => false
     t.datetime "deleted_at"
     t.datetime "locked_until"
     t.integer  "locked_by_id"
     t.datetime "completed_at"
-    t.text     "additional_details"
   end
 
   add_index "work_tasks", ["assigned_user_id"], :name => "work_tasks_assigned_user_id"
