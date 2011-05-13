@@ -113,12 +113,13 @@ class ActiveSupport::TestCase
   setup :clear_out_blueprint_attributes
 
   def clear_out_blueprint_attributes
+    # It's possible to run out of faker values (such as last name), so if you don't reset your shams you could run out of unique values
+    Sham.reset
+
     @entered = {} unless @entered
     unless @entered["#{self.class.name}::#{@method_name}"]
       @entered["#{self.class.name}::#{@method_name}"] = true
-
-      # It's possible to run out of faker values (such as last name), so if you don't reset your shams you could run out of unique values
-      Sham.reset
+      UserProfile.clear_cache
     end
   end
 end

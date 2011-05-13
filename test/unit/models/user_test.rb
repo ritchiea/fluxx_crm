@@ -146,8 +146,6 @@ class UserTest < ActiveSupport::TestCase
     user_profile, user = setup_user_profile
     assert_equal user_profile, user.user_profile
     
-    assert !user.has_create_for_model?(Organization)
-    
     UserProfileRule.make :user_profile => user_profile, :permission_name => 'create', :model_type => Organization.name
     assert user.reload.has_create_for_model?(Organization)
   end
@@ -235,7 +233,6 @@ class UserTest < ActiveSupport::TestCase
   test "check that we can add a user_rule with create_all and NOT create Organization and have it respect that.  Should still be able to create a TestModel" do
     user_profile, user = setup_user_profile
     UserProfileRule.create :user_profile => user_profile, :permission_name => 'create_all'
-    assert user.reload.has_create_for_model?(Organization)
     UserProfileRule.create :user_profile => user_profile, :permission_name => 'create', :model_type => Organization.name, :allowed => false
     user.reload
     assert !user.reload.has_create_for_model?(Organization)

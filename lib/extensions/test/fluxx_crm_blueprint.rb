@@ -18,46 +18,48 @@ module FluxxCrmBlueprint
     end
 
     User.blueprint do
-      first_name Sham.first_name
-      last_name Sham.last_name
-      login {"#{rand(999999)}_#{Faker::Internet.user_name}"}
-      email {"#{rand(999999)}_#{Faker::Internet.email}"}
+      first_name random_first_name
+      last_name random_last_name
+      login random_login
+      email random_email
       created_at 5.days.ago.to_s(:db)
       state 'active'
+      single_access_token Time.at(Time.now.to_i - rand(999999))
+      persistence_token random_word
     end
 
 
     Organization.blueprint do
       name Sham.company_name
-      city Sham.words
-      street_address Sham.words
-      street_address2 Sham.words
+      city random_words
+      street_address random_words
+      street_address2 random_words
       url Sham.url
     end
 
     UserOrganization.blueprint do
-      title Sham.words
+      title random_words
       user_id User.make.id
       organization_id Organization.make.id
     end
 
     GeoCountry.blueprint do
       name do
-        Sham.word
+        random_word
       end
-      iso3 Sham.word
-      fips104 Sham.word
+      iso3 random_word
+      fips104 random_word
     end
 
     GeoState.blueprint do
-      name Sham.word
-      abbreviation Sham.word
-      fips_10_4 Sham.word
+      name random_word
+      abbreviation random_word
+      fips_10_4 random_word
       geo_country_id GeoCountry.make.id
     end
 
     GeoCity.blueprint do
-      name Sham.word
+      name random_word
       geo_state_id GeoState.make.id
       geo_country_id GeoCountry.make.id
       original_id 1
@@ -68,7 +70,7 @@ module FluxxCrmBlueprint
         User.make
       end
       document Sham.document
-      document_file_name Sham.word
+      document_file_name random_word
     end
 
     # this helper class creates classes so your blueprint is happy
@@ -82,7 +84,7 @@ module FluxxCrmBlueprint
     end
 
     Note.blueprint do
-      note Sham.sentence
+      note random_sentence
       notable_type 'User'
       notable_id User.make.id
     end
@@ -100,7 +102,7 @@ module FluxxCrmBlueprint
     end
 
     Note.blueprint do
-      note Sham.sentence
+      note random_sentence
       notable_type 'User'
       notable_id User.make.id
     end
@@ -127,12 +129,12 @@ module FluxxCrmBlueprint
     end
 
     Project.blueprint do
-      title Sham.sentence
-      description Sham.sentence
+      title random_sentence
+      description random_sentence
     end
 
     ProjectList.blueprint do
-      title Sham.sentence
+      title random_sentence
       list_order 1
     end
 
@@ -143,8 +145,8 @@ module FluxxCrmBlueprint
     end
 
     ProjectListItem.blueprint do
-      name Sham.word
-      list_item_text Sham.sentence
+      name random_word
+      list_item_text random_sentence
       due_at Time.now
       item_order 1
     end
@@ -152,60 +154,61 @@ module FluxxCrmBlueprint
     WikiDocument.blueprint do
       model_type Organization.name
       wiki_order 1
-      title Sham.word
-      note Sham.sentence
+      title random_word
+      note random_sentence
     end
 
     WikiDocumentTemplate.blueprint do
       model_type Organization.name
-      document_type Sham.word
-      filename Sham.word
-      description Sham.word
-      category Sham.word
-      document Sham.sentence
+      document_type random_word
+      filename random_word
+      description random_word
+      category random_word
+      document random_sentence
     end
 
     ModelDocumentTemplate.blueprint do
       model_type Organization.name
-      document_type Sham.word
-      filename Sham.word
-      description Sham.word
-      category Sham.word
-      document Sham.sentence
+      document_type random_word
+      filename random_word
+      description random_word
+      category random_word
+      document random_sentence
     end
     
     ModelDocumentType.blueprint do
     end
     
     BankAccount.blueprint do
-      bank_name Sham.words
-      account_name Sham.word
-      account_number Sham.word
-      special_instructions Sham.sentence
-      street_address Sham.words
-      street_address2 Sham.words
-      city Sham.words
-      postal_code Sham.word
-      phone  Sham.word
-      fax Sham.word
-      bank_code Sham.word
-      bank_contact_name "#{Sham.first_name} #{Sham.last_name}"
-      bank_contact_phone Sham.word
-      domestic_wire_aba_routing Sham.words
-      domestic_special_wire_instructions Sham.words
-      foreign_wire_intermediary_bank_name Sham.words
-      foreign_wire_intermediary_bank_swift Sham.sentence
-      foreign_wire_beneficiary_bank_swift Sham.sentence
-      foreign_special_wire_instructions Sham.sentence
+      bank_name random_words
+      account_name random_word
+      account_number random_word
+      special_instructions random_sentence
+      street_address random_words
+      street_address2 random_words
+      city random_words
+      postal_code random_word
+      phone  random_word
+      fax random_word
+      bank_code random_word
+      bank_contact_name "#{random_first_name} #{random_last_name}"
+      bank_contact_phone random_word
+      domestic_wire_aba_routing random_words
+      domestic_special_wire_instructions random_words
+      foreign_wire_intermediary_bank_name random_words
+      foreign_wire_intermediary_bank_swift random_sentence
+      foreign_wire_beneficiary_bank_swift random_sentence
+      foreign_special_wire_instructions random_sentence
     end
     
     WorkTask.blueprint do
-      name Sham.word
-      task_text Sham.sentence
+      name random_word
+      task_text random_sentence
       due_at Time.now
       task_order 1
     end
     Role.blueprint do
+      name random_word
     end
     UserPermission.blueprint do
     end

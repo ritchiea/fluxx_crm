@@ -50,7 +50,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     cycle_count = 0
     timeline = model.class.suspended_delta(false)  do
       working_timeline = [model.state.to_s]
-
+      
       while cycle_count < 500 && (cur_event = (aasm_events_for_state_with_guard(model) & (model.class.all_workflow_events)).last)
         model.send cur_event
         working_timeline << model.state

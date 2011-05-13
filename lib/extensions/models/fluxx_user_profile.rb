@@ -15,6 +15,11 @@ module FluxxUserProfile
   end
 
   module ModelClassMethods
+    def clear_cache
+      UserProfile.cached_all_user_profile_hash = nil
+      UserProfile.cached_all_user_profile_rules = nil
+    end
+    
     # Works fine as long as there aren't many user profile rules
     def all_user_profile_rules
       unless UserProfile.cached_all_user_profile_rules

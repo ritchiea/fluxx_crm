@@ -35,15 +35,12 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
   end
   
   test 'clearing and adding' do
-    race = Race.new
-    workflow = race.workflow_object
-    assert_equal workflow.states_to_english.size, 6
+    workflow = @dsl_workflow
+    assert_equal workflow.states_to_english.size, 0
     workflow.clear_states_to_english
     assert workflow.states_to_english.empty?
     workflow.add_state_to_english :a_new_state, 'A New State'
     assert_equal workflow.states_to_english.size, 1
-    race.state = 'a_new_state'
-    assert_equal workflow.state_to_english(race), 'A New State'
   end
   
   test 'category test new' do
