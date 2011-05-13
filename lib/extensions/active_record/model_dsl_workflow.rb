@@ -15,6 +15,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   attr_accessor :non_validating_events
   # If this is true, the workflow updates will not execute
   attr_accessor :workflow_disabled
+  # Alternate workflow model block returns the ID of a different related 
+  attr_accessor :alternate_note_model_block
 
   def initialize model_class
     super model_class
@@ -99,10 +101,17 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   
   def track_workflow_changes model, force, change_type
     # If state changed, track a WorkflowEvent
-    if force || (model.send(:changed_attributes)['state'] != model.state && !(model.send(:changed_attributes)['state']).blank?)
+    if force || (model.send(:changed_attributes)['state'] != model.state && !((model.send(:changed_attributes)['state']).blank?))
      unless workflow_disabled
-        wfe = WorkflowEvent.create :comment => model.workflow_note, :change_type => change_type, :ip_address => model.workflow_ip_address.to_s, :workflowable_type => model.class.to_s, 
-          :workflowable_id => model.id, :old_state => (model.send(:changed_attributes)['state']) || '', :new_state => model.state || '', :created_by  => model.updated_by, :updated_by => model.updated_by
+        workflowable_hash = if alternate_note_model_block && alternate_note_model_block.is_a?(Proc)
+         note_model = alternate_note_model_block.call model
+         {:related_workflowable_type => model.class.to_s, :related_workflowable_id => model.id, 
+           :workflowable_type => (note_model ? note_model.class.to_s : nil), :workflowable_id => (note_model ? note_model.id : nil)}
+       else
+         {:workflowable_type => model.class.to_s, :workflowable_id => model.id}
+       end
+       
+        wfe = WorkflowEvent.create workflowable_hash.merge(:comment => model.workflow_note, :change_type => change_type, :ip_address => model.workflow_ip_address.to_s, :old_state => (model.send(:changed_attributes)['state']) || '', :new_state => model.state || '', :created_by => model.updated_by, :updated_by => model.updated_by)
         # p "ESH: creating new wfe=#{wfe.inspect}, errors=#{wfe.errors.inspect}"
         # begin
         #   rails Exception.new 'stack trace'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110512015554) do
+ActiveRecord::Schema.define(:version => 20110513223024) do
 
   create_table "alert_email_templates", :force => true do |t|
     t.string "name"
@@ -359,8 +359,8 @@ ActiveRecord::Schema.define(:version => 20110512015554) do
     t.integer  "parent_org_id"
     t.datetime "locked_until"
     t.integer  "locked_by_id"
-    t.string   "tax_id"
     t.string   "vendor_number"
+    t.string   "tax_id"
   end
 
   add_index "organizations", ["created_by_id"], :name => "organizations_created_by_id"
@@ -608,7 +608,6 @@ ActiveRecord::Schema.define(:version => 20110512015554) do
     t.datetime "locked_until"
     t.integer  "locked_by_id"
     t.integer  "user_profile_id"
-    t.boolean  "test_user_flag",                               :default => false
     t.string   "crypted_password",             :limit => 128,  :default => "",                           :null => false
     t.string   "password_salt",                                :default => "",                           :null => false
     t.string   "persistence_token"
@@ -620,6 +619,7 @@ ActiveRecord::Schema.define(:version => 20110512015554) do
     t.datetime "last_login_at"
     t.string   "current_login_ip"
     t.string   "last_login_ip"
+    t.boolean  "test_user_flag",                               :default => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :length => {"email"=>"255"}
@@ -707,6 +707,8 @@ ActiveRecord::Schema.define(:version => 20110512015554) do
     t.string   "old_state"
     t.string   "new_state"
     t.text     "comment"
+    t.string   "related_workflowable_type"
+    t.integer  "related_workflowable_id"
   end
 
   add_index "workflow_events", ["created_by_id"], :name => "workflow_events_created_by_id"

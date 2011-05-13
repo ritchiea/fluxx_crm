@@ -200,7 +200,7 @@ class ActiveRecord::Base
       end
 
       define_method :track_workflow_create do
-        track_workflow_changes true, 'create'
+        track_workflow_changes false, 'create'
       end
       define_method :track_workflow_update do
         track_workflow_changes false, 'update'
