@@ -251,4 +251,23 @@ class ActiveRecord::Base
     marker_state_index = state_array.index(marker_state) || -1
     cur_state_index >= marker_state_index if cur_state_index && marker_state_index
   end
+
+  def current_user_session
+    return @current_user_session if defined?(@current_user_session)
+    @current_user_session = UserSession.find
+  end
+
+  def current_user
+    User.suspended_delta(false) do
+      User.without_realtime do
+        User.without_auditing do
+          if defined?(@current_user)
+            @current_user
+          else
+            @current_user = current_user_session && current_user_session.user
+          end
+        end
+      end
+    end
+  end
 end
