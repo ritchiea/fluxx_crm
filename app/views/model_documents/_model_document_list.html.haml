@@ -10,7 +10,7 @@
 - unless required_doc_ids.empty?
   - missing_doc_ids = required_doc_ids - models.map(&:model_document_type_id)
   - missing_docs = ModelDocumentType.find_all_by_id(missing_doc_ids)
-      
+
 %table.tabular{:cellspacing => 0}
   - if documentable
     %thead
@@ -27,7 +27,7 @@
     - if !models || models.empty?
       %tr
         %td 
-          %p.caption=  "No Documents"
+          %p.caption=  "Click the green '+' sign in order to upload all relevant request and organization documents."
     - else
       - # Show the documents with types first in order
       - models.sort_by{|model| [(model.model_document_type ? (model.model_document_type.name || '||') : '||'), (model.created_at ? (-1 * model.created_at.to_i) : 0)]}.each do |model|
