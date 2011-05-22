@@ -34,7 +34,7 @@ class ActionController::Base
       User.without_realtime do
         User.without_auditing do
           if defined?(@current_user)
-            @current_user 
+            @current_user
           else
             @current_user = current_user_session && current_user_session.user
           end

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :admin_items
+
   resources :admin_cards
   resources :user_permissions
 
