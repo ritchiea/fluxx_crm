@@ -43,6 +43,7 @@ jQuery(function($){
         $elem.addClass('selected');
         var $detail = $('#fluxx-admin .fluxx-admin-partial');
         if ($elem.attr('href'))
+          $detail.fluxxCard().closeCardModal();
           $detail.attr('data-src', $elem.attr('href'));
           $detail.refreshAreaPartial({}, function() {
             $detail.scrollTop(0);
