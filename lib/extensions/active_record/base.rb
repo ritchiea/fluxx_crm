@@ -1,4 +1,5 @@
 class ActiveRecord::Base
+  @@all_workflow_classnames= []
   
   def self.insta_favorite
     has_many :favorites, :as => :favorable
@@ -55,6 +56,7 @@ class ActiveRecord::Base
     if respond_to?(:workflow_object) && workflow_object
       yield workflow_object if block_given?
     else
+      @@all_workflow_classnames << self.name
       local_workflow_object = ActiveRecord::ModelDslWorkflow.new(self)
       class_inheritable_reader :workflow_object
       write_inheritable_attribute :workflow_object, local_workflow_object
@@ -233,6 +235,10 @@ class ActiveRecord::Base
       end
     end
   end
+
+  def self.all_workflow_classnames
+    @@all_workflow_classnames.sort
+  end
   
   def state_past state_array, marker_state, current_state
     state_array = state_array.map{|elem| elem.to_s}
@@ -270,4 +276,5 @@ class ActiveRecord::Base
       end
     end
   end
+
 end
