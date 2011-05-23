@@ -39,8 +39,8 @@ class FluxxCrmCreateUsers < ActiveRecord::Migration
       t.datetime :locked_until,              :null => true
       t.integer :locked_by_id,               :null => true
     end
-    add_index :users, :login, :unique => true
-    add_index :users, :email, :unique => true
+    add_index :users, :login, :unique => true, :name => :index_users_on_login
+    add_index :users, :email, :unique => true, :name => :index_users_on_email
     
     add_constraint 'users', 'users_personal_country_id', 'personal_geo_country_id', 'geo_countries', 'id'
     add_constraint 'users', 'users_personal_geo_state_id', 'personal_geo_state_id', 'geo_states', 'id'

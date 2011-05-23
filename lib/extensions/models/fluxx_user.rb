@@ -13,6 +13,7 @@ module FluxxUser
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :user_profile
+    base.belongs_to :client if User.columns.map(&:name).include?('client_id')
     base.has_many :model_documents, :as => :documentable
     base.has_many :notes, :as => :notable, :conditions => {:deleted_at => nil}
     base.has_many :group_members, :as => :groupable
