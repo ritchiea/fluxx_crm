@@ -7,7 +7,8 @@
         = form.input :name
         = form.input :subject
         = form.input :body
-        = form.input :recipients
+        = form.input :recipients, :as => :select, :collection => Alert.recipients
+        - @model.class.recipient_roles.keys.map(&:to_s).sort.each do |role_name|
+          = form.input role_name, :as => :boolean, :label => @model.class.recipient_roles[role_name.to_sym][:friendly_name]
         = render :partial => "#{@model.class.name.underscore}_form", :locals => { :form => form }
-
       = form.buttons :commit

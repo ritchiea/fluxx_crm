@@ -32,19 +32,30 @@ module FluxxCrmAlert
   extend FluxxModuleHelper
 
   when_included do
-    has_many :alert_recipients
+    has_many :alert_recipients, :dependent => :destroy
     has_many :alert_users, :class_name => AlertRecipient.name, :conditions => ["alert_recipients.user_id IS NOT NULL"]
     has_many :recipients, :through => :alert_users, :source => 'user'
-    validates :name, :presence => true, :uniqueness => true
+
     serialize :filter, Hash
-    after_initialize :create_default_filter
+    validates :name, :presence => true, :uniqueness => true
+
+    class_inheritable_hash :recipient_roles
+    self.recipient_roles = HashWithIndifferentAccess.new
+
+    after_initialize :on_init
+    after_save :save_roles
     before_validation(:on => :create) do
       self.last_realtime_update_id = RealtimeUpdate.maximum(:id) if self.last_realtime_update_id.nil?
     end
+
     insta_search
   end
 
   class_methods do
+    def recipients
+      User.joins(:user_profile).where("user_profiles.name = 'Employee' OR user_profiles.name = 'Board'").order("users.first_name, users.last_name ASC")
+    end
+
     def with_triggered_alerts!(&alert_processing_block)
       Alert.find_each do |alert|
         matching_rtus = []
@@ -95,6 +106,28 @@ module FluxxCrmAlert
         end
       }
     end
+
+    def attr_recipient_role(name, opts)
+      recipient_finder, friendly_name = opts.values_at(:recipient_finder, :friendly_name)
+
+      friendly_name ||= name.to_s.humanize
+
+      self.recipient_roles[name] = {:friendly_name => friendly_name, :recipient_finder => recipient_finder}
+
+      attr_reader name
+
+      define_method("#{name}=") do |value|
+        bool_value = if value == "1"
+                  true
+                elsif value == "0"
+                  false
+                else
+                  !!value
+                end
+
+        instance_variable_set("@#{name}", bool_value)
+      end
+    end
   end
 
   instance_methods do
@@ -123,8 +156,7 @@ module FluxxCrmAlert
         if alert_recipient.user
           alert_recipient.user
         else
-          user_id = rtu.model.send(alert_recipient.rtu_model_user_method)
-          User.find(user_id)
+          self.class.recipient_roles[alert_recipient][:recipient_finder].call(rtu.model)
         end
       end.uniq
     end
@@ -141,8 +173,40 @@ module FluxxCrmAlert
       Liquid::Template.parse(body).render(locals.stringify_keys.merge('alert' => self))
     end
 
+    def on_init
+      create_default_filter
+      load_roles
+    end
+
     def create_default_filter
       self.filter ||= {}
+    end
+
+    def load_roles
+      self.class.recipient_roles.keys.each do |recipient_role|
+        is_set = self.alert_recipients.where(:rtu_model_user_method => recipient_role).exists?
+        send("#{recipient_role}=", is_set)
+      end
+    end
+
+    def save_roles
+      self.class.recipient_roles.keys.each do |recipient_role|
+        save_role(recipient_role)
+      end
+    end
+
+    def save_role(role_name)
+      is_a_recipient = send(role_name)
+      was_a_recipient = self.alert_recipients.where(:rtu_model_user_method => role_name).exists?
+
+      return if was_a_recipient && is_a_recipient
+      return if !was_a_recipient && !is_a_recipient
+
+      if is_a_recipient
+        AlertRecipient.where(:alert_id => self.id, :rtu_model_user_method => role_name).create!
+      else
+        AlertRecipient.where(:alert_id => self.id, :rtu_model_user_method => role_name).each(&:destroy)
+      end
     end
   end
 end
