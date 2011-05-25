@@ -33,4 +33,21 @@ class AlertTest < ActiveSupport::TestCase
     Alert.make(:last_realtime_update_id => rtu.id)
     assert !alert_is_triggered
   end
+
+  test "alert should coalesce rtus that point to the same model" do
+    Alert.delete_all
+    Alert.make
+    user1 = User.make
+    rtu1 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
+    rtu2 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
+    rtu3 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
+    user2 = User.make
+    rtu4 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
+    rtu5 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
+    rtu6 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
+
+    filtered_rtus = []
+    Alert.with_triggered_alerts!(skip_filter = true){|triggered_alert, matching_rtus| filtered_rtus = matching_rtus }
+    assert_equal [rtu3, rtu6], filtered_rtus
+  end
 end

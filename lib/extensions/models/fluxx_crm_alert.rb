@@ -56,18 +56,24 @@ module FluxxCrmAlert
       User.joins(:user_profile).where("user_profiles.name = 'Employee' OR user_profiles.name = 'Board'").order("users.first_name, users.last_name ASC")
     end
 
-    def with_triggered_alerts!(&alert_processing_block)
+    def with_triggered_alerts!(skip_filter = false, &alert_processing_block)
       Alert.find_each do |alert|
         matching_rtus = []
         last_realtime_update_id = alert.last_realtime_update_id || -1
         RealtimeUpdate.where("id > ?", last_realtime_update_id).order('id asc').find_each do |rtu|
           last_realtime_update_id = rtu.id
-          matching_rtus << rtu if alert.should_be_triggered?(rtu)
+          matching_rtus << rtu if skip_filter || alert.should_be_triggered?(rtu)
         end
+
+        matching_rtus = coalesce(matching_rtus)
 
         alert.update_attribute(:last_realtime_update_id, last_realtime_update_id)
         alert_processing_block.call(alert, matching_rtus) unless matching_rtus.empty?
       end
+    end
+
+    def coalesce(matching_rtus)
+      matching_rtus.group_by(&:model).map{|model, rtus| rtus.last}.compact
     end
 
     def alertable_classes
