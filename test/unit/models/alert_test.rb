@@ -35,7 +35,6 @@ class AlertTest < ActiveSupport::TestCase
   end
 
   test "alert should coalesce rtus that point to the same model" do
-    Alert.delete_all
     Alert.make
     user1 = User.make
     rtu1 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)

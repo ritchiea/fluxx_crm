@@ -162,9 +162,10 @@ module FluxxCrmAlert
         if alert_recipient.user
           alert_recipient.user
         else
-          self.class.recipient_roles[alert_recipient][:recipient_finder].call(rtu.model)
+          role_recipient_opts = self.class.recipient_roles[alert_recipient.rtu_model_user_method.to_sym]
+          role_recipient_opts[:recipient_finder].call(rtu.model) if role_recipient_opts
         end
-      end.uniq
+      end.compact.uniq
     end
 
     def to_liquid
