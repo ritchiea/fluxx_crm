@@ -22,8 +22,14 @@ module FluxxModelDocumentTemplate
   end
 
   module ModelClassMethods
-    def for_type_and_category(model_type, category)
-      where(:model_type => model_type, :category => category)
+    def for_type_and_category(model_type, category=nil)
+      clause = where(:model_type => model_type)
+      clause = clause.where(:category => category) if category
+      clause
+    end
+    
+    def adhoc_for_type_and_category(model_type, category=nil)
+      for_type_and_category(model_type, category).where(:display_in_adhoc_list => true)
     end
     
     # STOP! use only for dev purposes

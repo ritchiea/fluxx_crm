@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110513223024) do
+ActiveRecord::Schema.define(:version => 20110525204818) do
 
   create_table "alert_email_templates", :force => true do |t|
     t.string "name"
@@ -239,7 +239,8 @@ ActiveRecord::Schema.define(:version => 20110513223024) do
     t.string   "category"
     t.text     "document"
     t.datetime "deleted_at"
-    t.boolean  "delta",         :default => true, :null => false
+    t.boolean  "delta",                 :default => true,  :null => false
+    t.boolean  "display_in_adhoc_list", :default => false, :null => false
   end
 
   add_index "model_document_templates", ["category"], :name => "index_model_document_templates_on_category"

@@ -16,6 +16,15 @@ module FluxxModelDocumentType
   end
 
   module ModelClassMethods
+    def load_by_class klass, options={}
+      klass = if klass.is_a? Class
+        klass
+      else
+        klass.class
+      end
+      
+      ModelDocumentType.where(:model_type => klass.name).all
+    end
   end
 
   module ModelInstanceMethods

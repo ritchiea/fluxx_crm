@@ -64,6 +64,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'create_alert_email_templates.rb', 'db/migrate/fluxx_crm_create_alert_email_templates.rb'
     handle_migration 'fix_user_profile_rules.rb', 'db/migrate/fluxx_crm_fix_user_profile_rules.rb'
     handle_migration 'add_related_workflowable_to_notes.rb', 'db/migrate/fluxx_crm_add_related_workflowable_to_notes.rb'
+    handle_migration 'add_adhoc_flag_to_model_document_template.rb', 'db/migrate/fluxx_crm_add_adhoc_flag_to_model_document_template.rb'
   end
   
   private
