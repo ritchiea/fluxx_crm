@@ -22,7 +22,7 @@ module FluxxCrmAlertEmail
 
   instance_methods do
     def deliver
-      alert.recipients(realtime_update).each{|recipient| AlertMailer.send(mailer_method, recipient, alert).deliver}
+      alert.rtu_recipients(realtime_update).each{|recipient| AlertMailer.send(mailer_method, recipient, alert).deliver}
       update_attributes(:delivered => true)
     end
   end

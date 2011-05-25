@@ -11,6 +11,13 @@ class AlertTest < ActiveSupport::TestCase
     alert_is_triggered
   end
 
+  test "alerts should have a unique name" do
+    alert1 = Alert.make
+    alert2 = Alert.make_unsaved(:name => alert1.name)
+    alert2.valid?
+    assert_equal "has already been taken", alert2.errors[:name].first
+  end
+
   test "no alert is triggered if we don't have any alert" do
     assert_equal 0, Alert.count
     assert !alert_is_triggered
@@ -27,17 +34,19 @@ class AlertTest < ActiveSupport::TestCase
     assert !alert_is_triggered
   end
 
-  test "alert is triggered if its filters match the rtu and the rtu hasn't been processed" do
-    user = User.make(:email => 'forfiter@szwagier.pl')
-    rtu = RealtimeUpdate.make(:model_class => User, :model_id => user.id)
-    Alert.make(:last_realtime_update_id => rtu.id - 1, :filter => RTUMatcher::Attribute.new(:attribute => :email, :value => 'forfiter@szwagier.pl'))
-    assert alert_is_triggered
-  end
+  test "alert should coalesce rtus that point to the same model" do
+    Alert.make
+    user1 = User.make
+    rtu1 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
+    rtu2 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
+    rtu3 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
+    user2 = User.make
+    rtu4 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
+    rtu5 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
+    rtu6 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
 
-  test "alert is not triggered if its filters do not match the rtu for a non processed rtu" do
-    user = User.make(:email => 'forfiter@szwagier.pl')
-    rtu = RealtimeUpdate.make(:model_class => User, :model_id => user.id)
-    Alert.make(:last_realtime_update_id => rtu.id - 1, :filter => RTUMatcher::Attribute.new(:attribute => :email, :value => 'forfiter@franca.pl'))
-    assert alert_is_triggered
+    filtered_rtus = []
+    Alert.with_triggered_alerts!(skip_filter = true){|triggered_alert, matching_rtus| filtered_rtus = matching_rtus }
+    assert_equal [rtu3, rtu6], filtered_rtus
   end
 end
