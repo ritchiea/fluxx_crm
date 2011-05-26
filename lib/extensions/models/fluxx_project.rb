@@ -42,5 +42,9 @@ module FluxxProject
     def related_organizations
       project_organizations.map{|ro| ro.organization}.compact.sort_by{|o| o.name || ''}
     end
+
+    def to_liquid
+      {"title" => title, "description" => description}
+    end
   end
 end
