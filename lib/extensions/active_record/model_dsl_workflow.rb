@@ -284,6 +284,12 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     category_states = all_states_with_category model_class, category_name
     extract_all_event_types(model_class).select{|pair| category_states.include?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
   end
+
+  def insta_on_enter(state_name, &on_enter_behaviour)
+    self.model_class.after_save do |model|
+      on_enter_behaviour.call(model) if model.state_changed? && model.state == state_name.to_s
+    end
+  end
 end
 
 
