@@ -26,6 +26,8 @@ module FluxxModelDocument
     base.validates_presence_of :documentable
     base.validates_attachment_presence :document
     
+    base.before_save :normalize_filename
+    
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
@@ -58,6 +60,13 @@ module FluxxModelDocument
     def relates_to_user? user
       (self.documentable.class.name == 'RequestReport') ?
         (user.primary_organization.id == self.documentable.request.program_organization_id) || (user.primary_organization.id == self.documentable.request.fiscal_organization_id) : false
+    end
+    
+    def normalize_filename
+      if filename_changed?
+        require 'cgi'
+        self.filename = CGI::escape(filename)
+      end
     end
   end
 end
