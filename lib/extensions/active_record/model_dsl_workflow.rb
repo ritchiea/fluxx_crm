@@ -285,9 +285,18 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     extract_all_event_types(model_class).select{|pair| category_states.include?(pair[1]) if pair.is_a?(Array) && pair[1]}.map{|pair| pair.first}
   end
 
-  def insta_on_enter(state_name, &on_enter_behaviour)
-    self.model_class.after_save do |model|
-      on_enter_behaviour.call(model) if model.state_changed? && model.state == state_name.to_s
+  def states_for_category(state_category_name)
+    cat_states = []
+    self.states_to_category.each do |state,cats|
+      cat_states << state if cats.include?(state_category_name.to_s)
+    end
+    cat_states
+  end
+
+  def insta_on_enter_state_category(state_category_name, &on_enter_behaviour)
+    cat_states = states_for_category(state_category_name)
+    self.model_class.after_save do
+      on_enter_behaviour.call(self) if state_changed? && cat_states.include?(state)
     end
   end
 end

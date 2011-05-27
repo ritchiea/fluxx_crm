@@ -107,24 +107,22 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
   end
 
   test 'hooking some behaviour when entering a state' do
-    rejected_races = []
+    @dsl_workflow.add_state_to_english :rejected, '', ['rejected_or_kicked_off', 'some_other_category']
+    @dsl_workflow.add_state_to_english :beginning, '', 'rejected_or_kicked_off'
 
-    @dsl_workflow.insta_on_enter(:rejected) do |race|
-      rejected_races << race
-    end
-
-    @dsl_workflow.insta_on_enter(:beginning) do |race|
-      rejected_races << race
+    rejected_or_kicked_off_races = []
+    @dsl_workflow.insta_on_enter_state_category('rejected_or_kicked_off') do |race|
+      rejected_or_kicked_off_races << race
     end
 
     new_race = Race.make
     middle_race = Race.make(:state => 'middle')
     sent_back_race = Race.make(:state => 'final'); sent_back_race.send_back_starting_line; sent_back_race.save!
-    rejected_race1 = Race.make(:state => 'rejected')
+    rejected_race1 = Race.make(:state => 'rejected'); rejected_race1.state = 'rejected'; rejected_race1.save!
     rejected_race2 = Race.make; rejected_race2.reject; rejected_race2.save!
     kicked_off_race1 = Race.make(:state => 'beginning')
     kicked_off_race2 = Race.make; kicked_off_race2.kick_off; kicked_off_race2.save!
 
-    assert_equal [rejected_race1, rejected_race2, kicked_off_race1, kicked_off_race2].map(&:id).sort, rejected_races.map(&:id).sort
+    assert_equal [rejected_race1, rejected_race2, kicked_off_race1, kicked_off_race2].map(&:id).sort, rejected_or_kicked_off_races.map(&:id).sort
   end
 end
