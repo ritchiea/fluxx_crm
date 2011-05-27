@@ -111,7 +111,7 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
     @dsl_workflow.add_state_to_english :beginning, '', 'rejected_or_kicked_off'
 
     rejected_or_kicked_off_races = []
-    @dsl_workflow.insta_on_enter_state_category('rejected_or_kicked_off', 'here_we_can_pass_some_other_category_too') do |race|
+    @dsl_workflow.on_enter_state_category('rejected_or_kicked_off', 'here_we_can_pass_some_other_category_too') do |race|
       rejected_or_kicked_off_races << race
     end
 
