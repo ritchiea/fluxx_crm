@@ -293,8 +293,12 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     cat_states
   end
 
-  def insta_on_enter_state_category(state_category_name, &on_enter_behaviour)
-    cat_states = states_for_category(state_category_name)
+  def insta_on_enter_state_category(*state_category_names, &on_enter_behaviour)
+    cat_states = []
+    state_category_names.each do |state_category_name|
+      cat_states += states_for_category(state_category_name)
+    end
+
     self.model_class.after_save do
       on_enter_behaviour.call(self) if state_changed? && cat_states.include?(state)
     end
