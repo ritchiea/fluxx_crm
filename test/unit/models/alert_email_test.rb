@@ -27,5 +27,22 @@ class AlertEmailTest < ActiveSupport::TestCase
     assert_equal "the subject for janedoe@fakemailaddress.com on project 'conquer the world'", ActionMailer::Base.deliveries.last.subject
     assert_equal "the body for janedoe@fakemailaddress.com on project 'conquer the world'", ActionMailer::Base.deliveries.last.body.to_s
   end
+
+  test "send_at column is set to a fixed period of time since the last email with the same alert/model pair" do
+    model = Project.make
+    alert = Alert.make
+    other_model = Project.make
+    other_alert = Alert.make
+
+    sent_matching_email = AlertEmail.create!(:alert => alert, :model => model, :delivered => true, :send_at => 6.days.ago)
+    last_sent_matching_email = AlertEmail.create!(:alert => alert, :model => model, :delivered => true, :send_at => 5.days.ago)
+    sent_email_that_does_not_match_the_model = AlertEmail.create!(:alert => alert, :model => other_model, :delivered => true, :send_at => 4.days.ago)
+    sent_email_that_does_not_match_the_alert = AlertEmail.create!(:alert => other_alert, :model => model, :delivered => true, :send_at => 3.days.ago)
+
+    new_alert_email = AlertEmail.enqueue(:alert, :alert => alert, :model => model)
+    AlertEmail.stubs(:minimum_time_between_emails).returns(1.day)
+
+    assert new_alert_email.send_at == (last_sent_matching_email.send_at + 1.day)
+  end
 end
 
