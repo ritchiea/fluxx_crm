@@ -58,32 +58,18 @@ module FluxxCrmAlert
 
     def with_triggered_alerts!(skip_filter = false, &alert_processing_block)
       Alert.find_each do |alert|
-        matching_rtus = []
+        matching_models = []
+
         last_realtime_update_id = alert.last_realtime_update_id || -1
         RealtimeUpdate.where("id > ?", last_realtime_update_id).order('id asc').find_each do |rtu|
           last_realtime_update_id = rtu.id
-          matching_rtus << rtu if skip_filter || alert.should_be_triggered?(rtu)
+          matching_models << rtu.model if skip_filter || alert.should_be_triggered_by_model?(rtu.model)
         end
 
-        matching_rtus = coalesce(matching_rtus)
+        matching_models = matching_models.compact.uniq
 
         alert.update_attribute(:last_realtime_update_id, last_realtime_update_id)
-        alert_processing_block.call(alert, matching_rtus) unless matching_rtus.empty?
-      end
-    end
-
-    def coalesce(matching_rtus)
-      matching_rtus.group_by(&:model).map{|model, rtus| rtus.last}.compact
-    end
-
-    def alertable_classes
-      ActiveRecord::Base.subclasses.select{|ar_class| ar_class.constants.include?("SEARCH_ATTRIBUTES")}
-    end
-
-    def alertable_classes_attributes
-      Alert.alertable_classes.inject({}) do |hash, klass|
-        hash[klass.name] = klass.const_get("SEARCH_ATTRIBUTES")
-        hash
+        alert_processing_block.call(alert, matching_models) unless matching_models.empty?
       end
     end
 
@@ -141,11 +127,11 @@ module FluxxCrmAlert
       self.class.name.gsub(/^(.+)Alert$/, '\1').constantize
     end
 
-    def should_be_triggered?(rtu)
-      return false unless rtu.model.is_a?(target_class)
+    def should_be_triggered_by_model?(model)
+      return false unless model.is_a?(target_class)
 
       filter.map do |matcher_name, matcher_hash|
-        attribute_value = call_method_chain(rtu.model, matcher_hash[:attribute])
+        attribute_value = call_method_chain(model, matcher_hash[:attribute])
         comparable_attribute_value = ComparingWrapper.new(attribute_value)
         matcher_hash[:values].map do |value|
           comparable_attribute_value.send(matcher_hash[:comparer], value)
@@ -157,13 +143,13 @@ module FluxxCrmAlert
       method_chain.to_s.split('.').inject(object){|object, method_name| object.send(method_name)}
     end
 
-    def rtu_recipients(rtu)
+    def model_recipients(model)
       alert_recipients.map do |alert_recipient|
         if alert_recipient.user
           alert_recipient.user
         else
           role_recipient_opts = self.class.recipient_roles[alert_recipient.rtu_model_user_method.to_sym]
-          role_recipient_opts[:recipient_finder].call(rtu.model) if role_recipient_opts
+          role_recipient_opts[:recipient_finder].call(model) if role_recipient_opts
         end
       end.compact.uniq
     end

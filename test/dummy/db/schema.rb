@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110519225406) do
+ActiveRecord::Schema.define(:version => 20110530210527) do
 
   create_table "alert_email_templates", :force => true do |t|
     t.string "name"
@@ -20,13 +20,14 @@ ActiveRecord::Schema.define(:version => 20110519225406) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
-    t.integer  "attempts",           :default => 0
+    t.integer  "attempts",        :default => 0
     t.datetime "last_attempt_at"
-    t.boolean  "delivered",          :default => false
+    t.boolean  "delivered",       :default => false
     t.integer  "alert_id"
-    t.integer  "realtime_update_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "model_id"
+    t.string   "model_type"
   end
 
   create_table "alert_recipients", :force => true do |t|
@@ -241,7 +242,8 @@ ActiveRecord::Schema.define(:version => 20110519225406) do
     t.string   "category"
     t.text     "document"
     t.datetime "deleted_at"
-    t.boolean  "delta",         :default => true, :null => false
+    t.boolean  "delta",                 :default => true,  :null => false
+    t.boolean  "display_in_adhoc_list", :default => false, :null => false
   end
 
   add_index "model_document_templates", ["category"], :name => "index_model_document_templates_on_category"

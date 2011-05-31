@@ -7,7 +7,7 @@ class AlertTest < ActiveSupport::TestCase
 
   def alert_is_triggered
     alert_is_triggered = false
-    Alert.with_triggered_alerts!{|triggered_alert, matching_rtus| alert_is_triggered = true }
+    Alert.with_triggered_alerts!{|triggered_alert, matching_models| alert_is_triggered = true }
     alert_is_triggered
   end
 
@@ -45,8 +45,8 @@ class AlertTest < ActiveSupport::TestCase
     rtu5 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
     rtu6 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
 
-    filtered_rtus = []
-    Alert.with_triggered_alerts!(skip_filter = true){|triggered_alert, matching_rtus| filtered_rtus = matching_rtus }
-    assert_equal [rtu3, rtu6], filtered_rtus
+    filtered_models = []
+    Alert.with_triggered_alerts!(skip_filter = true){|triggered_alert, matching_models| filtered_models = matching_models }
+    assert_equal [user1, user2], filtered_models
   end
 end

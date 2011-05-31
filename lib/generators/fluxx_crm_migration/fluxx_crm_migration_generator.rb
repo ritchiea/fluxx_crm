@@ -69,6 +69,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'change_alert_model_type_to_type.rb', 'db/migrate/fluxx_crm_change_alert_model_type_to_type.rb'
     handle_migration 'add_name_to_alerts.rb', 'db/migrate/fluxx_crm_add_name_to_alerts.rb'
     handle_migration 'add_adhoc_flag_to_model_document_template.rb', 'db/migrate/fluxx_crm_add_adhoc_flag_to_model_document_template.rb'
+    handle_migration 'change_alert_email_realtime_update_to_model.rb', 'db/migrate/fluxx_crm_change_alert_email_realtime_update_to_model.rb'
   end
   
   private

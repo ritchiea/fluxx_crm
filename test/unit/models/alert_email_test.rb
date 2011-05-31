@@ -17,7 +17,7 @@ class AlertEmailTest < ActiveSupport::TestCase
     rtu = RealtimeUpdate.make(:type_name => Project, :model_id => project.id)
     Alert.attr_recipient_role(:creator, :recipient_finder => lambda{|model| model.created_by})
     RealtimeUpdate.where(:type_name => 'Musician').each(&:destroy)
-    AlertEmail.enqueue(:alert, :alert => alert, :realtime_update => rtu)
+    AlertEmail.enqueue(:alert, :alert => alert, :model => rtu.model)
     AlertEmail.deliver_all
 
     assert_equal 2, ActionMailer::Base.deliveries.size
