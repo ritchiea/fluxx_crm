@@ -19,10 +19,11 @@ module FluxxCrmAlertEmail
     end
 
     def deliver_all
-      undelivered.each(&:deliver)
+      pending_deliver.each(&:deliver)
     end
 
-    def undelivered
+    def pending_deliver
+      #where(["delivered = ? AND send_at <= ? OR send_at IS NULL", false, Date.today])
       where(:delivered => false)
     end
 

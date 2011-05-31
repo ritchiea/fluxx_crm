@@ -54,5 +54,18 @@ class AlertEmailTest < ActiveSupport::TestCase
 
     assert_equal [existent_alert_email], AlertEmail.all
   end
+
+  test "only send undelivered emails that have send_at <= today" do
+    model = Project.make
+    alert = Alert.make
+
+    unsent_email_with_send_at_in_past = AlertEmail.create!(:alert => alert, :model => model, :delivered => false, :send_at => 1.day.ago)
+    unsent_email_with_send_at_in_future = AlertEmail.create!(:alert => alert, :model => model, :delivered => false, :send_at => 1.day.from_now)
+
+    AlertEmail.deliver_all
+
+    assert unsent_email_with_send_at_in_past.reload.delivered
+    assert !unsent_email_with_send_at_in_future.reload.delivered
+  end
 end
 
