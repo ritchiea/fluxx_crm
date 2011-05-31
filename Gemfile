@@ -30,6 +30,7 @@ gem 'pdfkit'
 
 gem 'writeexcel', '>=0.6.1'
 gem 'rake', '0.9.0'
+gem 'mocha', ">= 0.9"
 
 if RUBY_VERSION < '1.9'
   gem "ruby-debug", ">= 0.10.3"

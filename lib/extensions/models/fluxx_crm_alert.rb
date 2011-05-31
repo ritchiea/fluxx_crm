@@ -16,13 +16,13 @@ module FluxxCrmAlert
       @value == other
     end
 
-    def due_in(other)
-      @value <= other.to_i.days.from_now
-    end
-
-    def overdue_by(other)
-      @value <= other.to_i.days.ago
-    end
+#    def due_in(other)
+#      @value <= other.to_i.days.from_now
+#    end
+#
+#    def overdue_by(other)
+#      @value <= other.to_i.days.ago
+#    end
 
     def in(other)
       @value.include?(other)
@@ -60,15 +60,11 @@ module FluxxCrmAlert
       Alert.find_each do |alert|
         matching_models = []
 
-        last_realtime_update_id = alert.last_realtime_update_id || -1
-        RealtimeUpdate.where("id > ?", last_realtime_update_id).order('id asc').find_each do |rtu|
-          last_realtime_update_id = rtu.id
-          matching_models << rtu.model if skip_filter || alert.should_be_triggered_by_model?(rtu.model)
-        end
+        matching_models += alert.models_matched_through_rtus
+        matching_models += alert.models_matched_through_time_based_matchers
 
         matching_models = matching_models.compact.uniq
 
-        alert.update_attribute(:last_realtime_update_id, last_realtime_update_id)
         alert_processing_block.call(alert, matching_models) unless matching_models.empty?
       end
     end
@@ -134,7 +130,11 @@ module FluxxCrmAlert
         attribute_value = call_method_chain(model, matcher_hash[:attribute])
         comparable_attribute_value = ComparingWrapper.new(attribute_value)
         matcher_hash[:values].map do |value|
-          comparable_attribute_value.send(matcher_hash[:comparer], value)
+          if comparable_attribute_value.respond_to?(matcher_hash[:comparer])
+            comparable_attribute_value.send(matcher_hash[:comparer], value)
+          else
+            false
+          end
         end.any?
       end.all?
     end
@@ -200,6 +200,21 @@ module FluxxCrmAlert
       else
         AlertRecipient.where(:alert_id => self.id, :rtu_model_user_method => role_name).each(&:destroy)
       end
+    end
+
+    def models_matched_through_rtus
+      matching_models = []
+      last_rtu_id = self.last_realtime_update_id || -1
+      RealtimeUpdate.where("id > ?", last_rtu_id).order('id asc').find_each do |rtu|
+        last_rtu_id = rtu.id
+        matching_models << rtu.model if should_be_triggered_by_model?(rtu.model)
+      end
+      update_attribute(:last_realtime_update_id, last_rtu_id)
+      matching_models
+    end
+
+    def models_matched_through_time_based_matchers
+      []
     end
   end
 end

@@ -46,7 +46,9 @@ class AlertTest < ActiveSupport::TestCase
     rtu6 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
 
     filtered_models = []
-    Alert.with_triggered_alerts!(skip_filter = true){|triggered_alert, matching_models| filtered_models = matching_models }
+
+    Alert.any_instance.stubs(:should_be_triggered_by_model?).returns(true)
+    Alert.with_triggered_alerts!{|triggered_alert, matching_models| filtered_models = matching_models }
     assert_equal [user1, user2], filtered_models
   end
 end
