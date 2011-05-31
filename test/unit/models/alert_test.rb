@@ -48,6 +48,7 @@ class AlertTest < ActiveSupport::TestCase
     filtered_models = []
 
     Alert.any_instance.stubs(:should_be_triggered_by_model?).returns(true)
+    Alert.any_instance.stubs(:has_rtu_based_comparers?).returns(true)
     Alert.with_triggered_alerts!{|triggered_alert, matching_models| filtered_models = matching_models }
     assert_equal [user1, user2], filtered_models
   end
