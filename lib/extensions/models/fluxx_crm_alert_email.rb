@@ -10,7 +10,12 @@ module FluxxCrmAlertEmail
 
   class_methods do
     def enqueue(method, attrs={})
-      create(attrs.merge(:mailer_method => method.to_s))
+      alert = attrs[:alert]
+      model = attrs[:model]
+
+      unless where(:delivered => false, :alert_id => alert.id, :model_id => model.id, :model_type => model.class).exists?
+        create(attrs.merge(:mailer_method => method.to_s))
+      end
     end
 
     def deliver_all

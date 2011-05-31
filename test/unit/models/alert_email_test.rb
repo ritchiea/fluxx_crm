@@ -44,5 +44,15 @@ class AlertEmailTest < ActiveSupport::TestCase
 
     assert new_alert_email.send_at == (last_sent_matching_email.send_at + 1.day)
   end
+
+  test "don't enqueue a new email if there's already an unsent email for the same alert/model pair" do
+    model = Project.make
+    alert = Alert.make
+
+    existent_alert_email = AlertEmail.enqueue(:alert, :alert => alert, :model => model)
+    new_alert_email = AlertEmail.enqueue(:alert, :alert => alert, :model => model)
+
+    assert_equal [existent_alert_email], AlertEmail.all
+  end
 end
 
