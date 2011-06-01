@@ -1,12 +1,5 @@
 # -*- ruby -*-
 
-begin
-  require 'isolate/now'
-rescue LoadError => e
-  STDERR.puts e.message
-  STDERR.puts "Run `gem install isolate` to install 'isolate' gem."
-end
-
 Gem::Specification.new do |s|
   s.rubyforge_project = "fluxx_crm"
   s.name              = "fluxx_crm"
@@ -23,11 +16,10 @@ Gem::Specification.new do |s|
   s.test_files        = `git ls-files -- {test}/*`.split("\n")
   s.require_paths     = ["lib"]
 
-  Isolate.sandbox.entries.each do |entry|
-    if entry.environments.include?("development")
-      s.add_development_dependency entry.name, *entry.requirement.as_list
-    else
-      s.add_dependency entry.name, *entry.requirement.as_list
-    end
-  end
+  s.add_development_dependency 'capybara', '0.3.7'
+  s.add_development_dependency 'machinist', '>= 1.0.6'
+  s.add_development_dependency 'faker', '>= 0.3.1'
+  s.add_development_dependency 'mocha', '>= 0.9'
+  s.add_development_dependency 'rcov'
+  s.add_development_dependency "ruby-debug", ">= 0.10.3"
 end
