@@ -23,8 +23,7 @@ module FluxxCrmAlertEmail
     end
 
     def pending_deliver
-      #where(["delivered = ? AND send_at <= ? OR send_at IS NULL", false, Date.today])
-      where(:delivered => false)
+      where(["delivered = ? AND (send_at <= ? OR send_at IS NULL)", false, DateTime.now])
     end
 
     def minimum_time_between_emails
@@ -43,7 +42,7 @@ module FluxxCrmAlertEmail
       self.send_at = if last_matching_delivered_alert && last_matching_delivered_alert.send_at
         last_matching_delivered_alert.send_at + self.class.minimum_time_between_emails
       else
-        Date.today
+        DateTime.now
       end
     end
   end
