@@ -29,7 +29,7 @@ class ActionController::ControllerDslUpdate < ActionController::ControllerDsl
         else
           true
         end
-        
+
         if controller
           if event_allowed
             if (model.is_non_validating_event?(event_action) || model.valid?) && model.insta_fire_event(event_action, fluxx_current_user)
