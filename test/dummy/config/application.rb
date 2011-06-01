@@ -6,12 +6,11 @@ require "action_controller/railtie"
 require "action_view/railtie"
 require "action_mailer/railtie"
 
-Bundler.require
+$LOAD_PATH.unshift(File.expand_path("../../../../../fluxx_engine/lib", __FILE__))
 require "fluxx_crm"
 
 module Dummy
   class Application < Rails::Application
-  config.i18n.load_path << Dir[File.join(Rails.root, 'config', 'fluxx_locales', '*.{rb,yml}')].first
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -33,6 +32,7 @@ module Dummy
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    config.i18n.load_path << Dir[File.join(Rails.root, 'config', 'fluxx_locales', '*.{rb,yml}')].first
 
     # Configure generators values. Many other options are available, be sure to check the documentation.
     # config.generators do |g|

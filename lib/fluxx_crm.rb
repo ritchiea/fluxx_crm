@@ -1,11 +1,5 @@
-require "formtastic" 
-require "active_support" 
-require "will_paginate" 
-require "action_controller"
-require "action_view"
+require "rails"
 require "fluxx_engine"
-
-p "ESH: loading fluxx_crm"
 
 # Some classes need to be required before or after; put those in these lists
 CRM_EXTENSION_CLASSES_TO_PRELOAD = []
