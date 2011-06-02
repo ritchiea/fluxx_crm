@@ -5,7 +5,7 @@ module FluxxRolesController
       insta.template = 'role_list'
       insta.filter_title = "Roles Filter"
       insta.filter_template = 'roles/role_filter'
-      insta.order_clause = 'updated_at desc'
+      insta.order_clause = 'name asc, updated_at desc'
       insta.icon_style = ICON_STYLE
     end
     base.insta_show Role do |insta|
