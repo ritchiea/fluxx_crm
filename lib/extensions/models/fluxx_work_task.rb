@@ -44,6 +44,10 @@ module FluxxWorkTask
   end
   
   module ModelInstanceMethods
+    def name
+      task_text
+    end
+
     def adjust_completed_at
       self.completed_at = if task_completed
         Time.now
