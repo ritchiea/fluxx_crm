@@ -35,10 +35,6 @@ module FluxxProject
   end
 
   module ModelInstanceMethods
-    def name
-      title
-    end
-
     def related_users
       project_users.map{|pu| pu.user}.compact.sort_by{|u| [u.last_name || '', u.first_name || '']}
     end

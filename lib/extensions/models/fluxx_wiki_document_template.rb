@@ -43,10 +43,6 @@ module FluxxWikiDocumentTemplate
   end
 
   module ModelInstanceMethods
-    def name
-      filename
-    end
-
     def to_s
       description
     end
