@@ -12,21 +12,15 @@
 
 ActiveRecord::Schema.define(:version => 20110531192702) do
 
-  create_table "alert_email_templates", :force => true do |t|
-    t.string "name"
-    t.text   "subject"
-    t.text   "body"
-  end
-
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
     t.integer  "attempts",        :default => 0
     t.datetime "last_attempt_at"
     t.boolean  "delivered",       :default => false
     t.integer  "alert_id"
+    t.integer  "model_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "model_id"
     t.string   "model_type"
     t.datetime "send_at"
   end
@@ -60,9 +54,9 @@ ActiveRecord::Schema.define(:version => 20110531192702) do
     t.string   "username"
     t.string   "action"
     t.text     "audit_changes"
-    t.integer  "version",                              :default => 0
+    t.integer  "version",        :default => 0
     t.string   "comment"
-    t.text     "full_model",     :limit => 2147483647
+    t.text     "full_model"
   end
 
   add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
@@ -286,7 +280,8 @@ ActiveRecord::Schema.define(:version => 20110531192702) do
     t.integer  "model_document_template_id"
   end
 
-  add_index "model_documents", ["documentable_id", "documentable_type"], :name => "index_model_documents_on_documentable_id_and_documentable_type"
+  add_index "model_documents", ["documentable_id", "documentable_type"], :name => "model_documents_docid_type"
+  add_index "model_documents", ["documentable_type", "documentable_id"], :name => "model_documents_doc_type_id"
   add_index "model_documents", ["model_document_template_id"], :name => "model_documents_template_id"
   add_index "model_documents", ["model_document_type_id"], :name => "model_documents_model_document_type_id"
 
@@ -575,12 +570,10 @@ ActiveRecord::Schema.define(:version => 20110531192702) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.text     "roles_text"
     t.string   "login",                        :limit => 40
-    t.string   "password",                     :limit => 40
     t.string   "first_name",                   :limit => 400,  :default => ""
     t.string   "last_name",                    :limit => 400,  :default => ""
-    t.string   "email",                        :limit => 400
+    t.string   "email",                        :limit => 250
     t.string   "personal_email",               :limit => 400
     t.string   "salutation",                   :limit => 400
     t.string   "prefix",                       :limit => 400
@@ -627,7 +620,7 @@ ActiveRecord::Schema.define(:version => 20110531192702) do
     t.boolean  "test_user_flag",                               :default => false
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email", :length => {"email"=>"255"}
+  add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["login"], :name => "index_users_on_login"
   add_index "users", ["persistence_token"], :name => "index_users_on_persistence_token"
   add_index "users", ["personal_geo_country_id"], :name => "users_personal_country_id"
@@ -718,6 +711,6 @@ ActiveRecord::Schema.define(:version => 20110531192702) do
 
   add_index "workflow_events", ["created_by_id"], :name => "workflow_events_created_by_id"
   add_index "workflow_events", ["updated_by_id"], :name => "workflow_events_updated_by_id"
-  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "index_workflow_events_on_workflowable_id_and_workflowable_type"
+  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "workflow_events_id_type"
 
 end
