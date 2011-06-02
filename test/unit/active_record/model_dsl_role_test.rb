@@ -78,7 +78,7 @@ class ModelDslRoleTest < ActiveSupport::TestCase
   
   test "test that we can store the extract_related_object" do
     @model_dsl_role.extract_related_object do
-      p "ESH: hi there"
+      # p "ESH: hi there"
     end
     assert @model_dsl_role.extract_related_object_proc
   end

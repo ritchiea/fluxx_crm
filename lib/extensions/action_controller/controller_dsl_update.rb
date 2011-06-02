@@ -45,7 +45,7 @@ class ActionController::ControllerDslUpdate < ActionController::ControllerDsl
               result = false
             end
           else
-            p "User is not allowed to do #{event_action}; lacks required permissions"
+            # p "User is not allowed to do #{event_action}; lacks required permissions"
             raise AASM::InvalidTransition.new "User is not allowed to do #{event_action}; lacks required permissions"
           end
         end

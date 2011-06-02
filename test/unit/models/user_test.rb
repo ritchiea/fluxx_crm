@@ -165,7 +165,6 @@ class UserTest < ActiveSupport::TestCase
   test "check that has_create_for_model works for a user" do
     user_profile, user = setup_user_profile
     user.has_permission!('create', TestModel)
-    p "ESH: permissions = #{UserPermission.all.inspect}"
     assert user.has_create_for_model?(TestModel)
   end
 
