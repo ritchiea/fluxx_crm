@@ -40,11 +40,14 @@ module FluxxCrmAlert
       self.last_realtime_update_id = RealtimeUpdate.maximum(:id) if self.last_realtime_update_id.nil?
     end
 
+    acts_as_audited({:full_model_enabled => false, :except => [:type, :last_realtime_update_id]})
     insta_search
+    insta_lock
+    insta_export
   end
 
   class_methods do
-    def recipients
+    def board_or_employee_recipients
       User.joins(:user_profile).where("user_profiles.name = 'Employee' OR user_profiles.name = 'Board'").order("users.first_name, users.last_name ASC")
     end
 

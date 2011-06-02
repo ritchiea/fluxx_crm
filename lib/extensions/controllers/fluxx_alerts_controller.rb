@@ -20,6 +20,7 @@ module FluxxAlertsController
       insta.template = 'alert_form'
       insta.icon_style = ICON_STYLE
       insta.new_block = lambda do |params|
+        return Alert.new unless params[:type]
         params[:type].constantize.new
       end
     end
@@ -31,7 +32,7 @@ module FluxxAlertsController
       insta.template = 'alert_form'
       insta.icon_style = ICON_STYLE
       insta.new_block = lambda do |params|
-        params[:alert][:type].constantize.new.tap do |alert|
+        (params[:alert][:type] ? params[:alert][:type].constantize : Alert).new.tap do |alert|
           alert.update_attributes(params[:alert])
         end
       end

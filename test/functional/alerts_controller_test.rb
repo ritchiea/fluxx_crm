@@ -105,6 +105,6 @@ class AlertsControllerTest < ActionController::TestCase
 
   test "should destroy alert" do
     delete :destroy, :id => @alert.to_param
-    assert_not_nil @alert.reload().deleted_at 
+    assert !Alert.exists?(@alert.id)
   end
 end
