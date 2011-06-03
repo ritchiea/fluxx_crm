@@ -6,3 +6,8 @@
 %ul
   %li{:class => "card ignore-empty admin-card", :id => "fluxx-admin-card"}
     .detail.area.partial.fluxx-admin-partial
+      .body
+%ul{:id => "admin-buttons"}
+  %li
+    =link_to "Save Changes", "#", :class => "admin-submit"
+    =link_to "Cancel", "#", :class => "refresh-partial"

@@ -13,7 +13,7 @@ jQuery(function($){
               containerId: 'modal-container',
               dataId: $elem.attr('data-container-id') ? $elem.attr('data-container-id') : 'simplemodal-data',
               onOpen: function(dialog) {
-                $('#fluxx-admin .detail').height($('#modal-container').height() - 46);
+                $.my.stage.resizeFluxxStage();
                 $('#fluxx-admin li.entry:first').click();
                 dialog.overlay.fadeIn(200, function () {
                   dialog.container.fadeIn(200, function () {
@@ -40,13 +40,21 @@ jQuery(function($){
         $.fluxx.util.itEndsWithMe(e);
         var $elem = $(this);
         if ($elem.attr('href') != "") {
+          $('#admin-buttons').fadeOut();
           $('#fluxx-admin li.entry').removeClass('selected');
           $elem.addClass('selected');
           var $detail = $('#fluxx-admin .fluxx-admin-partial');
           $detail.fluxxCard().closeCardModal();
-          $detail.attr('data-src', $elem.attr('href'));
-          $detail.refreshAreaPartial({}, function() {
-            $detail.scrollTop(0);
+          var properties = {
+            area: $detail,
+            url: $elem.attr('href')
+          };
+           $detail
+            .addClass('updating')
+            .children()
+            .fadeTo(300, 0);
+          $elem.fluxxCardLoadContent(properties, function() {
+            $detail.removeClass('updating').children().fadeTo(300, 1);
           });
         }
       }
