@@ -38,6 +38,7 @@ jQuery(function($){
     '.to-admin': [
       'click', function(e) {
         $.fluxx.util.itEndsWithMe(e);
+        alert('test');
         var $elem = $(this);
         if ($elem.attr('href') != "") {
           $('#admin-buttons').fadeOut();
