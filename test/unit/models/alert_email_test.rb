@@ -14,7 +14,7 @@ class AlertEmailTest < ActiveSupport::TestCase
     project = Project.make(:title => "conquer the world", :created_by_id => janedoe.id)
     alert.alert_recipients.create!(:rtu_model_user_method => :creator)
 
-    rtu = RealtimeUpdate.make(:type_name => Project, :model_id => project.id)
+    rtu = RealtimeUpdate.make(:type_name => Project.name, :model_id => project.id)
     Alert.attr_recipient_role(:creator, :recipient_finder => lambda{|model| model.created_by})
     RealtimeUpdate.where(:type_name => 'Musician').each(&:destroy)
     AlertEmail.enqueue(:alert, :alert => alert, :model => rtu.model)
@@ -49,10 +49,35 @@ class AlertEmailTest < ActiveSupport::TestCase
     model = Project.make
     alert = Alert.make
 
-    existent_alert_email = AlertEmail.enqueue(:alert, :alert => alert, :model => model)
+    unsent_alert_email = AlertEmail.enqueue(:alert, :alert => alert, :model => model)
     new_alert_email = AlertEmail.enqueue(:alert, :alert => alert, :model => model)
 
-    assert_equal [existent_alert_email], AlertEmail.all
+    assert_equal [unsent_alert_email], AlertEmail.all
+  end
+
+  test "enqueue a new email if there's already a sent email for the same alert/model pair" do
+    model = Project.make
+    alert = Alert.make
+
+    sent_alert_email = AlertEmail.enqueue(:alert, :alert => alert, :model => model)
+    sent_alert_email.update_attribute(:delivered, true)
+    new_alert_email = AlertEmail.enqueue(:alert, :alert => alert, :model => model)
+
+    assert_equal [sent_alert_email, new_alert_email], AlertEmail.all
+  end
+
+  test "time based alerts should not be sent more than once for each alert/model pair" do
+    model1 = Project.make
+    model2 = Project.make
+    time_based_alert = Alert.make
+    time_based_alert.stubs(:has_time_based_comparers?).returns(true)
+
+    sent_alert_email = AlertEmail.enqueue(:alert, :alert => time_based_alert, :model => model1)
+    sent_alert_email.update_attribute(:delivered, true)
+    new_alert_email_for_model1 = AlertEmail.enqueue(:alert, :alert => time_based_alert, :model => model1)
+    new_alert_email_for_model2 = AlertEmail.enqueue(:alert, :alert => time_based_alert, :model => model2)
+
+    assert_equal [sent_alert_email, new_alert_email_for_model2], AlertEmail.all
   end
 
   test "only send undelivered emails that have send_at <= today" do

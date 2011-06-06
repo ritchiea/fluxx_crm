@@ -37,13 +37,13 @@ class AlertTest < ActiveSupport::TestCase
   test "alert should coalesce rtus that point to the same model" do
     Alert.make
     user1 = User.make
-    rtu1 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
-    rtu2 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
-    rtu3 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user1.id)
+    rtu1 = RealtimeUpdate.make(:type_name => User.name, :model_class => User.name, :model_id => user1.id)
+    rtu2 = RealtimeUpdate.make(:type_name => User.name, :model_class => User.name, :model_id => user1.id)
+    rtu3 = RealtimeUpdate.make(:type_name => User.name, :model_class => User.name, :model_id => user1.id)
     user2 = User.make
-    rtu4 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
-    rtu5 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
-    rtu6 = RealtimeUpdate.make(:type_name => User, :model_class => User, :model_id => user2.id)
+    rtu4 = RealtimeUpdate.make(:type_name => User.name, :model_class => User.name, :model_id => user2.id)
+    rtu5 = RealtimeUpdate.make(:type_name => User.name, :model_class => User.name, :model_id => user2.id)
+    rtu6 = RealtimeUpdate.make(:type_name => User.name, :model_class => User.name, :model_id => user2.id)
 
     filtered_models = []
 

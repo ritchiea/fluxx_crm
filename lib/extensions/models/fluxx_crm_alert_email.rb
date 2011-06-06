@@ -13,9 +13,17 @@ module FluxxCrmAlertEmail
       alert = attrs[:alert]
       model = attrs[:model]
 
-      unless where(:delivered => false, :alert_id => alert.id, :model_id => model.id, :model_type => model.class).exists?
+      if !there_are_undelivered_alerts_with(alert, model) && no_previous_time_based_email_exist_for(alert, model)
         create(attrs.merge(:mailer_method => method.to_s))
       end
+    end
+
+    def no_previous_time_based_email_exist_for(alert, model)
+      !alert.has_time_based_comparers? || !where(:alert_id => alert.id, :model_id => model.id, :model_type => model.class).exists?
+    end
+
+    def there_are_undelivered_alerts_with(alert, model)
+      where(:delivered => false, :alert_id => alert.id, :model_id => model.id, :model_type => model.class).exists?
     end
 
     def deliver_all
