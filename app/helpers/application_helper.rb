@@ -1,4 +1,10 @@
 module ApplicationHelper
+  def urlencode_filename(path)
+    require 'cgi'
+    fname, timestamp = path.split(/\?(\d+)/)
+    [fname.split("/").map { |part| CGI::escape(part) }.join("/"), timestamp].join("?")
+  end
+
   def dollars_format amount
     number_to_currency amount, :precision => 0
   end

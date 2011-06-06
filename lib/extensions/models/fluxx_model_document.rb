@@ -50,7 +50,6 @@ module FluxxModelDocument
       self.document_type == 'text'
     end
     
-    
     def transliterate_file_name
       self.document.instance_write(:file_name, CGI::unescape(model_document_actual_filename)) if model_document_actual_filename
     end
