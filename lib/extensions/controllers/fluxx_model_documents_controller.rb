@@ -18,7 +18,7 @@ module FluxxModelDocumentsController
         if params[:model_document][:model_document_template_id]
           # Create a model document based on a template
           template = ModelDocumentTemplate.find params[:model_document][:model_document_template_id] rescue nil
-          self.pre_model = ModelDocument.create params[:model_document].merge(:document_type => :text, :document_text => template.document, :model_document_template_id => template.id, :document_file_name => template.description) if template
+          self.pre_model = ModelDocument.new params[:model_document].merge(:document_type => :text, :document_text => template.document, :model_document_template_id => template.id, :document_file_name => template.description) if template
         end
         if !self.pre_model && params[:name]
           # Need to grab the file and add it to the model document
@@ -34,7 +34,11 @@ module FluxxModelDocumentsController
       insta.format do |format|
         format.html do |triple|
           controller_dsl, outcome, default_block = triple
-          render :text => outcome
+          if params[:model_document][:model_document_template_id]
+            default_block.call
+          else
+            render :text => outcome
+          end
         end
       end
       insta.icon_style = ICON_STYLE
