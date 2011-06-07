@@ -8,7 +8,7 @@
     - if current_user.is_admin? || current_user.id == model.id 
       = form.input :password, :label => 'Password:'
       = form.input :password_confirmation, :label => 'Password Confirmation:'
-      = form.input :time_zone, :as => :time_zone, :priority_zones => /Pacific Time|Beijing/
+      = form.input :time_zone, :as => :time_zone, :priority_zones => FLUXX_CONFIGURATION[:priority_time_zones] || /Pacific Time|Beijing/
 %fieldset.inputs
   %ol 
     = form.input :salutation, :label => "Prefix"
