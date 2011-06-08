@@ -137,9 +137,11 @@ module FluxxCrmAlert
       end
 
       alert_class.new.tap do |new_alert|
-        alert_class.matchers.each do |matcher_name, matcher_opts|
-          attr_value = matcher_opts[:from_params].call(params[alert_class.target_class.name.underscore])
-          new_alert.send("#{matcher_name}=",  attr_value)
+        if params.has_key?(alert_class.target_class.name.underscore)
+          alert_class.matchers.each do |matcher_name, matcher_opts|
+            attr_value = matcher_opts[:from_params].call(params[alert_class.target_class.name.underscore])
+            new_alert.send("#{matcher_name}=",  attr_value)
+          end
         end
       end
     end
