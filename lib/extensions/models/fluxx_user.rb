@@ -128,8 +128,9 @@ module FluxxUser
       ldap.encryption LDAP_CONFIG[:encryption] if LDAP_CONFIG[:encryption]
       ldap.auth LDAP_CONFIG[:bind_dn], LDAP_CONFIG[:password]
       filter = Net::LDAP::Filter.eq(LDAP_CONFIG[:login_attr], login) 
-      ldap.search(:filter => filter) do |entry|
-        logger.info "found #{entry.dn}"
+      results = ldap.search(:filter => filter) 
+      results.each do |entry|
+        logger.info "FOUND IN LDAP:  #{login}"
         return entry
       end
       logger.info { "NOT FOUND IN LDAP:  #{login}" }
@@ -472,13 +473,15 @@ module FluxxUser
     
     ######################################### AUTHLOGIC / LDAP
     
-    # check db cred(normal authlogic pw check), then check ldap cred
+    # check ldap credentials(and sync info), or db credentials(normal authlogic pw check)
     def valid_credentials?(password)
-      valid_password?(password) || ldap_authenticate?(password)
+      ldap_authenticate?(password) || valid_password?(password)
     end
 
     def ldap_authenticate?(password)
       return false unless Fluxx.config(:ldap_enabled) == "1"
+      return false unless login.present?
+      
       ldap = Net::LDAP.new
       ldap.host = LDAP_CONFIG[:host]
       ldap.port = LDAP_CONFIG[:port]
