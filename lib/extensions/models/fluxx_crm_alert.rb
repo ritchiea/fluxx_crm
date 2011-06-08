@@ -33,6 +33,8 @@ module FluxxCrmAlert
 
     class_inheritable_hash :recipient_roles
     self.recipient_roles = HashWithIndifferentAccess.new
+    class_inheritable_hash :matchers
+    self.matchers = HashWithIndifferentAccess.new
 
     after_initialize :on_init
     after_save :save_roles
@@ -51,16 +53,19 @@ module FluxxCrmAlert
       User.joins(:user_profile).where("user_profiles.name = 'Employee' OR user_profiles.name = 'Board'").order("users.first_name, users.last_name ASC")
     end
 
-    def attr_matcher(*matchers)
-      matchers.each { |opts|
+    def attr_matcher(*matcher_opts)
+      matcher_opts.each { |opts|
         if opts.is_a?(Hash)
-          name, comparer, attribute = opts.values_at(:name, :comparer, :attribute)
+          name, comparer, attribute, from_params = opts.values_at(:name, :comparer, :attribute, :from_params)
         else
-          name, comparer, attribute = opts.to_s, nil, nil
+          name, comparer, attribute, from_params = opts.to_s, nil, nil
         end
 
         attribute ||= name
         comparer ||= '=='
+        from_params ||= lambda{|model_params| model_params[name]}
+
+        matchers[name.to_sym] = {:comparer => comparer, :attribute => attribute, :from_params => from_params}
 
         define_method(name) do
           return nil unless filter[name]
@@ -71,6 +76,7 @@ module FluxxCrmAlert
           if value.blank?
             filter.delete(name)
           else
+            #TODO: we no longer need comparer and attribute here as it's in the Alert::matchers hash
             filter[name] = {:values => [value].flatten, :comparer => comparer, :attribute => attribute }
           end
         end
@@ -118,13 +124,28 @@ module FluxxCrmAlert
         alert_processing_block.call(alert, matched_models.compact.uniq) unless matched_models.empty?
       end
     end
+
+    def target_class
+      name.gsub(/^(.+)Alert$/, '\1').constantize
+    end
+
+    def new_from_params(params)
+      alert_class = if params[:type]
+        params[:type].gsub(/(^.*Alert).*/, '\1').constantize
+      else
+        Alert
+      end
+
+      alert_class.new.tap do |new_alert|
+        alert_class.matchers.each do |matcher_name, matcher_opts|
+          attr_value = matcher_opts[:from_params].call(params[alert_class.target_class.name.underscore])
+          new_alert.send("#{matcher_name}=",  attr_value)
+        end
+      end
+    end
   end
 
   instance_methods do
-    def target_class
-      self.class.name.gsub(/^(.+)Alert$/, '\1').constantize
-    end
-
     def models_matched_through_rtus
       matching_models = []
       last_rtu_id = self.last_realtime_update_id || -1
@@ -149,7 +170,7 @@ module FluxxCrmAlert
     end
 
     def should_be_triggered_by_model?(model)
-      return false unless model.is_a?(target_class)
+      return false unless model.is_a?(self.class.target_class)
 
       filter.select do |_, matcher_hash|
         !self.class.time_based_comparers.include?(matcher_hash[:comparer])
@@ -163,7 +184,7 @@ module FluxxCrmAlert
     end
 
     def models_matched_through_time_based_matchers
-      t = target_class.arel_table
+      t = self.class.target_class.arel_table
 
       due_in_predicates = filter.select{ |_,matcher_hash| matcher_hash[:comparer] == "due_in"}.map do |(_,matcher_hash)|
         t[matcher_hash[:attribute]].lteq_any(matcher_hash[:values].map{|v| v.to_i.days.from_now})
@@ -175,7 +196,7 @@ module FluxxCrmAlert
 
       predicate = (due_in_predicates + overdue_by_predicates).inject(:or)
 
-      target_class.where(predicate)
+      self.class.target_class.where(predicate)
     end
 
     def call_method_chain(object, method_chain)
