@@ -110,7 +110,7 @@ module FluxxUser
     ######################################### LDAP
     # Creates a User record in the database if there is an entry in LDAP with the given login
     def create_from_ldap_if_valid(login)
-      return nil unless FLUXX_CONFIGURATION[:ldap_enabled]
+      return nil unless Fluxx.config(:ldap_enabled) == "1"
       ldap_user = User.ldap_find(login)
       if ldap_user
         return User.create_or_update_user_from_ldap_entry(login, ldap_user)
@@ -119,7 +119,7 @@ module FluxxUser
     end
 
     def ldap_find(login)
-      return nil unless FLUXX_CONFIGURATION[:ldap_enabled]
+      return nil unless Fluxx.config(:ldap_enabled) == "1"
       # see http://net-ldap.rubyforge.org/Net/LDAP.html
       ldap = Net::LDAP.new
       ldap.host = LDAP_CONFIG[:host]
@@ -478,7 +478,7 @@ module FluxxUser
     end
 
     def ldap_authenticate?(password)
-      return false unless FLUXX_CONFIGURATION[:ldap_enabled]
+      return false unless Fluxx.config(:ldap_enabled) == "1"
       ldap = Net::LDAP.new
       ldap.host = LDAP_CONFIG[:host]
       ldap.port = LDAP_CONFIG[:port]
