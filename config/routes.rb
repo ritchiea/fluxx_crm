@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :multi_element_values
+
+  resources :multi_element_groups
+
   resources :admin_items
 
   resources :admin_cards
