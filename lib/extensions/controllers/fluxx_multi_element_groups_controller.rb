@@ -16,15 +16,7 @@ module FluxxMultiElementGroupsController
       insta.icon_style = ICON_STYLE
       insta.add_workflow
     end
-    insta_new MultiElementGroup do |insta|
-      insta.template = 'multi_element_group_form'
-      insta.icon_style = ICON_STYLE
-    end
     insta_edit MultiElementGroup do |insta|
-      insta.template = 'multi_element_group_form'
-      insta.icon_style = ICON_STYLE
-    end
-    insta_post MultiElementGroup do |insta|
       insta.template = 'multi_element_group_form'
       insta.icon_style = ICON_STYLE
     end

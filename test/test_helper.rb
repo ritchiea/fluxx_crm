@@ -22,6 +22,9 @@ ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
+require 'stringio'
+Fluxx.logger = Logger.new(StringIO.new)
+
 def current_user
   @current_user unless @current_user == false
 end
