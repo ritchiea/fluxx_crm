@@ -10,5 +10,7 @@
         = form.input :recipients, :as => :select, :collection => Alert.board_or_employee_recipients
         - @model.class.recipient_roles.keys.map(&:to_s).sort.each do |role_name|
           = form.input role_name, :as => :boolean, :label => @model.class.recipient_roles[role_name.to_sym][:friendly_name]
-        = render :partial => "#{@model.class.name.underscore}_form", :locals => { :form => form } unless @model.class == Alert
       = form.buttons :commit
+    #filter
+      = semantic_form_for ModelStub.generate_class_instance(@model.class.target_class), :url => current_index_path, :html => {:class => 'to-listing filters-form ignore-empty', :method => 'get'} do |form|
+        = render :partial => "/#{@model.class.target_class.name.underscore.pluralize}/#{@model.class.target_class.name.underscore}_filter", :locals => { :form => form } unless @model.class == Alert
