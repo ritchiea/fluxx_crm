@@ -13,4 +13,4 @@
       = form.buttons :commit
     #filter
       = semantic_form_for ModelStub.generate_class_instance(@model.class.target_class), :url => current_index_path, :html => {:class => 'to-listing filters-form ignore-empty', :method => 'get'} do |form|
-        = render :partial => "/#{@model.class.target_class.name.underscore.pluralize}/#{@model.class.target_class.name.underscore}_filter", :locals => { :form => form } unless @model.class == Alert
+        = render :partial => "#{@model.class.target_class.name.pluralize}Controller".constantize.class_index_object.filter_template, :locals => { :form => form } unless @model.class == Alert
