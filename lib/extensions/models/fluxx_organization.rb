@@ -66,7 +66,10 @@ module FluxxOrganization
       u.instance_variable_set '@human', I18n.t(:Organization)
       u
     end
-    
+
+    def current_grantor
+      where(:is_grantor => true).first
+    end
   end
   
   module ModelInstanceMethods

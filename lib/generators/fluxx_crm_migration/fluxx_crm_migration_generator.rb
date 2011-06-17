@@ -2,6 +2,11 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxCrmMigrationGenerator < Rails::Generators::Base
+  def add_is_grantor_to_organizations
+    handle_migration 'add_is_grantor_to_organizations.rb', 'db/migrate/fluxx_crm_add_is_grantor_to_organizations.rb'
+    sleep 1
+  end
+
   include Rails::Generators::Migration
 
   def self.source_root
