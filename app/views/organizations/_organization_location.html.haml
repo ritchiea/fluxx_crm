@@ -18,11 +18,11 @@
   - work_contact_details = [ |
       ['Direct Phone:', location.phone], |
       ['Fax:',  location.fax], |
-      ['Email:', location.email ], |
+      ['Email:', email_link(location.email) ], |
       ['Other Contact:', location.other_contact ], |
-      ['Website:', location.url ], |
-      ['Personal Blog:', location.blog_url ], |
-      ['Personal Twitter:', location.twitter_url ], |
+      ['Website:', external_link(location.url) ], |
+      ['Personal Blog:', external_link(location.blog_url) ], |
+      ['Personal Twitter:', external_link(location.twitter_url) ], |
       ['Acronym:', location.acronym ], |
     ].each do |contact_detail| |
     - label, value = contact_detail
