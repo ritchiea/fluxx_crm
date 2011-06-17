@@ -42,7 +42,7 @@ class ActionController::Base
       end
     end
   end
-  
+
   protected
     def require_user
       unless current_user
