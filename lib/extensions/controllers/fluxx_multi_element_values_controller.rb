@@ -5,7 +5,8 @@ module FluxxMultiElementValuesController
       insta.template = 'multi_element_value_list'
       insta.filter_title = "MultiElementValues Filter"
       insta.filter_template = 'multi_element_values/multi_element_value_filter'
-      insta.order_clause = 'updated_at desc'
+      insta.order_clause = 'value, description'
+      insta.results_per_page = 500
       insta.icon_style = ICON_STYLE
     end
     base.insta_show MultiElementValue do |insta|
