@@ -28,7 +28,6 @@ module FluxxCrmAlert
     has_many :alert_users, :class_name => AlertRecipient.name, :conditions => ["alert_recipients.user_id IS NOT NULL"]
     has_many :recipients, :through => :alert_users, :source => 'user'
 
-    serialize :filter, Hash
     validates :name, :presence => true, :uniqueness => true
 
     class_inheritable_hash :recipient_roles
@@ -40,12 +39,40 @@ module FluxxCrmAlert
     after_save :save_roles
     before_validation(:on => :create) do
       self.last_realtime_update_id = RealtimeUpdate.maximum(:id) if self.last_realtime_update_id.nil?
+      self.model_type = JSON.parse(filter).first["name"].gsub(/^([\w]+).*/, '\1').camelize.constantize if !self.filter.blank? && !self.model_type
     end
 
     acts_as_audited({:full_model_enabled => false, :except => [:type, :last_realtime_update_id]})
     insta_search
     insta_lock
     insta_export
+
+    ##################################################
+    attr_matcher :report_type, :state
+    attr_matcher :name => :lead_user_ids, :attribute => 'request.lead_user_ids', :comparer => 'in'
+    attr_matcher :name => :program_id, :attribute => 'request.program_id',
+                 :from_params => lambda{|request_report_params| request_report_params[:request_hierarchy].map{|rh| rh.split("-").first}}
+
+    attr_matcher :name => :due_within_days, :attribute => :due_at, :comparer => "due_in"
+    attr_matcher :name => :overdue_by_days, :attribute => :due_at, :comparer => "overdue_by"
+
+    attr_recipient_role :program_lead,
+                        :recipient_finder => lambda{|request_report| request_report.request.program_lead }
+
+    attr_recipient_role :grantee_org_owner,
+                        :recipient_finder => lambda{|request_report| request_report.request.grantee_org_owner },
+                        :friendly_name => "Primary contact"
+
+    attr_recipient_role :grantee_signatory,
+                        :recipient_finder => lambda{|request_report| request_report.request.grantee_signatory },
+                        :friendly_name => "Primary signatory"
+
+    attr_recipient_role :fiscal_org_owner,
+                        :recipient_finder => lambda{|request_report| request_report.request.fiscal_org_owner },
+                        :friendly_name => "Fiscal organization owner"
+
+    attr_recipient_role :fiscal_signatory,
+                        :recipient_finder => lambda{|request_report| request_report.request.program_lead }
   end
 
   class_methods do
@@ -105,44 +132,23 @@ module FluxxCrmAlert
       end
     end
 
-    def time_based_comparers
-      ["due_in", "overdue_by"]
+    def time_based_filtered_attrs
+      ["due_in_days", "overdue_by_days"]
     end
 
     def with_triggered_alerts!(&alert_processing_block)
       Alert.find_each do |alert|
-        matched_models = if alert.has_rtu_based_comparers? && alert.has_time_based_comparers?
+        matched_models = if alert.has_rtu_based_filtered_attrs? && alert.has_time_based_filtered_attrs?
           alert.models_matched_through_rtus & alert.models_matched_through_time_based_matchers
-        elsif alert.has_rtu_based_comparers?
+        elsif alert.has_rtu_based_filtered_attrs?
           alert.models_matched_through_rtus
-        elsif alert.has_time_based_comparers?
+        elsif alert.has_time_based_filtered_attrs?
           alert.models_matched_through_time_based_matchers
         else
           []
         end
 
         alert_processing_block.call(alert, matched_models.compact.uniq) unless matched_models.empty?
-      end
-    end
-
-    def target_class
-      name.gsub(/^(.+)Alert$/, '\1').constantize
-    end
-
-    def new_from_params(params)
-      alert_class = if params[:type]
-        params[:type].gsub(/(^.*Alert).*/, '\1').constantize
-      else
-        Alert
-      end
-
-      alert_class.new.tap do |new_alert|
-        if params.has_key?(alert_class.target_class.name.underscore)
-          alert_class.matchers.each do |matcher_name, matcher_opts|
-            attr_value = matcher_opts[:from_params].call(params[alert_class.target_class.name.underscore])
-            new_alert.send("#{matcher_name}=",  attr_value)
-          end
-        end
       end
     end
   end
@@ -159,46 +165,55 @@ module FluxxCrmAlert
       matching_models
     end
 
-    def comparers
-      filter.values.map{|v| v[:comparer].to_s}
+    def filtered_attrs
+      filter_as_hash.keys
     end
 
-    def has_time_based_comparers?
-      !(self.class.time_based_comparers & comparers).empty?
+    def filter_as_hash
+      return {} unless filter
+      JSON.parse(filter).inject({}) do |hash, filter_hash|
+        name = filter_hash["name"].gsub(/^#{model_type.underscore}\[(.+)\]\[\]$/, '\1')
+        value = filter_hash["value"]
+        hash[name] = value
+        hash
+      end
     end
 
-    def has_rtu_based_comparers?
-      !(comparers - self.class.time_based_comparers).empty?
+    def has_time_based_filtered_attrs?
+      !(self.class.time_based_filtered_attrs & filtered_attrs).empty?
+    end
+
+    def has_rtu_based_filtered_attrs?
+      !(filtered_attrs - self.class.time_based_filtered_attrs).empty?
     end
 
     def should_be_triggered_by_model?(model)
-      return false unless model.is_a?(self.class.target_class)
+      return false unless model.is_a?(model_type.constantize)
 
-      filter.select do |_, matcher_hash|
-        !self.class.time_based_comparers.include?(matcher_hash[:comparer])
-      end.map do |_, matcher_hash|
-        attribute_value = call_method_chain(model, matcher_hash[:attribute])
-        comparable_attribute_value = ComparingWrapper.new(attribute_value)
-        matcher_hash[:values].map do |value|
-          comparable_attribute_value.send(matcher_hash[:comparer], value)
+      filter_as_hash.select do |attr, value|
+        !self.class.time_based_filtered_attrs.include?(attr)
+      end.map do |attr, value|
+        model_value = call_method_chain(model, attr)
+        [value].flatten.map do |v|
+          model_value == value
         end.any?
       end.all?
     end
 
     def models_matched_through_time_based_matchers
-      t = self.class.target_class.arel_table
+      t = model_type.constantize.arel_table
 
-      due_in_predicates = filter.select{ |_,matcher_hash| matcher_hash[:comparer] == "due_in"}.map do |(_,matcher_hash)|
-        t[matcher_hash[:attribute]].lteq_any(matcher_hash[:values].map{|v| v.to_i.days.from_now})
+      due_in_predicates = filter_as_hash.select{ |k,_| k == "due_in_days"}.map do |(k,val)|
+        t["due_at"].lteq_any([val].flatten.map{|v| v.to_i.days.from_now})
       end
 
-      overdue_by_predicates = filter.select{ |_,matcher_hash| matcher_hash[:comparer] == "overdue_by"}.map do |(_,matcher_hash)|
-        t[matcher_hash[:attribute]].lteq_any(matcher_hash[:values].map{|v| v.to_i.days.ago})
+      overdue_by_predicates = filter_as_hash.select{ |k,_| k == "overdue_by_days"}.map do |(k,val)|
+        t["due_at"].lteq_any([val].flatten.map{|v| v.to_i.days.ago})
       end
 
       predicate = (due_in_predicates + overdue_by_predicates).inject(:or)
 
-      self.class.target_class.where(predicate)
+      model_type.constantize.where(predicate)
     end
 
     def call_method_chain(object, method_chain)
@@ -229,12 +244,7 @@ module FluxxCrmAlert
     end
 
     def on_init
-      create_default_filter
       load_roles
-    end
-
-    def create_default_filter
-      self.filter ||= {}
     end
 
     def load_roles

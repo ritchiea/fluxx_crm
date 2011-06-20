@@ -70,7 +70,7 @@ class AlertEmailTest < ActiveSupport::TestCase
     model1 = Project.make
     model2 = Project.make
     time_based_alert = Alert.make
-    time_based_alert.stubs(:has_time_based_comparers?).returns(true)
+    time_based_alert.stubs(:has_time_based_filtered_attrs?).returns(true)
 
     sent_alert_email = AlertEmail.enqueue(:alert, :alert => time_based_alert, :model => model1)
     sent_alert_email.update_attribute(:delivered, true)

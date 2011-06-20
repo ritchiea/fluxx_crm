@@ -12,7 +12,6 @@ module FluxxCrmBlueprint
       name random_words
       subject "the subject for {{recipient.email}}"
       body "the body for {{recipient.email}}"
-      type Alert.name
       last_realtime_update_id -1
     end
 
