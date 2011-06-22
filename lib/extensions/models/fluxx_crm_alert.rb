@@ -135,12 +135,12 @@ module FluxxCrmAlert
     def time_based_filtered_attrs
       ["due_in_days", "overdue_by_days"]
     end
-
-    def with_triggered_alerts!(controller, &alert_processing_block)
+    
+    def with_triggered_alerts!(&alert_processing_block)
       Alert.find_each do |alert|
         
         # Find models that match this filter
-        controller.class_index_object.load_results({}, model_ids_matched_through_rtus)
+        controller_klass.class_index_object.load_results({}, model_ids_matched_through_rtus)
         
         
         # matched_models = if alert.has_rtu_based_filtered_attrs? && alert.has_time_based_filtered_attrs?
@@ -159,6 +159,10 @@ module FluxxCrmAlert
   end
 
   instance_methods do
+    def controller_klass
+      model_controller_type.constantize
+    end
+
     def model_ids_matched_through_rtus
       klass = model_type.constantize
       rtus = RealtimeUpdate.where("id > ?", last_rtu_id).where(:type_name => klass.extract_class_names_for_model(klass)).order('id asc').all

@@ -19,9 +19,6 @@ module FluxxAlertsController
     insta_new Alert do |insta|
       insta.template = 'alert_form'
       insta.icon_style = ICON_STYLE
-      insta.new_block = lambda do |params|
-        Alert.new(:model_type => params[:model_type])
-      end
     end
     insta_edit Alert do |insta|
       insta.template = 'alert_form'
