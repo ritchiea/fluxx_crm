@@ -4,6 +4,7 @@
       = form.semantic_errors
       = form.inputs do
         = form.input :model_type, :as => :hidden
+        = form.input :filter, :as => :hidden
         = form.input :name
         = form.input :subject
         = form.input :body
