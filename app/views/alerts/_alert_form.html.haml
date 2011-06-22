@@ -5,7 +5,6 @@
       = form.inputs do
         = form.input :filter, :as => :hidden, :input_html => {:class => "filter"}
         = form.input :model_controller_type, :as => :hidden
-        = form.input :filter, :as => :hidden
         = form.input :name
         = form.input :subject
         = form.input :body
@@ -14,5 +13,5 @@
           = form.input role_name, :as => :boolean, :label => @model.class.recipient_roles[role_name.to_sym][:friendly_name]
       = form.buttons :commit
     #filter{"data-serialize-to-field" => '.filter'}
-      = semantic_form_for ModelStub.generate_class_instance(@model.controller_klass.class_index_object.model_class), :url => current_index_path, :html => {:class => 'to-listing filters-form ignore-empty', :method => 'get'} do |form|
+      = semantic_form_for ModelStub.generate_class_instance(@model.controller_klass.class_index_object.model_class), :url => current_index_path do |form|
         = render :partial => @model.controller_klass.class_index_object.filter_template, :locals => { :form => form }
