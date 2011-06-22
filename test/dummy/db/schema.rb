@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110531192702) do
+ActiveRecord::Schema.define(:version => 20110622203627) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -37,11 +37,13 @@ ActiveRecord::Schema.define(:version => 20110531192702) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "last_realtime_update_id"
-    t.string   "type"
+    t.string   "model_controller_type"
     t.text     "filter"
     t.string   "name"
     t.string   "subject"
     t.text     "body"
+    t.datetime "locked_until"
+    t.integer  "locked_by_id"
   end
 
   create_table "audits", :force => true do |t|
@@ -361,6 +363,7 @@ ActiveRecord::Schema.define(:version => 20110531192702) do
     t.integer  "locked_by_id"
     t.string   "vendor_number"
     t.string   "tax_id"
+    t.boolean  "is_grantor",                      :default => false
   end
 
   add_index "organizations", ["created_by_id"], :name => "organizations_created_by_id"

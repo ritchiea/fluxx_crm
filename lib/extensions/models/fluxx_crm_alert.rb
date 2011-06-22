@@ -135,18 +135,23 @@ module FluxxCrmAlert
     def time_based_filtered_attrs
       ["due_in_days", "overdue_by_days"]
     end
-
+    
     def with_triggered_alerts!(&alert_processing_block)
       Alert.find_each do |alert|
-        matched_models = if alert.has_rtu_based_filtered_attrs? && alert.has_time_based_filtered_attrs?
-          alert.models_matched_through_rtus & alert.models_matched_through_time_based_matchers
-        elsif alert.has_rtu_based_filtered_attrs?
-          alert.models_matched_through_rtus
-        elsif alert.has_time_based_filtered_attrs?
-          alert.models_matched_through_time_based_matchers
-        else
-          []
-        end
+        
+        # Find models that match this filter
+        controller_klass.class_index_object.load_results({}, model_ids_matched_through_rtus)
+        
+        
+        # matched_models = if alert.has_rtu_based_filtered_attrs? && alert.has_time_based_filtered_attrs?
+        #   alert.models_matched_through_rtus & alert.models_matched_through_time_based_matchers
+        # elsif alert.has_rtu_based_filtered_attrs?
+        #   alert.models_matched_through_rtus
+        # elsif alert.has_time_based_filtered_attrs?
+        #   alert.models_matched_through_time_based_matchers
+        # else
+        #   []
+        # end
 
         alert_processing_block.call(alert, matched_models.compact.uniq) unless matched_models.empty?
       end
@@ -154,6 +159,17 @@ module FluxxCrmAlert
   end
 
   instance_methods do
+    def controller_klass
+      model_controller_type.constantize
+    end
+
+    def model_ids_matched_through_rtus
+      klass = model_type.constantize
+      rtus = RealtimeUpdate.where("id > ?", last_rtu_id).where(:type_name => klass.extract_class_names_for_model(klass)).order('id asc').all
+      update_attribute(:last_realtime_update_id, rtus.last.id) if rtus && !rtus.empty?
+      rtus.map(&:model_id)
+    end
+    
     def models_matched_through_rtus
       matching_models = []
       last_rtu_id = self.last_realtime_update_id || -1

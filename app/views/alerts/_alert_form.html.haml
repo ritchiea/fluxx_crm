@@ -3,8 +3,13 @@
     = semantic_form_for @model, :as => :alert, :url => new_alert_path do |form|
       = form.semantic_errors
       = form.inputs do
+<<<<<<< HEAD
         = form.input :model_type, :as => :hidden
         = form.input :filter, :as => :hidden, :input_html => {:class => "filter"}
+=======
+        = form.input :model_controller_type, :as => :hidden
+        = form.input :filter, :as => :hidden
+>>>>>>> 6792c25e08c0bc361ff6a285c78cf35cb8d99810
         = form.input :name
         = form.input :subject
         = form.input :body
@@ -12,6 +17,12 @@
         - @model.class.recipient_roles.keys.map(&:to_s).sort.each do |role_name|
           = form.input role_name, :as => :boolean, :label => @model.class.recipient_roles[role_name.to_sym][:friendly_name]
       = form.buttons :commit
+<<<<<<< HEAD
     #filter{"data-serialize-to-field" => '.filter'}
       = semantic_form_for ModelStub.generate_class_instance(@model.model_type.constantize), :url => current_index_path do |form|
         = render :partial => "#{@model.model_type.pluralize}Controller".constantize.class_index_object.filter_template, :locals => { :form => form }
+=======
+    #filter
+      = semantic_form_for ModelStub.generate_class_instance(@model.controller_klass.class_index_object.model_class), :url => current_index_path, :html => {:class => 'to-listing filters-form ignore-empty', :method => 'get'} do |form|
+        = render :partial => @model.controller_klass.class_index_object.filter_template, :locals => { :form => form }
+>>>>>>> 6792c25e08c0bc361ff6a285c78cf35cb8d99810
