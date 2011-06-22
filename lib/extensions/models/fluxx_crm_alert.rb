@@ -39,7 +39,6 @@ module FluxxCrmAlert
     after_save :save_roles
     before_validation(:on => :create) do
       self.last_realtime_update_id = RealtimeUpdate.maximum(:id) if self.last_realtime_update_id.nil?
-      self.model_type = JSON.parse(filter).first["name"].gsub(/^([\w]+).*/, '\1').camelize.constantize if !self.filter.blank? && !self.model_type
     end
 
     acts_as_audited({:full_model_enabled => false, :except => [:type, :last_realtime_update_id]})
@@ -136,11 +135,32 @@ module FluxxCrmAlert
       ["due_in_days", "overdue_by_days"]
     end
     
+    def max_alert_results
+      200
+    end
+    
     def with_triggered_alerts!(&alert_processing_block)
       Alert.find_each do |alert|
         
         # Find models that match this filter
-        controller_klass.class_index_object.load_results({}, model_ids_matched_through_rtus)
+        model_filter = JSON.parse(alert.filter)
+        filter_params=model_filter.keys.inject(HashWithIndifferentAccess.new) do |acc, key|
+          unless model_filter[key].blank?
+            # Parse out the class:param_name
+            key =~ /(.*)\[(.*)\]/
+            model_key, attr_name = [$1, $2]
+            acc[model_key] ||= HashWithIndifferentAccess.new
+            acc[model_key][attr_name] = model_filter[key] unless ['sort_order', 'sort_attribute'].include?(attr_name) 
+          end
+          acc
+        end
+        controller = controller_klass.new
+        controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
+        matched_models = if alert.has_time_based_filtered_attrs?
+          controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
+        else
+          controller_klass.class_index_object.load_results(({:id => model_ids_matched_through_rtus}).merge(filter_params), nil, nil, controller, Alert.max_alert_results)
+        end
         
         
         # matched_models = if alert.has_rtu_based_filtered_attrs? && alert.has_time_based_filtered_attrs?
