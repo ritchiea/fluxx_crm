@@ -2,11 +2,6 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxCrmMigrationGenerator < Rails::Generators::Base
-  def add_is_grantor_to_organizations
-    handle_migration 'add_is_grantor_to_organizations.rb', 'db/migrate/fluxx_crm_add_is_grantor_to_organizations.rb'
-    sleep 1
-  end
-
   include Rails::Generators::Migration
 
   def self.source_root
@@ -78,6 +73,8 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_send_at_to_alert_emails.rb', 'db/migrate/fluxx_crm_add_send_at_to_alert_emails.rb'
     handle_migration 'add_lock_columns_to_alerts.rb', 'db/migrate/fluxx_crm_add_lock_columns_to_alerts.rb'
     handle_migration 'change_alert_type_to_model_type.rb', 'db/migrate/fluxx_crm_change_alert_type_to_model_type.rb'
+    handle_migration 'add_is_grantor_to_organizations.rb', 'db/migrate/fluxx_crm_add_is_grantor_to_organizations.rb'
+    handle_migration 'update_alerts_model_type_column.rb', 'db/migrate/fluxx_crm_update_alerts_model_type_column.rb'
   end
   
   private
