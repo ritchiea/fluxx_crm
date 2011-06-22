@@ -4,7 +4,7 @@
       = form.semantic_errors
       = form.inputs do
         = form.input :model_type, :as => :hidden
-        = form.input :filter, :as => :hidden
+        = form.input :filter, :as => :hidden, :input_html => {:class => "filter"}
         = form.input :name
         = form.input :subject
         = form.input :body
@@ -12,6 +12,6 @@
         - @model.class.recipient_roles.keys.map(&:to_s).sort.each do |role_name|
           = form.input role_name, :as => :boolean, :label => @model.class.recipient_roles[role_name.to_sym][:friendly_name]
       = form.buttons :commit
-    #filter
-      = semantic_form_for ModelStub.generate_class_instance(@model.model_type.constantize), :url => current_index_path, :html => {:class => 'to-listing filters-form ignore-empty', :method => 'get'} do |form|
+    #filter{"data-serialize-to-field" => '.filter'}
+      = semantic_form_for ModelStub.generate_class_instance(@model.model_type.constantize), :url => current_index_path do |form|
         = render :partial => "#{@model.model_type.pluralize}Controller".constantize.class_index_object.filter_template, :locals => { :form => form }
