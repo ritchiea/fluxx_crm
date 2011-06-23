@@ -23,7 +23,7 @@ module FluxxModelDocumentsController
         if !self.pre_model && params[:name]
           # Need to grab the file and add it to the model document
           self.pre_model = ModelDocument.new params[:model_document]
-          pre_model.model_document_actual_filename = params[:name]
+          pre_model.model_document_actual_filename = params[:name].gsub(/[\$\&\?\+\,\/:;=@]/, '')
           f = Tempfile.new params[:name]
           f.write request.body.read
           pre_model.document = f
