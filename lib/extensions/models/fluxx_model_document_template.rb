@@ -14,7 +14,7 @@ module FluxxModelDocumentTemplate
     base.insta_export
     base.insta_realtime
     base.insta_lock
-    
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
