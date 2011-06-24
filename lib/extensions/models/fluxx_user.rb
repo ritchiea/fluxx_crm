@@ -471,6 +471,10 @@ module FluxxUser
       primary_user_organization.organization if primary_user_organization
     end
     
+    def mailer_email
+      "#{full_name} <#{email}>"
+    end
+    
     ######################################### AUTHLOGIC / LDAP
     
     # check ldap credentials(and sync info), or db credentials(normal authlogic pw check)

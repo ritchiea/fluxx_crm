@@ -132,11 +132,11 @@ module FluxxCrmAlert
     end
 
     def time_based_filtered_attrs
-      ["due_in_days", "overdue_by_days"]
+      ["due_within_days", "due_in_days", "overdue_by_days"]
     end
     
     def max_alert_results
-      200
+      100
     end
     
     def with_triggered_alerts!(&alert_processing_block)
@@ -144,34 +144,15 @@ module FluxxCrmAlert
         
         # Find models that match this filter
         model_filter = JSON.parse(alert.filter)
-        filter_params=model_filter.keys.inject(HashWithIndifferentAccess.new) do |acc, key|
-          unless model_filter[key].blank?
-            # Parse out the class:param_name
-            key =~ /(.*)\[(.*)\]/
-            model_key, attr_name = [$1, $2]
-            acc[model_key] ||= HashWithIndifferentAccess.new
-            acc[model_key][attr_name] = model_filter[key] unless ['sort_order', 'sort_attribute'].include?(attr_name) 
-          end
-          acc
-        end
-        controller = controller_klass.new
+        filter_params=alert.filter_as_hash
+        controller = alert.controller_klass.new
+        # Add an admin user as the current user for doing the search to bypass the controller perms check
         controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
         matched_models = if alert.has_time_based_filtered_attrs?
-          controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
+          alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
         else
-          controller_klass.class_index_object.load_results(({:id => model_ids_matched_through_rtus}).merge(filter_params), nil, nil, controller, Alert.max_alert_results)
+          alert.controller_klass.class_index_object.load_results(({:id => alert.model_ids_matched_through_rtus}).merge(filter_params), nil, nil, controller, Alert.max_alert_results)
         end
-        
-        
-        # matched_models = if alert.has_rtu_based_filtered_attrs? && alert.has_time_based_filtered_attrs?
-        #   alert.models_matched_through_rtus & alert.models_matched_through_time_based_matchers
-        # elsif alert.has_rtu_based_filtered_attrs?
-        #   alert.models_matched_through_rtus
-        # elsif alert.has_time_based_filtered_attrs?
-        #   alert.models_matched_through_time_based_matchers
-        # else
-        #   []
-        # end
 
         alert_processing_block.call(alert, matched_models.compact.uniq) unless matched_models.empty?
       end
@@ -184,10 +165,10 @@ module FluxxCrmAlert
     end
 
     def model_ids_matched_through_rtus
-      klass = model_type.constantize
-      rtus = RealtimeUpdate.where("id > ?", last_rtu_id).where(:type_name => klass.extract_class_names_for_model(klass)).order('id asc').all
+      klass = controller_klass.class_index_object.model_class
+      rtus = RealtimeUpdate.where("id > ?", last_realtime_update_id).where(:type_name => klass.extract_class_names_for_model(klass)).order('id asc').all
       update_attribute(:last_realtime_update_id, rtus.last.id) if rtus && !rtus.empty?
-      rtus.map(&:model_id)
+      rtus.map{|rtu| rtu.model_id.to_s}
     end
     
     def models_matched_through_rtus
@@ -202,16 +183,22 @@ module FluxxCrmAlert
     end
 
     def filtered_attrs
-      filter_as_hash.keys
+      filter_as_hash.values.first.keys
     end
 
     def filter_as_hash
       return {} unless filter
-      JSON.parse(filter).inject({}) do |hash, filter_hash|
-        name = filter_hash["name"].gsub(/^#{model_type.underscore}\[(.+)\]\[\]$/, '\1')
-        value = filter_hash["value"]
-        hash[name] = value
-        hash
+      
+      model_filter = JSON.parse(filter)
+      filter_params=model_filter.keys.inject(HashWithIndifferentAccess.new) do |acc, key|
+        unless model_filter[key].blank?
+          # Parse out the class:param_name
+          key =~ /(.*)\[(.*)\]/
+          model_key, attr_name = [$1, $2]
+          acc[model_key] ||= HashWithIndifferentAccess.new
+          acc[model_key][attr_name] = model_filter[key] unless ['sort_order', 'sort_attribute'].include?(attr_name) 
+        end
+        acc
       end
     end
 

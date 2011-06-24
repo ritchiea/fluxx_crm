@@ -3,8 +3,8 @@ require 'fluxx_engine'
 namespace :fluxx_crm do
   desc "Generates emails for all pending alerts"
   task :enqueue_alert_notifications => :environment do
-    Alert.with_triggered_alerts! { |alert, rtus|
-      rtus.each { |rtu| AlertEmail.enqueue(:alert, :alert => alert, :realtime_update => rtu) }
+    Alert.with_triggered_alerts! { |alert, models|
+      models.each { |model| AlertEmail.enqueue(:alert, :alert => alert, :model => model) }
     }
   end
 
