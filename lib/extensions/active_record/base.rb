@@ -48,6 +48,10 @@ class ActiveRecord::Base
         allowed_event_names && event_pairs.select{|event_pair| allowed_event_names.include?(event_pair.first)}
       end
       
+      define_method :admin_edit_allowed_for_user? do |user|
+        related_object_model = extract_related_model self
+        role_object.admin_edit_allowed_for_user?(user, related_object_model)
+      end
     end
   end
   

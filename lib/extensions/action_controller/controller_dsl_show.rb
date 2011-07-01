@@ -16,8 +16,8 @@ class ActionController::ControllerDslShow < ActionController::ControllerDsl
         end || []
         
         action_enabled = action_buttons.is_a?(Array) ? !action_buttons.empty? : action_buttons
-        send :instance_variable_set, "@edit_enabled", action_enabled
-        send :instance_variable_set, "@delete_enabled", action_enabled
+        send :instance_variable_set, "@edit_enabled", (action_enabled || model.admin_edit_allowed_for_user?(current_user))
+        send :instance_variable_set, "@delete_enabled", (action_enabled || model.admin_edit_allowed_for_user?(current_user))
         send :instance_variable_set, "@action_buttons", action_buttons
       end
     else
