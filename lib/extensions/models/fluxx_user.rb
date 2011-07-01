@@ -38,10 +38,6 @@ module FluxxUser
       c.validate_email_field=false
     end # block optional
     
-    # Setup accessible (or protected) attributes for your model
-    base.attr_accessible :email, :password, :password_confirmation
-    base.validates_confirmation_of :password
-    base.validates_length_of       :login,    :within => 2..40, :if => lambda {|user| !user.login.blank? }  
 
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
