@@ -1,7 +1,7 @@
 module FluxxOrganization
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :created_at, :updated_at, :name, :id]
-  LIQUID_METHODS = [:name, :display_name, :street_address, :street_address2, :city, :state_name, :state_abbreviation, :postal_code, :country_name, :url, :acronym, :bank_accounts]  
+  LIQUID_METHODS = [:name, :display_name, :street_address, :street_address2, :city, :state_name, :state_abbreviation, :postal_code, :country_name, :url, :acronym, :bank_accounts, :tax_id, :tax_class_name]  
   
   def self.included(base)
     base.has_many :user_organizations
@@ -149,6 +149,11 @@ module FluxxOrganization
     def country_name
       geo_country.name if geo_country
     end
+
+    def tax_class_name
+      tax_class.name if tax_class
+    end
+
   
     def to_s
       name.blank? ? nil : name
