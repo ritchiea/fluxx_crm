@@ -29,6 +29,7 @@ module FluxxUser
     base.acts_as_audited({:full_model_enabled => false, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
     base.before_save :preprocess_user
     
+    
     base.acts_as_authentic do |c|
       # c.my_config_option = my_value # for available options see documentation in: Authlogic::ActsAsAuthentic
       c.act_like_restful_authentication = true
@@ -37,6 +38,11 @@ module FluxxUser
       c.validate_email_field=false
     end # block optional
     
+    # Setup accessible (or protected) attributes for your model
+    base.attr_accessible :email, :password, :password_confirmation
+    base.validates_confirmation_of :password
+    base.validates_length_of       :login,    :within => 2..40, :if => lambda {|user| !user.login.blank? }  
+
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
     end
