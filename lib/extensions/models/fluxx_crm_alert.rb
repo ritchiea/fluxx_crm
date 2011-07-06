@@ -151,7 +151,16 @@ module FluxxCrmAlert
         matched_models = if alert.has_time_based_filtered_attrs?
           alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
         else
-          alert.controller_klass.class_index_object.load_results(({:id => alert.model_ids_matched_through_rtus}).merge(filter_params), nil, nil, controller, Alert.max_alert_results)
+          rtu_matched_ids = alert.model_ids_matched_through_rtus
+          if rtu_matched_ids && !rtu_matched_ids.empty?
+            form_name = alert.controller_klass.class_index_object.model_class.calculate_form_name
+            model_params = filter_params[form_name] || {}
+            model_params['id'] = rtu_matched_ids
+            filter_params[form_name] = model_params
+            alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
+          else
+            []
+          end
         end
 
         alert_processing_block.call(alert, matched_models.compact.uniq) unless matched_models.empty?
@@ -190,13 +199,15 @@ module FluxxCrmAlert
       return {} unless filter
       
       model_filter = JSON.parse(filter)
-      filter_params=model_filter.keys.inject(HashWithIndifferentAccess.new) do |acc, key|
-        unless model_filter[key].blank?
+      filter_params=model_filter.inject(HashWithIndifferentAccess.new) do |acc, filter_hash|
+        unless filter_hash.blank? || filter_hash['name'].blank? || filter_hash['value'].blank?
+          name = filter_hash['name']
+          value = filter_hash['value']
           # Parse out the class:param_name
-          key =~ /(.*)\[(.*)\]/
+          name.gsub('[]', '') =~ /(.*)\[(.*)\]/
           model_key, attr_name = [$1, $2]
           acc[model_key] ||= HashWithIndifferentAccess.new
-          acc[model_key][attr_name] = model_filter[key] unless ['sort_order', 'sort_attribute'].include?(attr_name) 
+          acc[model_key][attr_name] = value unless ['sort_order', 'sort_attribute'].include?(attr_name) 
         end
         acc
       end
