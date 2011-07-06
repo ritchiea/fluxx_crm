@@ -495,14 +495,17 @@ module FluxxUser
       ldap.encryption LDAP_CONFIG[:encryption] if LDAP_CONFIG[:encryption]
       ldap.auth LDAP_CONFIG[:bind_dn], LDAP_CONFIG[:password]
       filter = Net::LDAP::Filter.eq(LDAP_CONFIG[:login_attr], login) 
-      result = ldap.bind_as(:filter => filter, :password => password)
-      if result
-        logger.info "LDAP Authentication SUCCESSFUL for: #{login}"
-        User.create_or_update_user_from_ldap_entry(login, result.first)
-        return true
-      else
-        logger.info "LDAP Authentication FAILED for: #{login}"
-      end    
+      begin
+        result = ldap.bind_as(:filter => filter, :password => password)
+        if result
+          logger.info "LDAP Authentication SUCCESSFUL for: #{login}"
+          User.create_or_update_user_from_ldap_entry(login, result.first)
+          return true
+        else
+          logger.info "LDAP Authentication FAILED for: #{login}"
+        end    
+      rescue Exception => e
+      end
       false
     end
   end
