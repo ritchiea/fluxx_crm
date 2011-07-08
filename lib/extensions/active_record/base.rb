@@ -238,6 +238,11 @@ class ActiveRecord::Base
         local_workflow_object.event_timeline self
       end
       
+      define_method :states_passed_through do
+        old_states = (WorkflowEvent.select('group_concat(old_state) old_states').where(['workflowable_id = ? and old_state is not null and workflowable_type in (?)', self.id, self.class.extract_own_class_names]).first).old_states
+        ((old_states.blank? ? [] : old_states.split(',')) + [self.state]).compact.uniq
+      end
+      
       define_method :generate_docs do
         if changed_attributes.include?('state') && self.respond_to?(:model_documents)
           ModelDocumentTemplate.where(:model_type => self.class.name, :generate_state => state).all.each do |template|
