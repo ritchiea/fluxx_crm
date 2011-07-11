@@ -137,7 +137,11 @@ module FluxxCrmAlert
     end
     
     def max_alert_results
-      100
+      1000
+    end
+    
+    def max_time_based_alert_results
+      5000
     end
     
     def with_triggered_alerts!(&alert_processing_block)
@@ -150,7 +154,7 @@ module FluxxCrmAlert
         # Add an admin user as the current user for doing the search to bypass the controller perms check
         controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
         matched_models = if alert.has_time_based_filtered_attrs?
-          alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
+          alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_time_based_alert_results)
         else
           rtu_matched_ids = alert.model_ids_matched_through_rtus
           if rtu_matched_ids && !rtu_matched_ids.empty?
