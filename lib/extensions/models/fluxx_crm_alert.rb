@@ -36,6 +36,7 @@ module FluxxCrmAlert
     self.matchers = HashWithIndifferentAccess.new
 
     after_initialize :on_init
+    after_create :save_roles
     after_save :save_roles
     before_validation(:on => :create) do
       self.last_realtime_update_id = RealtimeUpdate.maximum(:id) if self.last_realtime_update_id.nil?
@@ -282,10 +283,17 @@ module FluxxCrmAlert
     end
 
     def load_roles
-      self.class.recipient_roles.keys.each do |recipient_role|
-        is_set = self.alert_recipients.where(:rtu_model_user_method => recipient_role).exists?
-        send("#{recipient_role}=", is_set)
+      # Check to see whether the recipient roles have been populated during initialization
+      unless roles_already_populated?
+        self.class.recipient_roles.keys.each do |recipient_role|
+          is_set = self.alert_recipients.where(:rtu_model_user_method => recipient_role).exists?
+          send("#{recipient_role}=", is_set)
+        end
       end
+    end
+    
+    def roles_already_populated?
+      self.class.recipient_roles.keys.any?{|role_name| !send(role_name).nil?}
     end
 
     def save_roles
