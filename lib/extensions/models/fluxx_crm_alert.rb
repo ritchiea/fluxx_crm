@@ -36,6 +36,7 @@ module FluxxCrmAlert
     self.matchers = HashWithIndifferentAccess.new
 
     after_initialize :on_init
+    after_create :save_roles
     after_save :save_roles
     before_validation(:on => :create) do
       self.last_realtime_update_id = RealtimeUpdate.maximum(:id) if self.last_realtime_update_id.nil?
@@ -136,7 +137,11 @@ module FluxxCrmAlert
     end
     
     def max_alert_results
-      100
+      1000
+    end
+    
+    def max_time_based_alert_results
+      5000
     end
     
     def with_triggered_alerts!(&alert_processing_block)
@@ -149,7 +154,7 @@ module FluxxCrmAlert
         # Add an admin user as the current user for doing the search to bypass the controller perms check
         controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
         matched_models = if alert.has_time_based_filtered_attrs?
-          alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
+          alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_time_based_alert_results)
         else
           rtu_matched_ids = alert.model_ids_matched_through_rtus
           if rtu_matched_ids && !rtu_matched_ids.empty?
@@ -282,10 +287,17 @@ module FluxxCrmAlert
     end
 
     def load_roles
-      self.class.recipient_roles.keys.each do |recipient_role|
-        is_set = self.alert_recipients.where(:rtu_model_user_method => recipient_role).exists?
-        send("#{recipient_role}=", is_set)
+      # Check to see whether the recipient roles have been populated during initialization
+      unless roles_already_populated?
+        self.class.recipient_roles.keys.each do |recipient_role|
+          is_set = self.alert_recipients.where(:rtu_model_user_method => recipient_role).exists?
+          send("#{recipient_role}=", is_set)
+        end
       end
+    end
+    
+    def roles_already_populated?
+      self.class.recipient_roles.keys.any?{|role_name| !send(role_name).nil?}
     end
 
     def save_roles
