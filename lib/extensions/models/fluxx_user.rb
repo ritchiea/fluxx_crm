@@ -477,6 +477,10 @@ module FluxxUser
       "#{full_name} <#{email}>"
     end
     
+    def related_organizations limit_amount=20
+      organizations.order('name asc').limit(limit_amount)
+    end
+    
     ######################################### AUTHLOGIC / LDAP
     
     # check ldap credentials(and sync info), or db credentials(normal authlogic pw check)
