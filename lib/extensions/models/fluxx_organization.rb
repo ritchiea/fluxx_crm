@@ -39,7 +39,7 @@ module FluxxOrganization
 
     base.insta_template do |insta|
       insta.entity_name = 'organization'
-      insta.add_methods [:geo_country, :geo_state]
+      insta.add_methods [:geo_country, :geo_state, :name_and_location]
       insta.remove_methods [:id]
     end
     base.liquid_methods *( LIQUID_METHODS )  
@@ -96,6 +96,10 @@ module FluxxOrganization
       elsif
         write_attribute(:geo_state, GeoState.find_by_name(val))
       end
+    end
+
+    def name_and_location
+      autocomplete_to_s
     end
     
     def autocomplete_to_s
