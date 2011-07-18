@@ -75,6 +75,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_is_grantor_to_organizations.rb', 'db/migrate/fluxx_crm_add_is_grantor_to_organizations.rb'
     handle_migration 'update_alerts_model_type_column.rb', 'db/migrate/fluxx_crm_update_alerts_model_type_column.rb'
     handle_migration 'add_generate_state_to_model_document_templates.rb', 'db/migrate/fluxx_crm_add_generate_state_to_model_document_templates.rb'
+    handle_migration 'push_salutation_to_prefix.rb', 'db/migrate/fluxx_crm_push_salutation_to_prefix.rb'
   end
   
   private
