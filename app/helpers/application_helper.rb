@@ -148,15 +148,15 @@ module ApplicationHelper
       ['Office Fax:', primary_user_org && primary_user_org.organization ? primary_user_org.organization.fax : nil ],
       ['Direct Phone:', model.work_phone],
       ['Direct Fax:', model.work_fax],
-      ['Email Address:', model.email ],
+      ['Email Address:', email_link(model.email) ],
       ['Personal Phone:', model.personal_phone ],
       ['Personal Mobile:', model.personal_mobile ],
       ['Personal Fax:', model.personal_fax ],
-      ['Personal Blog:', model.blog_url ],
-      ['Personal Twitter:', model.twitter_url ],
+      ['Personal Blog:', external_link(model.blog_url) ],
+      ['Personal Twitter:', external_link(model.twitter_url) ],
       ['Assistant Name:', model.assistant_name ],
       ['Assistant Phone:', model.assistant_phone ],
-      ['Assisant Email:', model.assistant_email ],
+      ['Assisant Email:', email_link(model.assistant_email) ],
     ]
   end
 
