@@ -18,6 +18,7 @@ module FluxxAlertsController
     end
     insta_new Alert do |insta|
       insta.template = 'alert_form'
+      insta.template_map = {:manage_subscription => 'alerts/manage_subscription'}
       insta.icon_style = ICON_STYLE
     end
     insta_edit Alert do |insta|
