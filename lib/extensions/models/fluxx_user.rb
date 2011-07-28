@@ -2,7 +2,7 @@ require 'net/ldap'
 module FluxxUser
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name]
-  LIQUID_METHODS = [:salutation, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization]  
+  LIQUID_METHODS = [:salutation, :prefix, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization]  
 
   def self.included(base)
     base.has_many :user_organizations
