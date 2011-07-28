@@ -6,7 +6,7 @@ module FluxxUsersController
       insta.order_clause = 'last_name asc, first_name asc'
       insta.icon_style = ICON_STYLE
       insta.filter_template = 'users/user_filter'
-      insta.order_clause = 'first_name asc, last_name asc'
+      insta.order_clause = 'last_name asc, first_name asc'
     end
     base.insta_show User do |insta|
       insta.template = 'user_show'
