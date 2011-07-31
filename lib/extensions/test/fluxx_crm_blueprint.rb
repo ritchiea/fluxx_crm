@@ -13,6 +13,7 @@ module FluxxCrmBlueprint
       subject "the subject for {{recipient.email}}"
       body "the body for {{recipient.email}}"
       last_realtime_update_id -1
+      model_controller_type 'OrganizationsController'
     end
 
     User.blueprint do

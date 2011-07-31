@@ -1,5 +1,5 @@
 module FluxxWorkTask
-  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :taskable_type, :taskable_id, :assigned_user_id, :task_completed]
+  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :taskable_type, :taskable_id, :assigned_user_id, :task_completed, :due_at]
   
   def self.included(base)
     base.validates_presence_of :task_text

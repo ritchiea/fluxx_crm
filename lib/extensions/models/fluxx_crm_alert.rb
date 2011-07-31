@@ -79,6 +79,41 @@ module FluxxCrmAlert
     def board_or_employee_recipients
       User.joins(:user_profile).where("user_profiles.name = 'Employee' OR user_profiles.name = 'Board'").order("users.first_name, users.last_name ASC")
     end
+    
+    def resolve_for_dashboard dashboard, cards
+      existing_dashboard_alerts = Alert.where(:dashboard_id => dashboard.id).all
+      updated_dashboard_cards = cards.inject({}){|acc, card| acc[card[:dashboard_card_id].to_i] = card; acc}
+      
+      # Delete existing alerts that no longer are alerted cards
+      alerts_to_delete = existing_dashboard_alerts.reject {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
+      alerts_to_delete.each {|alert| alert.safe_delete}
+      
+      # Update existing alerts that are still present
+      alerts_to_update = existing_dashboard_alerts.select {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
+      alerts_to_update.each do |alert|
+        card = updated_dashboard_cards[alert.dashboard_card_id]
+        filter = card['filter']
+        alert.filter = filter ? filter.to_json : ''
+        alert.model_controller_type = card[:model_controller_type]
+        alert.name = "Dashboard Alert: #{dashboard.name}"
+        alert.save
+      end
+        
+      # Insert new alerts that did not exist before
+      existing_dashboard_alert_ids = existing_dashboard_alerts.map{|alert| alert.dashboard_card_id}
+      alerts_to_create = updated_dashboard_cards.reject{|key, card| existing_dashboard_alert_ids.include?(card[:dashboard_card_id])}.values.compact
+      last_rtu = RealtimeUpdate.last
+      alerts_to_create.each do |card| 
+        filter = card['filter']
+        Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
+          :last_realtime_update_id => (last_rtu ? last_rtu.created_at.to_i : 0),
+          :model_controller_type => card[:model_controller_type],
+          :filter => (filter ? filter.to_json : ''),
+          :subject => 'Subject',
+          :body => 'Body',
+          :name => "Dashboard Alert: #{dashboard.name}"
+      end
+    end
 
     def attr_matcher(*matcher_opts)
       matcher_opts.each { |opts|
@@ -148,7 +183,11 @@ module FluxxCrmAlert
       Alert.find_each do |alert|
         
         # Find models that match this filter
-        model_filter = JSON.parse(alert.filter)
+        model_filter = unless alert.filter.blank?
+          JSON.parse(alert.filter) 
+        else
+          {}
+        end
         filter_params=alert.filter_as_hash
         controller = alert.controller_klass.new
         # Add an admin user as the current user for doing the search to bypass the controller perms check
@@ -197,11 +236,12 @@ module FluxxCrmAlert
     end
 
     def filtered_attrs
-      filter_as_hash.values.first.keys
+      attrs = filter_as_hash.values.first
+      attrs ? attrs.keys : []
     end
 
     def filter_as_hash
-      return {} unless filter
+      return {} if filter.blank?
       
       model_filter = JSON.parse(filter)
       filter_params=model_filter.inject(HashWithIndifferentAccess.new) do |acc, filter_hash|

@@ -4,7 +4,8 @@ namespace :fluxx_crm do
   desc "Generates emails for all pending alerts"
   task :enqueue_alert_notifications => :environment do
     Alert.with_triggered_alerts! { |alert, models|
-      models.each { |model| AlertEmail.enqueue(:alert, :alert => alert, :model => model) }
+      # TODO ESH: need to have a switch on whether to send an email for each model or to group them together
+      AlertEmail.enqueue(:alert, :alert => alert, :models => models)
     }
   end
 

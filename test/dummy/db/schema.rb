@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110622203627) do
+ActiveRecord::Schema.define(:version => 20110728143133) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -44,7 +44,11 @@ ActiveRecord::Schema.define(:version => 20110622203627) do
     t.text     "body"
     t.datetime "locked_until"
     t.integer  "locked_by_id"
+    t.integer  "dashboard_id"
+    t.integer  "dashboard_card_id"
   end
+
+  add_index "alerts", ["dashboard_id"], :name => "alerts_dashboard_id"
 
   create_table "audits", :force => true do |t|
     t.datetime "created_at"
@@ -241,6 +245,7 @@ ActiveRecord::Schema.define(:version => 20110622203627) do
     t.datetime "deleted_at"
     t.boolean  "delta",                 :default => true,  :null => false
     t.boolean  "display_in_adhoc_list", :default => false, :null => false
+    t.string   "generate_state"
   end
 
   add_index "model_document_templates", ["category"], :name => "index_model_document_templates_on_category"
