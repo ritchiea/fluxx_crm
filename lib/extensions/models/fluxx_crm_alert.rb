@@ -28,8 +28,6 @@ module FluxxCrmAlert
     has_many :alert_users, :class_name => AlertRecipient.name, :conditions => ["alert_recipients.user_id IS NOT NULL"]
     has_many :recipients, :through => :alert_users, :source => 'user'
 
-    validates :name, :presence => true, :uniqueness => true
-
     class_inheritable_hash :recipient_roles
     self.recipient_roles = HashWithIndifferentAccess.new
     class_inheritable_hash :matchers
@@ -86,16 +84,19 @@ module FluxxCrmAlert
       
       # Delete existing alerts that no longer are alerted cards
       alerts_to_delete = existing_dashboard_alerts.reject {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
-      alerts_to_delete.each {|alert| alert.safe_delete}
+      alerts_to_delete.each {|alert| alert.safe_delete(dashboard.user)}
       
       # Update existing alerts that are still present
       alerts_to_update = existing_dashboard_alerts.select {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
       alerts_to_update.each do |alert|
+        controller_klass = alert.model_controller_type.constantize
+        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name
         card = updated_dashboard_cards[alert.dashboard_card_id]
         filter = card['filter']
         alert.filter = filter ? filter.to_json : ''
         alert.model_controller_type = card[:model_controller_type]
-        alert.name = "Dashboard Alert: #{dashboard.name}"
+        alert.subject = subject
+        alert.body = body
         alert.save
       end
         
@@ -105,16 +106,30 @@ module FluxxCrmAlert
       last_rtu = RealtimeUpdate.last
       alerts_to_create.each do |card| 
         filter = card['filter']
-        Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
-          :last_realtime_update_id => (last_rtu ? last_rtu.created_at.to_i : 0),
+        controller_klass = card[:model_controller_type]
+        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name
+        alert = Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
+          :last_realtime_update_id => (last_rtu ? last_rtu.id : 0),
           :model_controller_type => card[:model_controller_type],
           :filter => (filter ? filter.to_json : ''),
-          :subject => 'Subject',
-          :body => 'Body',
-          :name => "Dashboard Alert: #{dashboard.name}"
+          :group_models => true,
+          :subject => subject,
+          :body => body
+        alert_expr = AlertRecipient.where(:alert_id => alert.id, :user_id => dashboard.user_id)
+        alert_expr.create! unless alert_expr.first
       end
     end
-
+    
+    def generate_dashboard_alert_subject_body controller_klass, dashboard_name
+      subject = "New alert for #{dashboard_name}"
+      
+      body = "
+{% for model in models %}{{'#{controller_klass.class_index_object.template if controller_klass && controller_klass.class_index_object}' | haml }}{% endfor %}
+      "
+      [subject, body]
+    end
+    
+    
     def attr_matcher(*matcher_opts)
       matcher_opts.each { |opts|
         if opts.is_a?(Hash)

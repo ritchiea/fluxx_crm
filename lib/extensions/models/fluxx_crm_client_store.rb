@@ -4,7 +4,7 @@ module FluxxCrmClientStore
   when_included do
     include ::FluxxClientStore
     # When a dashboard client_store is updated, inspect the contents to see if any alerts have been added/updated/deleted
-    
+    belongs_to :user
     after_create :update_alerts
     after_save :update_alerts
   end
@@ -17,7 +17,6 @@ module FluxxCrmClientStore
   
   instance_methods do
     def update_alerts
-      p "ESH: in update_alerts"
       alerted_cards = dashboard_cards.map do |card|
         # 
         if ClientStore.dashboard_card_gets_email? card

@@ -78,6 +78,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'push_salutation_to_prefix.rb', 'db/migrate/fluxx_crm_push_salutation_to_prefix.rb'
     handle_migration 'add_alert_dashboard_ids.rb', 'db/migrate/fluxx_crm_add_alert_dashboard_ids.rb'
     handle_migration 'allow_models_grouping_for_alerts.rb', 'db/migrate/fluxx_crm_allow_models_grouping_for_alerts.rb'
+    handle_migration 'add_alert_email_params.rb', 'db/migrate/fluxx_crm_add_alert_email_params.rb'
   end
   
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110801083503) do
+ActiveRecord::Schema.define(:version => 20110801113507) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(:version => 20110801083503) do
     t.datetime "updated_at"
     t.string   "model_type"
     t.datetime "send_at"
+    t.text     "email_params"
   end
 
   create_table "alert_recipients", :force => true do |t|
