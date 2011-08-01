@@ -5,7 +5,7 @@ namespace :fluxx_crm do
   task :enqueue_alert_notifications => :environment do
     Alert.with_triggered_alerts! { |alert, models|
       if alert.group_models
-        AlertEmail.enqueue(:alert, :alert => alert, :email_params => {:models => models.map(&:id)}.to_json)
+        AlertEmail.enqueue(:alert_grouped, :alert => alert, :email_params => {:models => models.map(&:id)}.to_json)
       else
         models.each do |model|
           AlertEmail.enqueue(:alert, :alert => alert, :model => model)
@@ -16,6 +16,9 @@ namespace :fluxx_crm do
 
   desc "Sends all enqueued emails with alerts"
   task :deliver_enqueued_alert_emails => :enqueue_alert_notifications do
+    ActionController::Base.asset_host = ENV['asset_host']
+    ActionController::Base.asset_path = ENV['asset_path']
+    
     AlertEmail.deliver_all
   end
 

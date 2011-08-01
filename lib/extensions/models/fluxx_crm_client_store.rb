@@ -27,7 +27,7 @@ module FluxxCrmClientStore
             if url_mapping
               controller = url_mapping[:controller]
               if controller
-                Kernel.const_get "#{controller.titlecase}Controller" rescue nil
+                Kernel.const_get "#{controller.titlecase.gsub(' ', '')}Controller" rescue nil
               end
             end
           end

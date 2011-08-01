@@ -24,6 +24,7 @@ module FluxxCrmAlert
   extend FluxxModuleHelper
 
   when_included do
+    has_many :alert_emails, :dependent => :destroy
     has_many :alert_recipients, :dependent => :destroy
     has_many :alert_users, :class_name => AlertRecipient.name, :conditions => ["alert_recipients.user_id IS NOT NULL"]
     has_many :recipients, :through => :alert_users, :source => 'user'
@@ -122,9 +123,22 @@ module FluxxCrmAlert
     
     def generate_dashboard_alert_subject_body controller_klass, dashboard_name
       subject = "New alert for #{dashboard_name}"
-      
+      template_name = if controller_klass && controller_klass.class_index_object
+        dir_name = if controller_klass.name =~ /(.*)Controller$/
+          $1.tableize
+        end
+        
+        template_name = controller_klass.class_index_object.template 
+        if template_name =~ /^\//
+          template_name
+        else
+          "/#{dir_name}/#{template_name}"
+        end
+      end
       body = "
-{% for model in models %}{{'#{controller_klass.class_index_object.template if controller_klass && controller_klass.class_index_object}' | haml }}{% endfor %}
+      {% assign template_name = '#{template_name}' %}
+      
+{% for model in models %}{{template_name | haml }}{% endfor %}
       "
       [subject, body]
     end
@@ -234,7 +248,9 @@ module FluxxCrmAlert
 
     def model_ids_matched_through_rtus
       klass = controller_klass.class_index_object.model_class
-      rtus = RealtimeUpdate.where("id > ?", last_realtime_update_id).where(:type_name => klass.extract_class_names_for_model(klass)).order('id asc').all
+      base_klasses = klass.extract_classes(klass)
+      all_classes = base_klasses.map{|base_klass| base_klass.descendants}.compact.flatten + base_klasses
+      rtus = RealtimeUpdate.where("id > ?", last_realtime_update_id).where(:type_name => all_classes.map(&:name)).order('id asc').all
       update_attribute(:last_realtime_update_id, rtus.last.id) if rtus && !rtus.empty?
       rtus.map{|rtu| rtu.model_id.to_s}
     end
