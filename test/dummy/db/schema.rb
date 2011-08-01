@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110728143133) do
+ActiveRecord::Schema.define(:version => 20110801083503) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(:version => 20110728143133) do
     t.integer  "locked_by_id"
     t.integer  "dashboard_id"
     t.integer  "dashboard_card_id"
+    t.boolean  "group_models",            :default => false, :null => false
   end
 
   add_index "alerts", ["dashboard_id"], :name => "alerts_dashboard_id"
