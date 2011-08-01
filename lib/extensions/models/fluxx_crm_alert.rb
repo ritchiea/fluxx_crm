@@ -81,7 +81,7 @@ module FluxxCrmAlert
     end
     
     def resolve_for_dashboard dashboard, cards
-      existing_dashboard_alerts = Alert.where(:dashboard_id => dashboard.id).all
+      existing_dashboard_alerts = Alert.where(:dashboard_id => dashboard.id).all rescue []
       updated_dashboard_cards = cards.inject({}){|acc, card| acc[card[:dashboard_card_id].to_i] = card; acc}
       
       # Delete existing alerts that no longer are alerted cards
