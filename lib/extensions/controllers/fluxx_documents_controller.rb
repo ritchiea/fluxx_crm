@@ -9,7 +9,7 @@ module FluxxDocumentsController
       insta.pre do |conf|
         if params[:name]
           # Need to grab the file and add it to the document
-          self.pre_model = Document.new params[:document]
+          self.pre_model ||= Document.new params[:document]
           f = Tempfile.new params[:name]
           f.write request.body.read
           pre_model.document = f

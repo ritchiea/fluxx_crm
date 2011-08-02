@@ -18,11 +18,11 @@ module FluxxModelDocumentsController
         if params[:model_document][:model_document_template_id]
           # Create a model document based on a template
           template = ModelDocumentTemplate.find params[:model_document][:model_document_template_id] rescue nil
-          self.pre_model = ModelDocument.new params[:model_document].merge(:document_type => :text, :document_text => template.document, :model_document_template_id => template.id, :document_file_name => template.description) if template
+          self.pre_model ||= ModelDocument.new params[:model_document].merge(:document_type => :text, :document_text => template.document, :model_document_template_id => template.id, :document_file_name => template.description) if template
         end
         if !self.pre_model && params[:name]
           # Need to grab the file and add it to the model document
-          self.pre_model = ModelDocument.new params[:model_document]
+          self.pre_model ||= ModelDocument.new params[:model_document]
           pre_model.model_document_actual_filename = params[:name].gsub(/[\$\&\?\+\,\/:;=@]/, '')
           f = Tempfile.new params[:name]
           f.write request.body.read

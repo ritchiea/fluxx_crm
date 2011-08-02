@@ -6,7 +6,7 @@ module FluxxFavoritesController
     base.insta_post Favorite do |insta|
       insta.pre do |controller_dsl|
         if params[:favorite] && params[:favorite][:favorable_id] && params[:favorite][:favorable_type] && params[:favorite][:user_id]
-          self.pre_model = Favorite.where(:favorable_id => params[:favorite][:favorable_id], :favorable_type => params[:favorite][:favorable_type], :user_id => params[:favorite][:user_id]).first
+          self.pre_model ||= Favorite.where(:favorable_id => params[:favorite][:favorable_id], :favorable_type => params[:favorite][:favorable_type], :user_id => params[:favorite][:user_id]).first
         end
       end
       
