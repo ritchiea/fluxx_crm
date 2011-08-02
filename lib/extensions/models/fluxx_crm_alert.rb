@@ -275,10 +275,9 @@ module FluxxCrmAlert
       return {} if filter.blank?
       
       model_filter = JSON.parse(filter)
-      filter_params=model_filter.inject(HashWithIndifferentAccess.new) do |acc, filter_hash|
-        unless filter_hash.blank? || filter_hash['name'].blank? || filter_hash['value'].blank?
-          name = filter_hash['name']
-          value = filter_hash['value']
+      filter_params=model_filter.inject(HashWithIndifferentAccess.new) do |acc, filter_pair|
+        unless filter_pair.blank?
+          name, value = filter_pair
           # Parse out the class:param_name
           name.gsub('[]', '') =~ /(.*)\[(.*)\]/
           model_key, attr_name = [$1, $2]
