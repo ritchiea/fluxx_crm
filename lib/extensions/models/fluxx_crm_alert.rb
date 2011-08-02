@@ -93,7 +93,7 @@ module FluxxCrmAlert
         controller_klass = alert.model_controller_type.constantize
         subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name
         card = updated_dashboard_cards[alert.dashboard_card_id]
-        filter = card['filter']
+        filter = card[:filter]
         alert.filter = filter ? filter.to_json : ''
         alert.model_controller_type = card[:model_controller_type]
         alert.subject = subject
