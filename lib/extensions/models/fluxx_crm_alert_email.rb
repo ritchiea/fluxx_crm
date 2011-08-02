@@ -49,15 +49,19 @@ module FluxxCrmAlertEmail
   instance_methods do
     def deliver
       alert.model_recipients(model).each do |recipient| 
-        if alert.group_models
-          email_params_from_json = self.email_params.de_json if self.email_params
-          models = if email_params_from_json && alert.controller_klass && alert.controller_klass.class_index_object
-            alert.controller_klass.class_index_object.model_class.where({:id => email_params_from_json['models']}).all
-          end
+        begin
+          if alert.group_models
+            email_params_from_json = self.email_params.de_json if self.email_params
+            models = if email_params_from_json && alert.controller_klass && alert.controller_klass.class_index_object
+              alert.controller_klass.class_index_object.model_class.where({:id => email_params_from_json['models']}).all
+            end
             
-          AlertMailer.send(mailer_method, recipient, alert, "models" => models).deliver
-        else
-          AlertMailer.send(mailer_method, recipient, alert, "model" => model).deliver
+            AlertMailer.send(mailer_method, recipient, alert, "models" => models).deliver
+          else
+            AlertMailer.send(mailer_method, recipient, alert, "model" => model).deliver
+          end
+        rescue Exception => e
+          ActiveRecord::Base.logger.error "Unable to deliver email for recipient #{recipient.id} for alert_email=#{self.id}"
         end
 
       end
