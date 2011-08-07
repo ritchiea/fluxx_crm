@@ -195,9 +195,10 @@ module FluxxCrmAlert
         instance_variable_set("@#{name}", bool_value)
       end
       
-      def any_for? klass
-        Alert.where(:model_controller_type => klass.all_controllers.map(&:name)).exists?
-      end
+    end
+
+    def any_for? klass
+      Alert.where(:model_controller_type => klass.all_controllers.map(&:name)).exists?
     end
 
     def time_based_filtered_attrs
@@ -212,9 +213,8 @@ module FluxxCrmAlert
       5000
     end
     
-    
-    def self.trigger_alerts_for controller_klass
-      Alert.find_each(:model_controller_type => controller_klass.name) do |alert|
+    def trigger_alerts_for controller_klass
+      Alert.find_each(:conditions => {:model_controller_type => controller_klass.name}) do |alert|
         alert.with_triggered_alert!(&alert_processing_block)
       end
     end

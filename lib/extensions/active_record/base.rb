@@ -304,7 +304,7 @@ class ActiveRecord::Base
     # Never alert on a ClientStore update
     unless self.is_a?(ClientStore)
       if Alert.any_for? self.class
-        Alert.send_later :trigger_alerts_for, self.class.name
+        Alert.delay.trigger_alerts_for self.class
       end
     end
   end
