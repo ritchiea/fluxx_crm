@@ -4,13 +4,7 @@ namespace :fluxx_crm do
   desc "Generates emails for all pending alerts"
   task :enqueue_alert_notifications => :environment do
     Alert.with_triggered_alerts! { |alert, models|
-      if alert.group_models
-        AlertEmail.enqueue(:alert_grouped, :alert => alert, :email_params => {:models => models.map(&:id)}.to_json)
-      else
-        models.each do |model|
-          AlertEmail.enqueue(:alert, :alert => alert, :model => model)
-        end
-      end
+      alert.enqueue_for models
     }
   end
 

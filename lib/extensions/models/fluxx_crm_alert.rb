@@ -194,6 +194,10 @@ module FluxxCrmAlert
 
         instance_variable_set("@#{name}", bool_value)
       end
+      
+      def any_for? klass
+        Alert.where(:model_controller_type => klass.all_controllers.map(&:name)).exists?
+      end
     end
 
     def time_based_filtered_attrs
@@ -208,35 +212,55 @@ module FluxxCrmAlert
       5000
     end
     
+    
+    def self.trigger_alerts_for controller_klass
+      Alert.find_each(:model_controller_type => controller_klass.name) do |alert|
+        alert.with_triggered_alert!(&alert_processing_block)
+      end
+    end
+    
     def with_triggered_alerts!(&alert_processing_block)
       Alert.find_each do |alert|
-        
-        # Find models that match this filter
-        model_filter = unless alert.filter.blank?
-          JSON.parse(alert.filter) 
+        alert.with_triggered_alert!(&alert_processing_block)
+      end
+    end
+    
+    def with_triggered_alert!(&alert_processing_block)
+      # Find models that match this filter
+      model_filter = unless self.filter.blank?
+        JSON.parse(self.filter) 
+      else
+        {}
+      end
+      filter_params=self.filter_as_hash
+      controller = self.controller_klass.new
+      # Add an admin user as the current user for doing the search to bypass the controller perms check
+      controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
+      matched_models = if self.has_time_based_filtered_attrs?
+        self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_time_based_alert_results)
+      else
+        rtu_matched_ids = self.model_ids_matched_through_rtus
+        if rtu_matched_ids && !rtu_matched_ids.empty?
+          form_name = self.controller_klass.class_index_object.model_class.calculate_form_name
+          model_params = filter_params[form_name] || {}
+          model_params['id'] = rtu_matched_ids
+          filter_params[form_name] = model_params
+          self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
         else
-          {}
+          []
         end
-        filter_params=alert.filter_as_hash
-        controller = alert.controller_klass.new
-        # Add an admin user as the current user for doing the search to bypass the controller perms check
-        controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
-        matched_models = if alert.has_time_based_filtered_attrs?
-          alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_time_based_alert_results)
-        else
-          rtu_matched_ids = alert.model_ids_matched_through_rtus
-          if rtu_matched_ids && !rtu_matched_ids.empty?
-            form_name = alert.controller_klass.class_index_object.model_class.calculate_form_name
-            model_params = filter_params[form_name] || {}
-            model_params['id'] = rtu_matched_ids
-            filter_params[form_name] = model_params
-            alert.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
-          else
-            []
-          end
-        end
+      end
 
-        alert_processing_block.call(alert, matched_models.compact.uniq) unless matched_models.empty?
+      alert_processing_block.call(self, matched_models.compact.uniq) unless matched_models.empty?
+    end
+    
+    def enqueue_for models
+      if self.group_models
+        AlertEmail.enqueue(:alert_grouped, :alert => self, :email_params => {:models => models.map(&:id)}.to_json)
+      else
+        models.each do |model|
+          AlertEmail.enqueue(:alert, :alert => self, :model => model)
+        end
       end
     end
   end
@@ -247,12 +271,14 @@ module FluxxCrmAlert
     end
 
     def model_ids_matched_through_rtus
-      klass = controller_klass.class_index_object.model_class
-      base_klasses = klass.extract_classes(klass)
-      all_classes = base_klasses.map{|base_klass| base_klass.descendants}.compact.flatten + base_klasses
-      rtus = RealtimeUpdate.where("id > ?", last_realtime_update_id).where(:type_name => all_classes.map(&:name)).order('id asc').all
+      rtus = RealtimeUpdate.where("id > ?", last_realtime_update_id).where(:type_name => all_base_model_classes.map(&:name)).order('id asc').all
       update_attribute(:last_realtime_update_id, rtus.last.id) if rtus && !rtus.empty?
       rtus.map{|rtu| rtu.model_id.to_s}
+    end
+    
+    def all_base_model_classes
+      klass = controller_klass.class_index_object.model_class
+      klass.descendant_base_classes
     end
     
     def models_matched_through_rtus

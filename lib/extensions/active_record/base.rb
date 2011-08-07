@@ -296,4 +296,16 @@ class ActiveRecord::Base
     end
   end
 
+  after_create :notify_alerts
+  after_update :notify_alerts 
+  after_destroy :notify_alerts
+  
+  def notify_alerts
+    # Never alert on a ClientStore update
+    unless self.is_a?(ClientStore)
+      if Alert.any_for? self.class
+        Alert.send_later :trigger_alerts_for, self.class.name
+      end
+    end
+  end
 end
