@@ -19,7 +19,7 @@ module FluxxModelDocument
          :path => "/documents/:primary_uid/:filename"
     else
       # Use primary_uid instead of the default id
-      base.has_attached_file :document, :path => ":rails_root/public/system/:attachment/:primary_uid/:style/:basename.:extension"
+      base.has_attached_file :document, :url => "/system/:attachment/:primary_uid/:style/:filename"
     end
     base.before_post_process :transliterate_file_name
     
