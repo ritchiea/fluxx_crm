@@ -138,21 +138,21 @@ module FluxxCrmAlert
       
       alert_type_name = index_object.controller_name if index_object
       subject = "Fluxx Alert - #{alert_type_name} Update."
-      asset_path = "#{ActionController::Base.asset_host}#{ActionController::Base.asset_path}"
+      host_path = "#{FluxxManageHost.current_host}"
 
       
       
       body = "
-      {% assign asset_path = '#{asset_path}' %}
+      {% assign host_path = '#{host_path}' %}
       {% assign template_name = '#{template_name}' %}
       {% assign alert_execute_context = 'true' %}
       <html>
       <head>
-      <link href=\"{{asset_path}}/stylesheets/compiled/fluxx_engine/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
-      <link href=\"{{asset_path}}/stylesheets/compiled/fluxx_crm/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
-      <link href=\"{{asset_path}}/stylesheets/compiled/fluxx_grant/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
-      <link href=\"{{asset_path}}/stylesheets/compiled/fluxx_engine/theme/default/printable.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
-      <link href=\"{{asset_path}}/stylesheets/printable.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/compiled/fluxx_engine/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/compiled/fluxx_crm/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/compiled/fluxx_grant/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/compiled/fluxx_engine/theme/default/printable.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/printable.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
       </head>
 
 
