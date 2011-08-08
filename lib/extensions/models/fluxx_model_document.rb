@@ -18,7 +18,8 @@ module FluxxModelDocument
          :s3_credentials => "#{Rails.root}/config/amazon_s3.yml",
          :path => "/documents/:primary_uid/:filename"
     else
-      base.has_attached_file :document, :path => "/documents/:primary_uid/:filename"
+      # Use primary_uid instead of the default id
+      base.has_attached_file :document, :path => ":rails_root/public/system/:attachment/:primary_uid/:style/:basename.:extension"
     end
     base.before_post_process :transliterate_file_name
     
