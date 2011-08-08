@@ -10,10 +10,14 @@
       %tr
         %td= "No history available"
     - else
-      - load_audits(model).each do |audit|
+      - audits = load_audits(model)
+      - audit_changes = collect_audits model, audits
+      - audit_changes.each do |audit_hash|
+        - audit = audit_hash[:audit]
+        - deltas = audit_hash[:deltas]
         %tr
           %td
-            - audit_summary, audit_table = build_audit_table_and_summary model, audit
+            - audit_summary, audit_table = build_audit_table_and_summary model, audit, deltas
             - if audit.full_model.blank?
               %div= raw(audit_summary + audit_table)
             - else

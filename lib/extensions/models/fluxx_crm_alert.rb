@@ -122,21 +122,26 @@ module FluxxCrmAlert
     end
     
     def generate_dashboard_alert_subject_body controller_klass, dashboard_name
-      subject = "New alert for #{dashboard_name}"
-      template_name = if controller_klass && controller_klass.class_index_object
+      index_object = controller_klass.class_index_object if controller_klass && controller_klass.class_index_object
+      template_name = if index_object
         dir_name = if controller_klass.name =~ /(.*)Controller$/
           $1.tableize
         end
         
-        template_name = controller_klass.class_index_object.template 
+        template_name = index_object.template 
         if template_name =~ /^\//
           template_name
         else
           "/#{dir_name}/#{template_name}"
         end
       end
+      
+      alert_type_name = index_object.controller_name if index_object
+      subject = "Fluxx Alert - #{alert_type_name} Update."
+      
       body = "
       {% assign template_name = '#{template_name}' %}
+      {% assign alert_execute_context = 'true' %}
       
 {% for model in models %}{{template_name | haml }}{% endfor %}
       "
