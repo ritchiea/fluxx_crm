@@ -140,6 +140,23 @@ module FluxxCrmAlert
       subject = "Fluxx Alert - #{alert_type_name} Update."
       
       body = "
+      <html>
+      <head>
+      <link href="{{hostname}}/stylesheets/compiled/fluxx_engine/theme/default/style.css" media="all" rel="stylesheet" type="text/css" />
+      <link href="{{hostname}}/stylesheets/compiled/fluxx_crm/theme/default/style.css" media="all" rel="stylesheet" type="text/css" />
+      <link href="{{hostname}}/stylesheets/compiled/fluxx_grant/theme/default/style.css" media="all" rel="stylesheet" type="text/css" />
+      <link href="{{hostname}}/stylesheets/compiled/fluxx_engine/theme/default/printable.css" media="all" rel="stylesheet" type="text/css" />
+      <link href="{{hostname}}/stylesheets/printable.css" media="all" rel="stylesheet" type="text/css" />
+      </head>
+
+
+      <body id='fluxx'>
+      <div id='card-table'>
+      <div id='hand'>
+      <div id='card-header'> </div>
+      <div id='card-body'>
+      <div class='show'>
+      
       {% assign template_name = '#{template_name}' %}
       {% assign alert_execute_context = 'true' %}
 <p>The following records have been updated in your #{card_title} card:</p>
@@ -382,13 +399,17 @@ module FluxxCrmAlert
     def to_liquid
       {}
     end
+    
+    def liquid_host
+      "#{ActionController::Base.asset_host}#{ActionController::Base.asset_path}"
+    end
 
     def liquid_subject(locals={})
-      Liquid::Template.parse(subject).render(locals.stringify_keys.merge('alert' => self))
+      Liquid::Template.parse(subject).render(locals.stringify_keys.merge('alert' => self, 'hostname' => liquid_host))
     end
 
     def liquid_body(locals={})
-      Liquid::Template.parse(body).render(locals.stringify_keys.merge('alert' => self))
+      Liquid::Template.parse(body).render(locals.stringify_keys.merge('alert' => self, 'hostname' => liquid_host))
     end
 
     def on_init
