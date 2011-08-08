@@ -92,7 +92,7 @@ module FluxxCrmAlert
       alerts_to_update.each do |alert|
         controller_klass = alert.model_controller_type.constantize
         card = updated_dashboard_cards[alert.dashboard_card_id]
-        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card['title']
+        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
         filter = card[:filter]
         alert.filter = filter ? filter.to_json : ''
         alert.model_controller_type = card[:model_controller_type]
@@ -108,7 +108,7 @@ module FluxxCrmAlert
       alerts_to_create.each do |card| 
         filter = card['filter']
         controller_klass = card[:model_controller_type]
-        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card['title']
+        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
         alert = Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
           :last_realtime_update_id => (last_rtu ? last_rtu.id : 0),
           :model_controller_type => card[:model_controller_type],
