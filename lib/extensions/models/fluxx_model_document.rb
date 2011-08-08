@@ -9,13 +9,17 @@ module FluxxModelDocument
     base.send :attr_accessor, :model_document_actual_filename
     
 
+    Paperclip.interpolates :primary_uid  do |attachment, style|
+     attachment.instance.primary_uid
+    end
     if defined?(USE_MODEL_DOCUMENT_S3) && USE_MODEL_DOCUMENT_S3
       base.has_attached_file :document,
          :storage => :s3,
          :s3_credentials => "#{Rails.root}/config/amazon_s3.yml",
-         :path => "/documents/:id/:filename"
+         :path => "/documents/:primary_uid/:filename"
     else
-      base.has_attached_file :document
+      # Use primary_uid instead of the default id
+      base.has_attached_file :document, :path => ":rails_root/public/system/:attachment/:primary_uid/:style/:basename.:extension"
     end
     base.before_post_process :transliterate_file_name
     

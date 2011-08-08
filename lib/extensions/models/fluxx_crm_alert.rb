@@ -91,8 +91,8 @@ module FluxxCrmAlert
       alerts_to_update = existing_dashboard_alerts.select {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
       alerts_to_update.each do |alert|
         controller_klass = alert.model_controller_type.constantize
-        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name
         card = updated_dashboard_cards[alert.dashboard_card_id]
+        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
         filter = card[:filter]
         alert.filter = filter ? filter.to_json : ''
         alert.model_controller_type = card[:model_controller_type]
@@ -108,7 +108,7 @@ module FluxxCrmAlert
       alerts_to_create.each do |card| 
         filter = card['filter']
         controller_klass = card[:model_controller_type]
-        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name
+        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
         alert = Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
           :last_realtime_update_id => (last_rtu ? last_rtu.id : 0),
           :model_controller_type => card[:model_controller_type],
@@ -121,23 +121,49 @@ module FluxxCrmAlert
       end
     end
     
-    def generate_dashboard_alert_subject_body controller_klass, dashboard_name
-      subject = "New alert for #{dashboard_name}"
-      template_name = if controller_klass && controller_klass.class_index_object
+    def generate_dashboard_alert_subject_body controller_klass, dashboard_name, card_title
+      index_object = controller_klass.class_index_object if controller_klass && controller_klass.class_index_object
+      template_name = if index_object
         dir_name = if controller_klass.name =~ /(.*)Controller$/
           $1.tableize
         end
         
-        template_name = controller_klass.class_index_object.template 
+        template_name = index_object.template 
         if template_name =~ /^\//
           template_name
         else
           "/#{dir_name}/#{template_name}"
         end
       end
-      body = "
-      {% assign template_name = '#{template_name}' %}
       
+      alert_type_name = index_object.controller_name if index_object
+      subject = "Fluxx Alert - #{alert_type_name} Update."
+      host_path = "#{FluxxManageHost.current_host}"
+
+      
+      
+      body = "
+      {% assign host_path = '#{host_path}' %}
+      {% assign template_name = '#{template_name}' %}
+      {% assign alert_execute_context = 'true' %}
+      <html>
+      <head>
+      <link href=\"{{host_path}}/stylesheets/compiled/fluxx_engine/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/compiled/fluxx_crm/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/compiled/fluxx_grant/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/compiled/fluxx_engine/theme/default/printable.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{host_path}}/stylesheets/printable.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      </head>
+
+
+      <body id='fluxx'>
+      <div id='card-table'>
+      <div id='hand'>
+      <div id='card-header'> </div>
+      <div id='card-body'>
+      <div class='show'>
+      
+<p>The following records have been updated in your #{card_title} card:</p>
 {% for model in models %}{{template_name | haml }}{% endfor %}
       "
       [subject, body]
@@ -195,9 +221,10 @@ module FluxxCrmAlert
         instance_variable_set("@#{name}", bool_value)
       end
       
-      def any_for? klass
-        Alert.where(:model_controller_type => klass.all_controllers.map(&:name)).exists?
-      end
+    end
+
+    def any_for? klass
+      Alert.where(:model_controller_type => klass.all_controllers.map(&:name)).exists?
     end
 
     def time_based_filtered_attrs
@@ -212,10 +239,16 @@ module FluxxCrmAlert
       5000
     end
     
-    
-    def self.trigger_alerts_for controller_klass
-      Alert.find_each(:model_controller_type => controller_klass.name) do |alert|
-        alert.with_triggered_alert!(&alert_processing_block)
+    def trigger_and_mail_alerts_for controller_klass_names
+      Alert.find_each(:conditions => {:model_controller_type => controller_klass_names}) do |alert|
+        alert.with_triggered_alert! do |cur_alert, models|
+          alert_emails = cur_alert.enqueue_for models
+          if alert_emails.is_a?(Array)
+            alert_emails.each {|email| email.deliver}
+          else
+            alert_emails.deliver
+          end
+        end
       end
     end
     
@@ -225,6 +258,13 @@ module FluxxCrmAlert
       end
     end
     
+  end
+
+  instance_methods do
+    def controller_klass
+      model_controller_type.constantize
+    end
+
     def with_triggered_alert!(&alert_processing_block)
       # Find models that match this filter
       model_filter = unless self.filter.blank?
@@ -258,16 +298,10 @@ module FluxxCrmAlert
       if self.group_models
         AlertEmail.enqueue(:alert_grouped, :alert => self, :email_params => {:models => models.map(&:id)}.to_json)
       else
-        models.each do |model|
+        models.map do |model|
           AlertEmail.enqueue(:alert, :alert => self, :model => model)
         end
       end
-    end
-  end
-
-  instance_methods do
-    def controller_klass
-      model_controller_type.constantize
     end
 
     def model_ids_matched_through_rtus
@@ -369,7 +403,7 @@ module FluxxCrmAlert
     def to_liquid
       {}
     end
-
+    
     def liquid_subject(locals={})
       Liquid::Template.parse(subject).render(locals.stringify_keys.merge('alert' => self))
     end
