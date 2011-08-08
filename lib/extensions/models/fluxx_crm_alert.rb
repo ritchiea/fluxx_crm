@@ -218,9 +218,16 @@ module FluxxCrmAlert
       5000
     end
     
-    def trigger_alerts_for controller_klass
+    def trigger_and_mail_alerts_for controller_klass
       Alert.find_each(:conditions => {:model_controller_type => controller_klass.name}) do |alert|
-        alert.with_triggered_alert!(&alert_processing_block)
+        alert.with_triggered_alert! do |cur_alert, models|
+          alert_emails = cur_alert.enqueue_for models
+          if alert_emails.is_a?(Array)
+            alert_emails.each {|email| email.deliver}
+          else
+            alert_emails.deliver
+          end
+        end
       end
     end
     
@@ -263,7 +270,7 @@ module FluxxCrmAlert
       if self.group_models
         AlertEmail.enqueue(:alert_grouped, :alert => self, :email_params => {:models => models.map(&:id)}.to_json)
       else
-        models.each do |model|
+        models.map do |model|
           AlertEmail.enqueue(:alert, :alert => self, :model => model)
         end
       end
