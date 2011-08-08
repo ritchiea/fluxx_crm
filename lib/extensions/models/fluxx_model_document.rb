@@ -13,7 +13,11 @@ module FluxxModelDocument
       base.has_attached_file :document,
          :storage => :s3,
          :s3_credentials => "#{Rails.root}/config/amazon_s3.yml",
-         :path => "/documents/:id/:filename"
+         :path => "/documents/:primary_uid/:filename"
+      Paperclip.interpolates :primary_uid  do |attachment, style|
+       attachment.instance.primary_uid
+      end
+      
     else
       base.has_attached_file :document
     end
