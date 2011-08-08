@@ -108,7 +108,7 @@ module FluxxCrmAlert
       alerts_to_create.each do |card| 
         filter = card['filter']
         controller_klass = card[:model_controller_type]
-        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name
+        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card['title']
         alert = Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
           :last_realtime_update_id => (last_rtu ? last_rtu.id : 0),
           :model_controller_type => card[:model_controller_type],
@@ -121,7 +121,7 @@ module FluxxCrmAlert
       end
     end
     
-    def generate_dashboard_alert_subject_body controller_klass, dashboard_name
+    def generate_dashboard_alert_subject_body controller_klass, dashboard_name, card_title
       index_object = controller_klass.class_index_object if controller_klass && controller_klass.class_index_object
       template_name = if index_object
         dir_name = if controller_klass.name =~ /(.*)Controller$/
@@ -142,7 +142,7 @@ module FluxxCrmAlert
       body = "
       {% assign template_name = '#{template_name}' %}
       {% assign alert_execute_context = 'true' %}
-      
+<p>The following records have been updated in your #{card_title} card:</p>
 {% for model in models %}{{template_name | haml }}{% endfor %}
       "
       [subject, body]

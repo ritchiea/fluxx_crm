@@ -33,8 +33,9 @@ module FluxxCrmClientStore
           end
           
           card_id = card['uid']
+          card_title = card['title']
           
-          {:model_controller_type => controller_klass, :dashboard_card_id => card_id, :filter => ClientStore.dashboard_card_params(card)}
+          {:model_controller_type => controller_klass, :dashboard_card_id => card_id, :filter => ClientStore.dashboard_card_params(card), :title => card_title}
         end
       end.compact
       p "ESH: calling resolve_for_dashboard"
