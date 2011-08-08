@@ -116,4 +116,25 @@ namespace :fluxx_crm do
       end
     end
   end
+  
+  task :migrate_paperclip_to_s3 => :environment do
+    a = Dir.glob("#{Rails.root}/public/system/documents/*/original/*")
+    a.each do |filepath|
+      begin
+        filepath =~ /system\/documents\/(.*)\/original\/(.*)$/
+        model_id = $1
+        filename = $2
+
+        p "ESH: for filepath=#{filepath}, have model_id = #{model_id}"
+        doc = ModelDocument.find model_id
+        file = File.open filepath
+        doc.document = file
+        p "ESH: for filepath=#{filepath}, about to save"
+        doc.save(:validate => false)
+        p "ESH: for filepath=#{filepath}, saved!!"
+      rescue Exception => e
+        p "ESH: for filepath=#{filepath}, hit an exception #{e.inspect}, #{e.backtrace.inspect}"
+      end
+    end
+  end
 end
