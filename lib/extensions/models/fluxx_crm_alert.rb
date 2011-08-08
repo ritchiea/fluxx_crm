@@ -218,8 +218,8 @@ module FluxxCrmAlert
       5000
     end
     
-    def trigger_and_mail_alerts_for controller_klass
-      Alert.find_each(:conditions => {:model_controller_type => controller_klass.name}) do |alert|
+    def trigger_and_mail_alerts_for controller_klass_names
+      Alert.find_each(:conditions => {:model_controller_type => controller_klass_names}) do |alert|
         alert.with_triggered_alert! do |cur_alert, models|
           alert_emails = cur_alert.enqueue_for models
           if alert_emails.is_a?(Array)
@@ -237,6 +237,13 @@ module FluxxCrmAlert
       end
     end
     
+  end
+
+  instance_methods do
+    def controller_klass
+      model_controller_type.constantize
+    end
+
     def with_triggered_alert!(&alert_processing_block)
       # Find models that match this filter
       model_filter = unless self.filter.blank?
@@ -274,12 +281,6 @@ module FluxxCrmAlert
           AlertEmail.enqueue(:alert, :alert => self, :model => model)
         end
       end
-    end
-  end
-
-  instance_methods do
-    def controller_klass
-      model_controller_type.constantize
     end
 
     def model_ids_matched_through_rtus
