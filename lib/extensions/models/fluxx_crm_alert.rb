@@ -142,11 +142,11 @@ module FluxxCrmAlert
       body = "
       <html>
       <head>
-      <link href="{{hostname}}/stylesheets/compiled/fluxx_engine/theme/default/style.css" media="all" rel="stylesheet" type="text/css" />
-      <link href="{{hostname}}/stylesheets/compiled/fluxx_crm/theme/default/style.css" media="all" rel="stylesheet" type="text/css" />
-      <link href="{{hostname}}/stylesheets/compiled/fluxx_grant/theme/default/style.css" media="all" rel="stylesheet" type="text/css" />
-      <link href="{{hostname}}/stylesheets/compiled/fluxx_engine/theme/default/printable.css" media="all" rel="stylesheet" type="text/css" />
-      <link href="{{hostname}}/stylesheets/printable.css" media="all" rel="stylesheet" type="text/css" />
+      <link href=\"{{hostname}}/stylesheets/compiled/fluxx_engine/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{hostname}}/stylesheets/compiled/fluxx_crm/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{hostname}}/stylesheets/compiled/fluxx_grant/theme/default/style.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{hostname}}/stylesheets/compiled/fluxx_engine/theme/default/printable.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
+      <link href=\"{{hostname}}/stylesheets/printable.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />
       </head>
 
 
