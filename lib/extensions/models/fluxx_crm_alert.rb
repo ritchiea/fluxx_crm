@@ -224,7 +224,7 @@ module FluxxCrmAlert
     end
 
     def any_for? klass
-      Alert.where(:model_controller_type => klass.all_controllers.map(&:name)).exists?
+      Alert.where(:model_controller_type => klass.all_controllers.map(&:name)).exists? rescue nil
     end
 
     def time_based_filtered_attrs
