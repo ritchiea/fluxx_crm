@@ -129,7 +129,7 @@ module FluxxCrmAlert
         end
         
         template_name = index_object.template 
-        if template_name =~ /^\//
+        if template_name =~ /\//
           template_name
         else
           "/#{dir_name}/#{template_name}"

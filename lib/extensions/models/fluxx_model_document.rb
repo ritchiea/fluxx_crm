@@ -16,6 +16,7 @@ module FluxxModelDocument
       base.has_attached_file :document,
          :storage => :s3,
          :s3_credentials => "#{Rails.root}/config/amazon_s3.yml",
+         # :s3_options => {:server => (defined?(S3_HOST) ? S3_HOST : nil)},
          :path => "/documents/:primary_uid/:filename"
     else
       # Use primary_uid instead of the default id
