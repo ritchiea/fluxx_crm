@@ -5,7 +5,7 @@ module FluxxOrganization
   
   def self.included(base)
     base.has_many :user_organizations
-    base.has_many :users, :through => :user_organizations
+    base.has_many :users, :through => :user_organizations, :conditions => {:users => {:deleted_at => nil}}
     base.belongs_to :parent_org, :class_name => 'Organization', :foreign_key => :parent_org_id
     base.has_many :satellite_orgs, :class_name => 'Organization',  :foreign_key => :parent_org_id, :conditions => {:deleted_at => nil}
     base.belongs_to :geo_country
