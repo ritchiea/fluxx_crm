@@ -7,6 +7,7 @@
 
 %ul
   %li= link_to 'Alerts', alerts_path, :class => 'new-listing', 'data-insert' => 'after', :title => 'Alerts'
+  = render :partial => 'admin_cards/extra_admin_alerts'
 
 - unless defined?(ModelAttribute)
   %ul
