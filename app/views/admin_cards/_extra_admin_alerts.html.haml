@@ -1,4 +1,4 @@
-- if defined?(FLUXX_ADMIN_CONFIGURATION) && FLUXX_ADMIN_CONFIGURATION[:alerts]
-  - FLUXX_ADMIN_CONFIGURATION[:alerts].each do |pair|
+- if AdminDefaults.singleton.alerts
+  - AdminDefaults.singleton.alerts.each do |pair|
     - link_name, class_name = pair
     %li= link_to(link_name, new_alert_path(:alert => {:model_controller_type => class_name}), :class => 'to-modal', 'data-on-success' => 'close')
