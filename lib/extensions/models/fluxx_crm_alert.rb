@@ -244,7 +244,7 @@ module FluxxCrmAlert
         alert.with_triggered_alert! do |cur_alert, models|
           alert_emails = cur_alert.enqueue_for models
           if alert_emails.is_a?(Array)
-            alert_emails.each {|email| email.deliver}
+            alert_emails.compact.each {|email| email.deliver}
           else
             alert_emails.deliver
           end
