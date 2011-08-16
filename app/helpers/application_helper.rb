@@ -115,7 +115,7 @@ module ApplicationHelper
   def calculate_audit_changes model, audit, reflections_by_fk=nil, reflections_by_name=nil
     reflections_by_fk = calculate_reflections_by_fk(model) unless reflections_by_fk
     reflections_by_name = calculate_reflections_by_name(model) unless reflections_by_name
-    audit_changes = audit.attributes['audit_changes']
+    audit_changes = audit.attributes['audit_changes'] || {}
     deltas = audit_changes.keys.map do |k|
       name = ''
       old_value = ''
