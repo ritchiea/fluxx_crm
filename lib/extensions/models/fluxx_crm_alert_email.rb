@@ -61,7 +61,8 @@ module FluxxCrmAlertEmail
             AlertMailer.send(mailer_method, recipient, alert, "model" => model).deliver
           end
         rescue Exception => e
-          ActiveRecord::Base.logger.error "Unable to deliver email for recipient #{recipient.id} for alert_email=#{self.id}"
+          ActiveRecord::Base.logger.error "Unable to deliver email for recipient #{recipient.id} for alert_email=#{self.id}, #{e.inspect}, trace: #{e.backtrace.inspect}"
+          raise e
         end
 
       end
