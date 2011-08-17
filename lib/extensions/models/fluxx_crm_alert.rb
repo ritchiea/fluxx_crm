@@ -347,7 +347,7 @@ module FluxxCrmAlert
           name.gsub('[]', '') =~ /(.*)\[(.*)\]/
           model_key, attr_name = [$1, $2]
           acc[model_key] ||= HashWithIndifferentAccess.new
-          acc[model_key][attr_name] = value unless ['sort_order', 'sort_attribute'].include?(attr_name) 
+          acc[model_key][attr_name] = value unless ['sort_order', 'sort_attribute'].include?(attr_name) || value.blank?
         end
         acc
       end

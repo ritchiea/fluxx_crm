@@ -10,6 +10,7 @@ module FluxxAlertsController
       insta.filter_template = 'alerts/alert_filter'
       insta.order_clause = 'updated_at desc'
       insta.icon_style = ICON_STYLE
+      insta.search_conditions = 'group_models = 0'
     end
     insta_show Alert do |insta|
       insta.template = 'alert_show'
