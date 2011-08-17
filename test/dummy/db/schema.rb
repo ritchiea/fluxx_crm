@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110801113507) do
+ActiveRecord::Schema.define(:version => 20110817105051) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -520,6 +520,12 @@ ActiveRecord::Schema.define(:version => 20110801113507) do
 
   add_index "roles", ["created_by_id"], :name => "roles_created_by_id"
   add_index "roles", ["updated_by_id"], :name => "roles_updated_by_id"
+
+  create_table "sphinx_checks", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "check_ts"
+  end
 
   create_table "user_organizations", :force => true do |t|
     t.datetime "created_at"
