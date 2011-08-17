@@ -112,6 +112,7 @@ module ApplicationHelper
     end
   end
   
+  ATTRIBUTE_NAMES_TO_FILTER = ['last_logged_in_at', 'time_zone', 'locked_until', 'locked_by_id', 'crypted_password', 'password_salt', 'persistence_token', 'single_access_token', 'confirmation_sent_at', 'login_count', 'failed_login_count', 'current_login_at', 'last_login_at', 'current_login_ip', 'last_login_ip', 'user_profile_id', 'test_user_flag']
   def calculate_audit_changes model, audit, reflections_by_fk=nil, reflections_by_name=nil
     reflections_by_fk = calculate_reflections_by_fk(model) unless reflections_by_fk
     reflections_by_name = calculate_reflections_by_name(model) unless reflections_by_name
@@ -148,8 +149,8 @@ module ApplicationHelper
         end
         name = k.to_s.humanize
       end
-      {:name => name, :old_value => old_value, :new_value => new_value}
-    end
+      {:name => name, :old_value => old_value, :new_value => new_value} unless name.blank? || new_value.blank? || ATTRIBUTE_NAMES_TO_FILTER.include?(k.to_s)
+    end.compact
   end
 
   def build_audit_table_and_summary model, audit, deltas
@@ -158,7 +159,9 @@ module ApplicationHelper
     audit_summary += " By #{audit.user.full_name}" if audit.user
     audit_summary += " Modified at #{audit.created_at.ampm_time} on #{audit.created_at.full}" if audit.created_at
     audit_table = ''
-    if deltas
+    if audit.action == 'create'
+      audit_table += "<div class='audit-detail'><p><strong>New Record Created</strong></div>"
+    elsif deltas
       audit_table += "<table class='audit-detail'><tr><th class'attribute'>Attribute</th><th class='old'>Was</th><th class='arrow'>&nbsp;</th><th class='new'>Changed To</th></tr>"
       deltas.each do |delta|
         name = delta[:name]
