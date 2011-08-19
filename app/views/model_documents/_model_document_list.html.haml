@@ -1,4 +1,4 @@
-- restrict_by_users ||= params[:restrict_by_users].map {|id| id.to_i}
+- restrict_by_users ||= (params[:restrict_by_users] && params[:restrict_by_users].respond_to?("map")) ? params[:restrict_by_users].map {|id| id.to_i} : []
 - documentable ||= nil
 - unless documentable
   - if params[:documentable_id] && params[:documentable_type]
