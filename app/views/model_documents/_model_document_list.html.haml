@@ -1,4 +1,4 @@
-- restrict_by_users ||= (params[:restrict_by_users] && params[:restrict_by_users].respond_to?("map")) ? params[:restrict_by_users].map {|id| id.to_i} : nil
+
 - documentable ||= nil
 - unless documentable
   - if params[:documentable_id] && params[:documentable_type]
@@ -8,8 +8,7 @@
   - required_doc_ids = params[:required_doc_ids].collect {|id| id.to_i} # params are strings, so convert to integers
 
 
--if restrict_by_users
-  -models = models.select{|model| restrict_by_users.include?(model.created_by_id) }
+-models = models.select{|model| current_user.has_view_for_model?(model) }
 
 - unless required_doc_ids.empty?
   - missing_doc_ids = required_doc_ids - models.map(&:model_document_type_id)
