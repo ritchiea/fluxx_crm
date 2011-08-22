@@ -6,7 +6,7 @@
       %span.caption
         - if user_admin_permission
           %span.caption= "(Admin)"
-          %span.actions= link_to 'remove admin role', user_admin_permission, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+          %span.actions= link_to 'remove admin role', user_admin_permission, {:class => 'as-delete', 'data-on-success' => 'refreshCaller', 'data-message' => 'You will remove admin access for this user. Are you sure?'}
         - else
           %span.actions= link_to 'add admin role', user_permissions_path(:user_permission => {:user_id => model.id, :name => 'admin'}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
 
