@@ -36,7 +36,7 @@
     = form.input :personal_email, :label => "Personal Email"
     = form.input :blog_url, :label => "Personal Blog", :placeholder => 'http://'
     = form.input :twitter_url, :label => 'Personal Twitter:'
-    = form.input :birth_at, :label => 'Birthday:'
+    = form.input :birth_at, :label => 'Birthday:', :"data-year-range" => "-100:-5"
 %fieldset.inputs
   %ol
     = form.input :assistant_name, :label => 'Assistant Name:'
