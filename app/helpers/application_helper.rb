@@ -117,40 +117,44 @@ module ApplicationHelper
     reflections_by_fk = calculate_reflections_by_fk(model) unless reflections_by_fk
     reflections_by_name = calculate_reflections_by_name(model) unless reflections_by_name
     audit_changes = audit.attributes['audit_changes'] || {}
-    deltas = audit_changes.keys.map do |k|
-      name = ''
-      old_value = ''
-      new_value = ''
-      change = audit_changes[k]
-      unless !change.is_a?(Array) || (change.first.blank? && change.second.blank?)
-        k_name = k.gsub /_id$/, ''
-        old_value, new_value = if reflections_by_fk[k] || reflections_by_name[k_name]
-          klass = if reflections_by_fk[k]
-            reflections_by_fk[k].class_name.constantize
+    deltas = if audit_changes.is_a?(Hash)
+      audit_changes.keys.map do |k|
+        name = ''
+        old_value = ''
+        new_value = ''
+        change = audit_changes[k]
+        unless !change.is_a?(Array) || (change.first.blank? && change.second.blank?)
+          k_name = k.gsub /_id$/, ''
+          old_value, new_value = if reflections_by_fk[k] || reflections_by_name[k_name]
+            klass = if reflections_by_fk[k]
+              reflections_by_fk[k].class_name.constantize
+            else
+              reflections_by_name[k_name].class_name.constantize
+            end
+            old_obj = klass.find(change[0]) rescue nil
+            new_obj = klass.find(change[1]) rescue nil
+            [(old_obj.respond_to?(:name) ? old_obj.name : old_obj.to_s),
+             (new_obj.respond_to?(:name) ? new_obj.name : new_obj.to_s)]
           else
-            reflections_by_name[k_name].class_name.constantize
+            [change[0], change[1]]
           end
-          old_obj = klass.find(change[0]) rescue nil
-          new_obj = klass.find(change[1]) rescue nil
-          [(old_obj.respond_to?(:name) ? old_obj.name : old_obj.to_s),
-           (new_obj.respond_to?(:name) ? new_obj.name : new_obj.to_s)]
-        else
-          [change[0], change[1]]
+          old_value = if old_value.blank?
+            nil
+          else
+            old_value.to_s.humanize
+          end
+          new_value = if new_value.blank?
+            nil
+          else
+            new_value.to_s.humanize
+          end
+          name = k.to_s.humanize
         end
-        old_value = if old_value.blank?
-          nil
-        else
-          old_value.to_s.humanize
-        end
-        new_value = if new_value.blank?
-          nil
-        else
-          new_value.to_s.humanize
-        end
-        name = k.to_s.humanize
-      end
-      {:name => name, :old_value => old_value, :new_value => new_value} unless name.blank? || new_value.blank? || ATTRIBUTE_NAMES_TO_FILTER.include?(k.to_s)
-    end.compact
+        {:name => name, :old_value => old_value, :new_value => new_value} unless name.blank? || new_value.blank? || ATTRIBUTE_NAMES_TO_FILTER.include?(k.to_s)
+      end.compact
+    else
+      []
+    end
   end
 
   def build_audit_table_and_summary model, audit, deltas
