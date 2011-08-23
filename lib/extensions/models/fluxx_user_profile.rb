@@ -39,6 +39,10 @@ module FluxxUserProfile
     def all_user_profile_map_by_name
       UserProfile.all_user_profile_map.values.inject({}) {|acc, up| acc[up.name] = up; acc}
     end
+    
+    def employee_profile
+      UserProfile.where(:name => 'Employee').first
+    end
   end
 
   module ModelInstanceMethods
