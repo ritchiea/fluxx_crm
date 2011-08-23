@@ -240,7 +240,7 @@ module FluxxCrmAlert
     end
     
     def trigger_and_mail_alerts_for controller_klass_names
-      Alert.find_each(:conditions => {:model_controller_type => controller_klass_names}) do |alert|
+      Alert.find_each(:conditions => {:model_controller_type => controller_klass_names, :group_models => 1}) do |alert|
         alert.with_triggered_alert! do |cur_alert, models|
           alert_emails = cur_alert.enqueue_for models
           if alert_emails.is_a?(Array)
