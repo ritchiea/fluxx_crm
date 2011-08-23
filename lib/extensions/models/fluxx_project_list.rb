@@ -27,7 +27,7 @@ module FluxxProjectList
 
   module ModelInstanceMethods
     def list_type_value
-      list_type.is_a? String
+      if list_type.is_a? String
         list_type
       else
         list_type.value
