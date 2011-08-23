@@ -26,14 +26,22 @@ module FluxxProjectList
   end
 
   module ModelInstanceMethods
+    def list_type_value
+      list_type.is_a? String
+        list_type
+      else
+        list_type.value
+      end
+    end
+    
     def is_numbered?
-      list_type && list_type.value == 'Numbers'
+      list_type && list_type_value == 'Numbers'
     end
     def is_bulleted?
-      list_type && list_type.value == 'Bulleted'
+      list_type && list_type_value == 'Bulleted'
     end
     def is_todo?
-      list_type && list_type.value == 'To-Do'
+      list_type && list_type_value == 'To-Do'
     end
   end
 end
