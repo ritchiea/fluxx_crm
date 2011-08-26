@@ -25,6 +25,9 @@ module FluxxGeoCountry
   end
 
   module ModelClassMethods
+    def select_options
+      GeoCountry.order('name asc').all.map {|country| [country.name, country.id]}
+    end
   end
 
   module ModelInstanceMethods
