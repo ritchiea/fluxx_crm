@@ -35,6 +35,29 @@ module FluxxWorkTasksController
       insta.icon_style = ICON_STYLE
     end
 
+    base.insta_related WorkTask do |insta|      
+      insta.add_related do |related|
+        related.display_name = 'People'
+        related.add_title_block do |model|
+          model.full_name if model
+        end
+        related.for_search do |model|
+          model.related_users
+        end
+        related.display_template = '/users/related_users'
+      end
+      insta.add_related do |related|
+        related.display_name = 'Projects'
+        related.add_title_block do |model|
+          model.title if model
+        end
+        related.for_search do |model|
+          model.related_projects
+        end
+        related.display_template = '/projects/related_project'
+      end
+    end
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods

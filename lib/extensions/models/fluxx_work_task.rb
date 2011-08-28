@@ -51,5 +51,15 @@ module FluxxWorkTask
         nil
       end
     end
+    
+    def related_users
+      [assigned_user]
+    end
+    
+    def related_projects
+      result = []
+      result << taskable if taskable.is_a?(Project)
+      result
+    end
   end
 end
