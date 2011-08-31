@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110826063044) do
+ActiveRecord::Schema.define(:version => 20110831224633) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -635,6 +635,7 @@ ActiveRecord::Schema.define(:version => 20110826063044) do
     t.string   "last_login_ip"
     t.boolean  "test_user_flag",                               :default => false
     t.string   "linkedin_url"
+    t.string   "facebook_url"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"
