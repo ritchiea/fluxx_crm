@@ -17,9 +17,12 @@
         %li.action-item
           %input{:type=>"checkbox", :class => 'as-put', 'data-on-success' => 'refreshCaller', :href => work_task_path(:id => model.id, :work_task => {:task_completed => !model.task_completed}), :checked => model.task_completed}
           = model.task_text
-          %p.desc
-            = model.assigned_user ? "Assigned to #{model.assigned_user.full_name} | " : ''
-            = "Due #{model.due_at ? model.due_at.mdy : ''}"
+          %p
+          .desc
+            - info = []
+            - info.push "Assigned to #{model.assigned_user.full_name}" if model.assigned_user
+            - info.push "Due #{model.due_at.mdy}" if model.due_at
+            = info.join(' | ')
           %span.actions
             = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), work_task_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
       - unless completed_tasks.empty? || pending_tasks.empty?
@@ -28,9 +31,12 @@
         %li.action-item
           %input{:type=>"checkbox", :class => 'as-put', 'data-on-success' => 'refreshCaller', :href => work_task_path(:id => model.id, :work_task => {:task_completed => !model.task_completed}), :checked => model.task_completed}
           = model.task_text
-          %p.desc
-            = model.assigned_user ? "Completed by #{model.assigned_user.full_name} on " : ''
-            = " #{model.updated_at ? model.updated_at.mdy : ''}"
+          %p
+          .desc
+            - info = []
+            - info.push "Completed by #{model.assigned_user.full_name}" if model.assigned_user
+            - info.push model.completed_at.mdy if model.completed_at
+            = info.join(' on ')
           %span.actions
             = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), work_task_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
 
