@@ -10,13 +10,30 @@
     There are no tasks.
   - else
     %ul.todo
-      - models.sort_by{|task| task.created_at ? (-1 * task.created_at.to_i) : Time.at(0).to_i }.each do |model|
+      - models = models.sort_by{|task| task.created_at ? (-1 * task.created_at.to_i) : Time.at(0).to_i }
+      - pending_tasks = models.select{|model| !model.task_completed}
+      - completed_tasks = models.select{|model| model.task_completed}
+      - pending_tasks.each do |model|
         %li.action-item
           %input{:type=>"checkbox", :class => 'as-put', 'data-on-success' => 'refreshCaller', :href => work_task_path(:id => model.id, :work_task => {:task_completed => !model.task_completed}), :checked => model.task_completed}
           = model.task_text
-          %p.desc= "Due #{model.due_at ? model.due_at.mdy : ''}#{model.assigned_user ? ", Assigned to #{model.assigned_user.full_name}" : ''}"
+          %p.desc
+            = model.assigned_user ? "Assigned to #{model.assigned_user.full_name} | " : ''
+            = "Due #{model.due_at ? model.due_at.mdy : ''}"
           %span.actions
             = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), work_task_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+      - unless completed_tasks.empty? || pending_tasks.empty?
+        %hr
+      - completed_tasks.each do |model|
+        %li.action-item
+          %input{:type=>"checkbox", :class => 'as-put', 'data-on-success' => 'refreshCaller', :href => work_task_path(:id => model.id, :work_task => {:task_completed => !model.task_completed}), :checked => model.task_completed}
+          = model.task_text
+          %p.desc
+            = model.assigned_user ? "Completed by #{model.assigned_user.full_name} on " : ''
+            = " #{model.updated_at ? model.updated_at.mdy : ''}"
+          %span.actions
+            = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png"), work_task_path(model), {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+
 - else
   %h2= model.task_text
   %h4= "Assigned to: #{model.assigned_user.full_name}" if model.assigned_user
