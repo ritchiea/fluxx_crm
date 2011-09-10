@@ -127,12 +127,20 @@ namespace :fluxx_crm do
     a = Dir.glob("#{Rails.root}/public/system/documents/*/original/*")
     a.each do |filepath|
       begin
-        filepath =~ /system\/documents\/(.*)\/original\/(.*)$/
-        model_id = $1
-        filename = $2
+        doc = if filepath =~ /system\/documents\/(.*)_(.*)\/original\/(.*)$/
+          client_id = $1
+          model_id = $2
+          filename = $3
+          Client.use client_id
+          ModelDocument.find model_id
+        else
+          filepath =~ /system\/documents\/(.*)\/original\/(.*)$/
+          model_id = $1
+          filename = $2
+          ModelDocument.find model_id
+        end
 
         p "ESH: for filepath=#{filepath}, have model_id = #{model_id}"
-        doc = ModelDocument.find model_id
         file = File.open filepath
         doc.document = file
         p "ESH: for filepath=#{filepath}, about to save"

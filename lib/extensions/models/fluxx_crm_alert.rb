@@ -76,7 +76,7 @@ module FluxxCrmAlert
 
   class_methods do
     def board_or_employee_recipients
-      User.joins(:user_profile).where("user_profiles.name = 'Employee' OR user_profiles.name = 'Board'").order("users.first_name, users.last_name ASC")
+      User.joins(:user_profile).where(:deleted_at => nil).where("user_profiles.name = 'Employee' OR user_profiles.name = 'Board'").order("users.first_name, users.last_name ASC")
     end
     
     def resolve_for_dashboard dashboard, cards
