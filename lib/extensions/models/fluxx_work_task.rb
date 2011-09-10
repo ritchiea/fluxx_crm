@@ -62,7 +62,9 @@ module FluxxWorkTask
     
     def related_projects
       result = []
-      result << taskable if taskable.is_a?(Project)
+      # AML: This is throwing an error for some reason for certain taksks
+      t = taskable rescue nil
+      result << t if t.is_a?(Project)
       result
     end
   end
