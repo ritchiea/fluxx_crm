@@ -81,6 +81,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_alert_email_params.rb', 'db/migrate/fluxx_crm_add_alert_email_params.rb'
     handle_migration 'add_linkedin_field_to_user.rb', 'db/migrate/fluxx_crm_add_linkedin_field_to_user.rb'
     handle_migration 'add_facebook_field_to_user.rb', 'db/migrate/fluxx_crm_add_facebook_field_to_user.rb'
+    handle_migration 'add_organizations_parent_deleted_index.rb', 'db/migrate/fluxx_crm_add_organizations_parent_deleted_index.rb'
   end
   
   private
