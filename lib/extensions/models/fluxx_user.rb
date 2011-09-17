@@ -2,7 +2,7 @@ require 'net/ldap'
 module FluxxUser
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name, :user_profile_id]
-  LIQUID_METHODS = [:salutation, :prefix, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization,:personal_street_address, :personal_street_address2, :personal_city, :personal_state_name, :personal_postal_code]  
+  LIQUID_METHODS = [:salutation, :prefix, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization, :personal_street_address, :personal_street_address2, :personal_city, :personal_state_name, :personal_postal_code, :personal_country_name]  
 
   def self.included(base)
     base.has_many :user_organizations
@@ -483,6 +483,10 @@ module FluxxUser
     
     def personal_state_name
       personal_geo_state.name if personal_geo_state
+    end
+    
+    def personal_country_name
+      personal_geo_country.name if personal_geo_country
     end
     
     ######################################### AUTHLOGIC / LDAP
