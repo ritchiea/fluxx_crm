@@ -130,7 +130,7 @@ module FluxxUser
       ldap.encryption LDAP_CONFIG[:encryption] if LDAP_CONFIG[:encryption]
       ldap.auth LDAP_CONFIG[:bind_dn], LDAP_CONFIG[:password]
       filter = Net::LDAP::Filter.eq(LDAP_CONFIG[:login_attr], login) 
-      results = ldap.search(:filter => filter) 
+      results = ldap.search(:filter => filter) rescue []
       results.each do |entry|
         logger.info "FOUND IN LDAP:  #{login}"
         return entry
