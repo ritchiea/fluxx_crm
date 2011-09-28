@@ -81,43 +81,48 @@ module FluxxCrmAlert
     
     def resolve_for_dashboard dashboard, cards
       existing_dashboard_alerts = Alert.where(:dashboard_id => dashboard.id).all rescue []
-      updated_dashboard_cards = cards.inject({}){|acc, card| acc[card[:dashboard_card_id].to_i] = card; acc}
       
-      # Delete existing alerts that no longer are alerted cards
-      alerts_to_delete = existing_dashboard_alerts.reject {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
-      alerts_to_delete.each {|alert| alert.safe_delete(dashboard.user)}
+      if dashboard.deleted_at
+        existing_dashboard_alerts.each {|alert| alert.destroy}
+      else
+        updated_dashboard_cards = cards.inject({}){|acc, card| acc[card[:dashboard_card_id].to_i] = card; acc}
       
-      # Update existing alerts that are still present
-      alerts_to_update = existing_dashboard_alerts.select {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
-      alerts_to_update.each do |alert|
-        controller_klass = alert.model_controller_type.constantize
-        card = updated_dashboard_cards[alert.dashboard_card_id]
-        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
-        filter = card[:filter]
-        alert.filter = filter ? filter.to_json : ''
-        alert.model_controller_type = card[:model_controller_type]
-        alert.subject = subject
-        alert.body = body
-        alert.save
-      end
+        # Delete existing alerts that no longer are alerted cards
+        alerts_to_delete = existing_dashboard_alerts.reject {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
+        alerts_to_delete.each {|alert| alert.safe_delete(dashboard.user)}
+      
+        # Update existing alerts that are still present
+        alerts_to_update = existing_dashboard_alerts.select {|alert| updated_dashboard_cards[alert.dashboard_card_id]}
+        alerts_to_update.each do |alert|
+          controller_klass = alert.model_controller_type.constantize
+          card = updated_dashboard_cards[alert.dashboard_card_id]
+          subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
+          filter = card[:filter]
+          alert.filter = filter ? filter.to_json : ''
+          alert.model_controller_type = card[:model_controller_type]
+          alert.subject = subject
+          alert.body = body
+          alert.save
+        end
         
-      # Insert new alerts that did not exist before
-      existing_dashboard_alert_ids = existing_dashboard_alerts.map{|alert| alert.dashboard_card_id}
-      alerts_to_create = updated_dashboard_cards.reject{|key, card| existing_dashboard_alert_ids.include?(card[:dashboard_card_id])}.values.compact
-      last_rtu = RealtimeUpdate.last
-      alerts_to_create.each do |card| 
-        filter = card['filter']
-        controller_klass = card[:model_controller_type]
-        subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
-        alert = Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
-          :last_realtime_update_id => (last_rtu ? last_rtu.id : 0),
-          :model_controller_type => card[:model_controller_type],
-          :filter => (filter ? filter.to_json : ''),
-          :group_models => true,
-          :subject => subject,
-          :body => body
-        alert_expr = AlertRecipient.where(:alert_id => alert.id, :user_id => dashboard.user_id)
-        alert_expr.create! unless alert_expr.first
+        # Insert new alerts that did not exist before
+        existing_dashboard_alert_ids = existing_dashboard_alerts.map{|alert| alert.dashboard_card_id}
+        alerts_to_create = updated_dashboard_cards.reject{|key, card| existing_dashboard_alert_ids.include?(card[:dashboard_card_id])}.values.compact
+        last_rtu = RealtimeUpdate.last
+        alerts_to_create.each do |card| 
+          filter = card['filter']
+          controller_klass = card[:model_controller_type]
+          subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
+          alert = Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
+            :last_realtime_update_id => (last_rtu ? last_rtu.id : 0),
+            :model_controller_type => card[:model_controller_type],
+            :filter => (filter ? filter.to_json : ''),
+            :group_models => true,
+            :subject => subject,
+            :body => body
+          alert_expr = AlertRecipient.where(:alert_id => alert.id, :user_id => dashboard.user_id)
+          alert_expr.create! unless alert_expr.first
+        end
       end
     end
     

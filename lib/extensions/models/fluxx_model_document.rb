@@ -8,6 +8,7 @@ module FluxxModelDocument
     base.belongs_to :model_document_type
     base.send :attr_accessor, :model_document_actual_filename
     
+    base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :modified_by_id, :locked_until, :locked_by_id, :delta, :updated_by, :created_by, :audits]})
 
     Paperclip.interpolates :primary_uid  do |attachment, style|
      attachment.instance.primary_uid
