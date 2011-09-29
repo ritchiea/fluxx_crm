@@ -1,4 +1,4 @@
-%h1.minimize-detail-pull= [model.first_name, model.middle_initial, model.last_name].join ' '
+%h1.minimize-detail-pull= [model.prefix, model.first_name, model.middle_initial, model.last_name].join ' '
 = model.user_profile.name if model.user_profile
 - primary_user_org = model.primary_user_organization
 - if primary_user_org
@@ -28,6 +28,9 @@
             &nbsp;
         - if primary_user_org.organization.postal_code
           %span.zipcode= primary_user_org.organization.postal_code
+        - if primary_user_org.organization.country_name
+          %br
+          %span.country= primary_user_org.organization.country_name
   - build_user_work_contact_details(primary_user_org, model).each do |name, value|
     - unless value.blank?
       .pairs
@@ -51,6 +54,9 @@
       %abbr{:title => model.personal_geo_state}= model.personal_geo_state.abbreviation
     - if model.personal_postal_code
       %span.zipcode= model.personal_postal_code
+    - if model.personal_country_name
+      %br
+      %span.country= model.personal_country_name
   - unless model.personal_phone.blank?
     .pairs
       .key Home Phone
