@@ -36,7 +36,7 @@ module FluxxModelDocumentTemplate
     def reload_all_templated_model_documents
       ModelDocumentTemplate.reload_all_doc_templates
 
-      ModelDocumentTemplate.connection.execute 'update model_documents, model_document_templates set model_documents.document_text = model_document_templates.document where model_documents.model_document_template_id = model_document_templates.id'
+      ModelDocumentTemplate.connection.execute 'update model_documents, model_document_templates set model_documents.document_text = model_document_templates.document, model_documents.document_content_type = model_document_templates.document_content_type where model_documents.model_document_template_id = model_document_templates.id'
     end
     
     def reload_all_doc_templates

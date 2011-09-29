@@ -63,6 +63,21 @@ module FluxxModelDocumentsController
     base.insta_show ModelDocument do |insta|
       insta.template = 'model_document_show'
       insta.icon_style = ICON_STYLE
+      
+      insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          if !@model.document_content_type.blank? && @model.documentable && @model.documentable.respond_to?(:process_liquid_template)
+            # set content type and filename
+            add_headers @model.document_file_name, @model.document_content_type
+            # call template
+            render :text => @model.documentable.process_liquid_template(@model.document_text, view_context)
+          else
+            default_block.call
+          end
+        end
+      end
+      
     end
     base.extend(ModelClassMethods)
     base.class_eval do

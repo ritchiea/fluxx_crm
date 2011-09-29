@@ -247,7 +247,7 @@ class ActiveRecord::Base
         if changed_attributes.include?('state') && self.respond_to?(:model_documents)
           ModelDocumentTemplate.where(:model_type => self.class.name, :generate_state => state).all.each do |template|
             next if model_documents.map(&:model_document_template_id).include?(template.id) # skip if already exists
-            model_documents.build(:document_type => :text, :document_text => template.document, :model_document_template_id => template.id, :document_file_name => template.description) if template
+            model_documents.build(:document_type => :text, :document_text => template.document, :model_document_template_id => template.id, :document_file_name => template.description, :document_content_type => template.document_content_type) if template
           end
         end
       end
