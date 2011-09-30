@@ -2,11 +2,6 @@ require 'rails/generators'
 require 'rails/generators/migration'
 
 class FluxxCrmMigrationGenerator < Rails::Generators::Base
-  def correct_project_table_to_leave_project_id_to_model_attr_choices
-    handle_migration 'correct_project_table_to_leave_project_id_to_model_attr_choices.rb', 'db/migrate/fluxx_crm_correct_project_table_to_leave_project_id_to_model_attr_choices.rb'
-    sleep 1
-  end
-
   include Rails::Generators::Migration
 
   def self.source_root
