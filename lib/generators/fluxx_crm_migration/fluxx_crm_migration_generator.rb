@@ -83,6 +83,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_facebook_field_to_user.rb', 'db/migrate/fluxx_crm_add_facebook_field_to_user.rb'
     handle_migration 'add_organizations_parent_deleted_index.rb', 'db/migrate/fluxx_crm_add_organizations_parent_deleted_index.rb'
     handle_migration 'add_document_type_to_model_document_types.rb', 'db/migrate/fluxx_crm_add_document_type_to_model_document_types.rb'
+    handle_migration 'correct_abbreviation_column_for_geo_states.rb', 'db/migrate/fluxx_crm_correct_abbreviation_column_for_geo_states.rb'
   end
   
   private
