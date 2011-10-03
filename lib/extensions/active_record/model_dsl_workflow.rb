@@ -305,7 +305,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def alert_on_state_change model_klass, state
-    Alert.delay.trigger_and_mail_state_change_alerts_for (model_klass.all_controllers.map(&:name), state)
+    Alert.delay.trigger_and_mail_state_change_alerts_for(model_klass.all_controllers.map(&:name), state)
   end
 end
 
