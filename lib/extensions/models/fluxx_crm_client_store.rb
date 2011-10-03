@@ -11,7 +11,7 @@ module FluxxCrmClientStore
   
   class_methods do
     def dashboard_card_gets_email? card
-      card["settings"] && card["settings"]["emailNotifications"]
+      card["settings"] && card["settings"]["emailNotifications"] && card["settings"]["emailNotifications"].is_a?(TrueClass)
     end
   end
   
