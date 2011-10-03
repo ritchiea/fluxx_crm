@@ -101,6 +101,8 @@ class ActiveRecord::Base
         before_update :track_workflow_update
         before_destroy :track_workflow_destroy
         before_save :generate_docs
+        after_save :alert_on_state_change
+        after_create :alert_on_state_change
         
         def without_workflow(&block)
           workflow_was_disabled = workflow_object.workflow_disabled
@@ -166,6 +168,12 @@ class ActiveRecord::Base
         
         def all_state_categories_with_descriptions 
           workflow_object.all_state_categories_with_descriptions self
+        end
+      end
+      
+      define_method :alert_on_state_change do
+        if Alert.respond_to?(:any_for?) && Alert.any_for?(self.class) && state_changed?
+          workflow_object.alert_on_state_change self.class, state
         end
       end
       
@@ -251,7 +259,6 @@ class ActiveRecord::Base
           end
         end
       end
-      
     end
   end
 
@@ -304,7 +311,7 @@ class ActiveRecord::Base
     # Never alert on a ClientStore update
     unless self.is_a?(ClientStore)
       if Alert.respond_to?(:any_for?) && Alert.any_for?(self.class)
-        Alert.delay.trigger_and_mail_alerts_for self.class.all_controllers.map(&:name)
+        ActiveRecord::ModelDslAlert.trigger_and_mail_alerts_for self.class.all_controllers.map(&:name)
       end
     end
   end

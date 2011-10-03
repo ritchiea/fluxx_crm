@@ -84,6 +84,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_organizations_parent_deleted_index.rb', 'db/migrate/fluxx_crm_add_organizations_parent_deleted_index.rb'
     handle_migration 'add_document_type_to_model_document_types.rb', 'db/migrate/fluxx_crm_add_document_type_to_model_document_types.rb'
     handle_migration 'correct_abbreviation_column_for_geo_states.rb', 'db/migrate/fluxx_crm_correct_abbreviation_column_for_geo_states.rb'
+    handle_migration 'add_state_transition_condition_to_alerts.rb', 'db/migrate/fluxx_crm_add_state_transition_condition_to_alerts.rb'
   end
   
   private

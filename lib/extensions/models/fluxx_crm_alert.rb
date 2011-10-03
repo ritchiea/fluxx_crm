@@ -244,6 +244,19 @@ module FluxxCrmAlert
       5000
     end
     
+    def trigger_and_mail_state_change_alerts_for controller_klass_names, new_state
+      Alert.where({:model_controller_type => controller_klass_names, :state_driven => 1, :state_driven_transition => new_state}).all.each do |alert|
+        alert.with_triggered_alert! do |cur_alert, models|
+          alert_emails = cur_alert.enqueue_for models
+          if alert_emails.is_a?(Array)
+            alert_emails.compact.each {|email| email.deliver}
+          else
+            alert_emails.deliver
+          end
+        end
+      end
+    end
+    
     def trigger_and_mail_alerts_for controller_klass_names
       Alert.find_each(:conditions => {:model_controller_type => controller_klass_names, :group_models => 1}) do |alert|
         alert.with_triggered_alert! do |cur_alert, models|
@@ -257,8 +270,9 @@ module FluxxCrmAlert
       end
     end
     
+    # These are programmed alerts that are not driven as state changes or from checked cards in dashboards
     def with_triggered_alerts!(&alert_processing_block)
-      Alert.find_each do |alert|
+      Alert.where(:group_models => 0, :state_driven => 0).all.each do |alert|
         alert.with_triggered_alert!(&alert_processing_block)
       end
     end
