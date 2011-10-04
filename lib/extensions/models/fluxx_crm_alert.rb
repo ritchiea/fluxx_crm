@@ -299,17 +299,17 @@ module FluxxCrmAlert
       form_name = self.controller_klass.class_index_object.model_class.calculate_form_name
       model_params = filter_params[form_name] || {}
       matched_models = if self.has_time_based_filtered_attrs?
-        model_params['id'] = model_ids
+        model_params['id'] = model_ids if model_ids && !model_ids.empty?
         self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_time_based_alert_results)
       else
         rtu_matched_ids = self.model_ids_matched_through_rtus
         if rtu_matched_ids && !rtu_matched_ids.empty?
-          model_params['id'] = (rtu_matched_ids & model_ids)
-          filter_params[form_name] = model_params
-          self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
-        else
-          []
+          model_params['id'] = rtu_matched_ids
+        elsif model_ids && !model_ids.empty?
+          model_params['id'] = model_ids
         end
+        filter_params[form_name] = model_params
+        self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
       end
 
       alert_processing_block.call(self, matched_models.compact.uniq) unless matched_models.empty?
