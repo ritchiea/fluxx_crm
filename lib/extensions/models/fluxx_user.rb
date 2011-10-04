@@ -28,6 +28,8 @@ module FluxxUser
     base.has_many :bank_accounts, :foreign_key => :owner_user_id
     base.acts_as_audited({:full_model_enabled => false, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
     base.before_save :preprocess_user
+    base.send :attr_accessor, :temp_organization_title
+    base.send :attr_accessor, :temp_organization_id
     
     
     base.acts_as_authentic do |c|

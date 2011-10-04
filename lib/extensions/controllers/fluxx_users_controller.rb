@@ -35,7 +35,20 @@ module FluxxUsersController
     base.insta_post User do |insta|
       insta.template = 'user_form'
       insta.icon_style = ICON_STYLE
+      
+      # Add in a post method to create a user org if the organization_id param is passed in
+      insta.post do |triple|
+        controller_dsl, model, outcome = triple
+        # Check to see if there was an organization passed in to use to create a user organization
+        user = model
+        org = Organization.where(:id => user.temp_organization_id).first
+        if org 
+          user_org = UserOrganization.where(['organization_id = ? AND user_id = ?', org.id, user.id]).first
+          user_org || UserOrganization.create(:user => user, :organization => org, :title => user.temp_organization_title)
+        end
+      end
     end
+    
     base.insta_put User do |insta|
       insta.template = 'user_form'
       insta.icon_style = ICON_STYLE
