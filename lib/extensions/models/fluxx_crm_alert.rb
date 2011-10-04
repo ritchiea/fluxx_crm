@@ -244,9 +244,9 @@ module FluxxCrmAlert
       5000
     end
     
-    def trigger_and_mail_state_change_alerts_for controller_klass_names, new_state
+    def trigger_and_mail_state_change_alerts_for model_id, controller_klass_names, new_state
       Alert.where({:model_controller_type => controller_klass_names, :state_driven => 1, :state_driven_transition => new_state}).all.each do |alert|
-        alert.with_triggered_alert! do |cur_alert, models|
+        alert.with_triggered_alert!([model_id]) do |cur_alert, models|
           alert_emails = cur_alert.enqueue_for models
           if alert_emails.is_a?(Array)
             alert_emails.compact.each {|email| email.deliver}
@@ -284,7 +284,7 @@ module FluxxCrmAlert
       model_controller_type.constantize
     end
 
-    def with_triggered_alert!(&alert_processing_block)
+    def with_triggered_alert!(model_ids=[], &alert_processing_block)
       # Find models that match this filter
       model_filter = unless self.filter.blank?
         JSON.parse(self.filter) 
@@ -292,17 +292,19 @@ module FluxxCrmAlert
         {}
       end
       filter_params=self.filter_as_hash
+      
       controller = self.controller_klass.new
       # Add an admin user as the current user for doing the search to bypass the controller perms check
       controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
+      form_name = self.controller_klass.class_index_object.model_class.calculate_form_name
+      model_params = filter_params[form_name] || {}
       matched_models = if self.has_time_based_filtered_attrs?
+        model_params['id'] = model_ids
         self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_time_based_alert_results)
       else
         rtu_matched_ids = self.model_ids_matched_through_rtus
         if rtu_matched_ids && !rtu_matched_ids.empty?
-          form_name = self.controller_klass.class_index_object.model_class.calculate_form_name
-          model_params = filter_params[form_name] || {}
-          model_params['id'] = rtu_matched_ids
+          model_params['id'] = (rtu_matched_ids & model_ids)
           filter_params[form_name] = model_params
           self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_alert_results)
         else

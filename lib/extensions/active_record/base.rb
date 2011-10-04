@@ -173,7 +173,7 @@ class ActiveRecord::Base
       
       define_method :alert_on_state_change do
         if Alert.respond_to?(:any_for?) && Alert.any_for?(self.class) && state_changed?
-          workflow_object.alert_on_state_change self.class, state
+          workflow_object.alert_on_state_change self, state
         end
       end
       
