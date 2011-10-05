@@ -8,6 +8,8 @@ module FluxxGroup
     
     base.insta_search
 
+    base.insta_export
+
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
