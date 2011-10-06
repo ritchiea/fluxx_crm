@@ -27,6 +27,8 @@ module FluxxCrmBlueprint
       persistence_token random_word
     end
 
+    AlertTransitionState.blueprint do
+    end
 
     Organization.blueprint do
       name Sham.company_name

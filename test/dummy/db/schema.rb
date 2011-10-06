@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111005182833) do
+ActiveRecord::Schema.define(:version => 20111006215948) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -34,6 +34,19 @@ ActiveRecord::Schema.define(:version => 20111005182833) do
     t.datetime "updated_at"
   end
 
+  create_table "alert_transition_states", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.integer  "alert_id"
+    t.string   "state"
+  end
+
+  add_index "alert_transition_states", ["alert_id"], :name => "alert_transition_states_alert_id"
+  add_index "alert_transition_states", ["created_by_id"], :name => "alert_transition_states_created_by_id"
+  add_index "alert_transition_states", ["updated_by_id"], :name => "alert_transition_states_updated_by_id"
+
   create_table "alerts", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -49,7 +62,6 @@ ActiveRecord::Schema.define(:version => 20111005182833) do
     t.integer  "dashboard_card_id"
     t.boolean  "group_models",            :default => false, :null => false
     t.boolean  "state_driven",            :default => false, :null => false
-    t.string   "state_driven_transition"
   end
 
   add_index "alerts", ["dashboard_id"], :name => "alerts_dashboard_id"

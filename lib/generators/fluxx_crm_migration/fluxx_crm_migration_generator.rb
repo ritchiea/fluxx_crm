@@ -86,6 +86,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'correct_abbreviation_column_for_geo_states.rb', 'db/migrate/fluxx_crm_correct_abbreviation_column_for_geo_states.rb'
     handle_migration 'add_state_transition_condition_to_alerts.rb', 'db/migrate/fluxx_crm_add_state_transition_condition_to_alerts.rb'
     handle_migration 'add_foreign_language_name_field_to_org.rb', 'db/migrate/fluxx_crm_add_foreign_language_name_field_to_org.rb'
+    handle_migration 'create_alert_transition_state.rb', 'db/migrate/fluxx_crm_create_alert_transition_state.rb'
   end
   
   private
