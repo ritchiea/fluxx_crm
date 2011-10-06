@@ -21,9 +21,10 @@ module FluxxModelDocument
          :path => "/documents/:primary_uid/:filename"
     else
       # Use primary_uid instead of the default id
-      base.has_attached_file :document, :url => "/system/:attachment/:primary_uid/:style/:filename"
+      base.has_attached_file :document, :path => ":rails_root/public/system/:attachment/:primary_uid/:style/:filename", :url => "/system/:attachment/:primary_uid/:style/:filename"
     end
     base.before_post_process :transliterate_file_name
+    base.after_post_process :transliterate_file_name
     
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
@@ -57,7 +58,10 @@ module FluxxModelDocument
     end
     
     def transliterate_file_name
-      self.document.instance_write(:file_name, CGI::unescape(model_document_actual_filename)) if model_document_actual_filename
+      if model_document_actual_filename
+        self.document.instance_write(:file_name, CGI::unescape(model_document_actual_filename)) 
+        self.document.instance_write(:uploaded_filename, CGI::unescape(model_document_actual_filename)) 
+      end
     end
 
     def relates_to_user? user
