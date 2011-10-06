@@ -25,6 +25,7 @@ module FluxxCrmAlert
 
   when_included do
     has_many :alert_emails, :dependent => :destroy
+    has_many :alert_transition_states, :dependent => :destroy
     has_many :alert_recipients, :dependent => :destroy
     has_many :alert_users, :class_name => AlertRecipient.name, :conditions => ["alert_recipients.user_id IS NOT NULL"]
     has_many :recipients, :through => :alert_users, :source => 'user'
@@ -245,7 +246,7 @@ module FluxxCrmAlert
     end
     
     def trigger_and_mail_state_change_alerts_for model_id, controller_klass_names, new_state
-      Alert.where({:model_controller_type => controller_klass_names, :state_driven => 1, :state_driven_transition => new_state}).all.each do |alert|
+      Alert.joins(:alert_transition_states).where({:model_controller_type => controller_klass_names, :state_driven => 1, :alert_transition_states => {:state => new_state}}).all.each do |alert|
         alert.with_triggered_alert!([model_id]) do |cur_alert, models|
           alert_emails = cur_alert.enqueue_for models
           if alert_emails.is_a?(Array)
