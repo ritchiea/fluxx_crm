@@ -57,22 +57,22 @@ module FluxxCrmAlert
     attr_matcher :name => :overdue_by_days, :attribute => :due_at, :comparer => "overdue_by"
 
     attr_recipient_role :program_lead,
-                        :recipient_finder => lambda{|request_report| request_report.request.program_lead }
+                        :recipient_finder => lambda{|cur_model| cur_model.respond_to?(:request) ? cur_model.request.program_lead : cur_model.program_lead }
 
     attr_recipient_role :grantee_org_owner,
-                        :recipient_finder => lambda{|request_report| request_report.request.grantee_org_owner },
+                        :recipient_finder => lambda{|cur_model| cur_model.respond_to?(:request) ? cur_model.request.grantee_org_owner : cur_model.grantee_org_owner },
                         :friendly_name => "Primary contact"
 
     attr_recipient_role :grantee_signatory,
-                        :recipient_finder => lambda{|request_report| request_report.request.grantee_signatory },
+                        :recipient_finder => lambda{|cur_model| cur_model.respond_to?(:request) ? cur_model.request.grantee_signatory : cur_model.grantee_signatory },
                         :friendly_name => "Primary signatory"
 
     attr_recipient_role :fiscal_org_owner,
-                        :recipient_finder => lambda{|request_report| request_report.request.fiscal_org_owner },
+                        :recipient_finder => lambda{|cur_model| cur_model.respond_to?(:request) ? cur_model.request.fiscal_org_owner : cur_model.fiscal_org_owner },
                         :friendly_name => "Fiscal organization owner"
 
     attr_recipient_role :fiscal_signatory,
-                        :recipient_finder => lambda{|request_report| request_report.request.program_lead }
+                        :recipient_finder => lambda{|cur_model| cur_model.respond_to?(:request) ? cur_model.request.program_lead : cur_model.program_lead }
   end
 
   class_methods do
