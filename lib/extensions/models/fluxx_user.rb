@@ -256,6 +256,10 @@ module FluxxUser
       role_user.destroy if role_user
     end
     
+    def has_related_role? related_klass
+      is_admin? || role_users.joins(:role).where(:roles => {:roleable_type => related_klass.name}).exists?
+    end
+    
     # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
     def has_role_user? role_name, related_object = nil
       return true if is_admin?
