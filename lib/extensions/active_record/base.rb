@@ -1,5 +1,6 @@
 class ActiveRecord::Base
   @@all_workflow_classnames= []
+  @@all_formbuilder_classnames= []
   
   def self.insta_favorite
     has_many :favorites, :as => :favorable
@@ -55,7 +56,10 @@ class ActiveRecord::Base
     end
   end
   
-  
+  def self.insta_formbuilder
+    @@all_formbuilder_classnames << self.name
+  end
+
   def self.insta_workflow
     if respond_to?(:workflow_object) && workflow_object
       yield workflow_object if block_given?
@@ -264,6 +268,10 @@ class ActiveRecord::Base
 
   def self.all_workflow_classnames
     @@all_workflow_classnames.sort
+  end
+
+  def self.all_formbuilder_classnames
+    (@@all_formbuilder_classnames + @@all_workflow_classnames).compact.sort
   end
   
   def state_past state_array, marker_state, current_state
