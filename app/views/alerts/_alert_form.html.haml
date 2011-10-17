@@ -11,9 +11,9 @@
         = form.input :body
         = form.input :recipients, :as => :select, :collection => Alert.board_or_employee_recipients
 
-        - if model_klass.respond_to?(:all_states)
+        - if model_klass.respond_to?(:all_states) && defined?(MachineState)
           = form.input :state_driven
-          = form.input :alert_transition_states, :label => 'Transition States:', :required => false, :as => :select, :collection => ((model_klass.all_states).map{|state|[model_klass.state_to_english_translation(state), state]})
+          = form.input :machine_states, :label => 'Transition States:', :required => false, :as => :select, :collection => ((model_klass.all_states).map{|state|machine_state = MachineState.where(:name => state, :model_type => model_klass.name).first; [model_klass.state_to_english_translation(state), machine_state.id] if machine_state}.compact)
         - @model.class.recipient_roles.keys.map(&:to_s).sort.each do |role_name|
           = form.input role_name, :as => :boolean, :label => @model.class.recipient_roles[role_name.to_sym][:friendly_name]
       = form.buttons :commit

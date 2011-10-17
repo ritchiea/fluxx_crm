@@ -26,6 +26,8 @@ module FluxxCrmAlert
   when_included do
     has_many :alert_emails, :dependent => :destroy
     has_many :alert_transition_states, :dependent => :destroy
+    has_many :machine_states, :through => :alert_transition_states
+    
     has_many :alert_recipients, :dependent => :destroy
     has_many :alert_users, :class_name => AlertRecipient.name, :conditions => ["alert_recipients.user_id IS NOT NULL"]
     has_many :recipients, :through => :alert_users, :source => 'user'
@@ -246,13 +248,16 @@ module FluxxCrmAlert
     end
     
     def trigger_and_mail_state_change_alerts_for model_id, controller_klass_names, new_state
-      Alert.joins(:alert_transition_states).where({:model_controller_type => controller_klass_names, :state_driven => 1, :alert_transition_states => {:state => new_state}}).all.each do |alert|
-        alert.with_triggered_alert!([model_id]) do |cur_alert, models|
-          alert_emails = cur_alert.enqueue_for models
-          if alert_emails.is_a?(Array)
-            alert_emails.compact.each {|email| email.deliver}
-          else
-            alert_emails.deliver
+      
+      if defined? MachineState
+        Alert.joins(:alert_transition_states => :machine_state).where({:model_controller_type => controller_klass_names, :state_driven => 1, :alert_transition_states => {:machine_state_id => {:machine_states => {:name => new_state}}}}).all.each do |alert|
+          alert.with_triggered_alert!([model_id]) do |cur_alert, models|
+            alert_emails = cur_alert.enqueue_for models
+            if alert_emails.is_a?(Array)
+              alert_emails.compact.each {|email| email.deliver}
+            else
+              alert_emails.deliver
+            end
           end
         end
       end
@@ -297,8 +302,13 @@ module FluxxCrmAlert
       controller = self.controller_klass.new
       # Add an admin user as the current user for doing the search to bypass the controller perms check
       controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
-      form_name = self.controller_klass.class_index_object.model_class.calculate_form_name
+      model_klass = self.controller_klass.class_index_object.model_class
+      form_name = model_klass.calculate_form_name
       model_params = filter_params[form_name] || {}
+      
+      # Before we call sphinx, make sure we reindex any delta indices that might be pending...
+      model_klass.force_inline_delta_index
+      
       matched_models = if self.has_time_based_filtered_attrs?
         model_params['id'] = model_ids if model_ids && !model_ids.empty?
         self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_time_based_alert_results)
