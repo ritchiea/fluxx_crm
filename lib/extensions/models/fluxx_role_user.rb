@@ -5,6 +5,8 @@ module FluxxRoleUser
     base.belongs_to :user
     base.belongs_to :role
     base.after_save :update_related_data
+    base.after_create :update_related_data
+    base.after_destroy :update_related_data
     base.insta_search
     base.insta_export
     base.validates_presence_of :roleable_id, :if => :needs_validation_roleable
