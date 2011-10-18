@@ -4,6 +4,7 @@ module FluxxRoleUser
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.belongs_to :user
     base.belongs_to :role
+    base.after_save :update_related_data
     base.insta_search
     base.insta_export
     base.validates_presence_of :roleable_id, :if => :needs_validation_roleable
@@ -29,6 +30,10 @@ module FluxxRoleUser
     # Force validation of roleable if roleable_type is supplied
     def needs_validation_roleable
       role.roleable_type if role
+    end
+    
+    def update_related_data
+      self.user.update_attributes :delta => 1
     end
   end
 end
