@@ -173,6 +173,7 @@ module FluxxCrmAlert
       
 <p>The following records have been updated in your #{card_title} card:</p>
 {% for model in models %}{{template_name | haml }}{% endfor %}
+      </div></div></div></div></body></html>
       "
       [subject, body]
     end
