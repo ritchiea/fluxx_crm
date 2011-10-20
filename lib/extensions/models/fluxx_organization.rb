@@ -132,8 +132,16 @@ module FluxxOrganization
     
     def related_users limit_amount=20
       users.where(:deleted_at => nil).order('last_name asc, first_name asc').limit(limit_amount)
+      User.find_by_sql ["SELECT users.* FROM users, user_organizations 
+                             WHERE user_organizations.organization_id IN 
+                             (select distinct(id) from (select id from organizations where id = ? and deleted_at is null
+                              union select id from organizations where parent_org_id = ? and deleted_at is null 
+                              union select id from organizations where parent_org_id = (select parent_org_id from organizations where id = ?) and parent_org_id is not null
+                              union select parent_org_id from organizations where id = ?) all_orgs where id is not null and deleted_at is null) 
+                             AND user_organizations.user_id = users.id and users.deleted_at is null group by users.id
+                             order by last_name asc, first_name asc #{limit_amount ? " limit #{limit_amount} " : ''}", self.id, self.id, self.id, self.id]
     end
-
+    
     def has_satellites?
       is_headquarters? && Organization.find(id, :select => "(select count(*) from organizations sat where sat.parent_org_id = organizations.id) satellite_count").satellite_count.to_i
     end

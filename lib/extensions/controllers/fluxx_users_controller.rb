@@ -10,13 +10,10 @@ module FluxxUsersController
         if params[:related_organization_id]
           rel_org_id = params[:related_organization_id]
           # TODO ESH: refactor this into organization.rb so we can do org.all_related_users
-          self.pre_models ||= User.find_by_sql ['SELECT users.* FROM users, user_organizations 
-                                 WHERE user_organizations.organization_id IN 
-                                 (select distinct(id) from (select id from organizations where id = ? 
-                                  union select id from organizations where parent_org_id = ? 
-                                  union select id from organizations where parent_org_id = (select parent_org_id from organizations where id = ?) and parent_org_id is not null
-                                  union select parent_org_id from organizations where id = ?) all_orgs where id is not null) 
-                                 AND user_organizations.user_id = users.id and users.deleted_at is null', rel_org_id, rel_org_id, rel_org_id, rel_org_id]
+          org = Organization.find rel_org_id
+          if org
+            self.pre_models ||= org.related_users nil
+          end
         end
       end
     end
