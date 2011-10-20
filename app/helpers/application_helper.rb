@@ -112,7 +112,7 @@ module ApplicationHelper
     end
   end
   
-  ATTRIBUTE_NAMES_TO_FILTER = ['last_logged_in_at', 'time_zone', 'locked_until', 'locked_by_id', 'crypted_password', 'password_salt', 'persistence_token', 'single_access_token', 'confirmation_sent_at', 'login_count', 'failed_login_count', 'current_login_at', 'last_login_at', 'current_login_ip', 'last_login_ip', 'user_profile_id', 'test_user_flag']
+  ATTRIBUTE_NAMES_TO_FILTER = ['last_logged_in_at', 'time_zone', 'locked_until', 'locked_by_id', 'crypted_password', 'password_salt', 'persistence_token', 'single_access_token', 'confirmation_sent_at', 'login_count', 'failed_login_count', 'current_login_at', 'last_login_at', 'current_login_ip', 'last_login_ip', 'user_profile_id', 'test_user_flag', 'deleted_at']
   def calculate_audit_changes model, audit, reflections_by_fk=nil, reflections_by_name=nil
     reflections_by_fk = calculate_reflections_by_fk(model) unless reflections_by_fk
     reflections_by_name = calculate_reflections_by_name(model) unless reflections_by_name
@@ -150,7 +150,7 @@ module ApplicationHelper
           end
           name = k.to_s.humanize
         end
-        {:name => name, :old_value => old_value, :new_value => new_value} unless name.blank? || new_value.blank? || ATTRIBUTE_NAMES_TO_FILTER.include?(k.to_s)
+        {:name => name, :old_value => old_value, :new_value => new_value} unless name.blank? || ATTRIBUTE_NAMES_TO_FILTER.include?(k.to_s)
       end.compact
     else
       []
