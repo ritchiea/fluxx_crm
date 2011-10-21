@@ -25,6 +25,18 @@ module FluxxWorkTask
       insta.delta_attributes = SEARCH_ATTRIBUTES
       insta.updated_by_field = :updated_by_id
     end
+    base.insta_json do |insta|
+      insta.add_only 'request_id'
+      insta.add_only 'name'
+      insta.add_only 'task_text'
+      insta.add_only 'taskable_type'
+      insta.add_only 'due_at'
+      insta.add_only 'task_order'
+      insta.add_only 'task_completed'
+      insta.add_only 'completed_at'
+      
+      insta.copy_style :simple, :detailed
+    end
 
     base.insta_template do |insta|
       insta.entity_name = 'work_task'

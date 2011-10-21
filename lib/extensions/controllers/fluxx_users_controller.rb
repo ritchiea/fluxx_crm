@@ -9,7 +9,6 @@ module FluxxUsersController
       insta.pre do |controller_dsl|
         if params[:related_organization_id]
           rel_org_id = params[:related_organization_id]
-          # TODO ESH: refactor this into organization.rb so we can do org.all_related_users
           org = Organization.find rel_org_id
           if org
             self.pre_models ||= org.related_users nil

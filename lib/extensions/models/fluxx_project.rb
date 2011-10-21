@@ -24,6 +24,24 @@ module FluxxProject
     base.insta_multi
     base.insta_favorite
     base.insta_lock
+    base.insta_realtime do |insta|
+      insta.delta_attributes = SEARCH_ATTRIBUTES
+      insta.updated_by_field = :updated_by_id
+    end
+    base.insta_json do |insta|
+      insta.add_only 'request_id'
+      insta.add_only 'title'
+      insta.add_only 'description'
+      insta.add_only 'state'
+      insta.add_only 'project_type_id'
+      insta.add_only 'lead_user_id'
+      insta.add_method 'lead_user_full_name'
+      
+      insta.copy_style :simple, :detailed
+      insta.add_method 'related_users', :detailed
+      insta.add_method 'related_organizations', :detailed
+    end
+    
     
     base.extend(ModelClassMethods)
     base.class_eval do
@@ -35,6 +53,11 @@ module FluxxProject
   end
 
   module ModelInstanceMethods
+    
+    def lead_user_full_name
+      lead_user.full_name if lead_user
+    end
+    
     def related_users
       project_users.map{|pu| pu.user}.compact.sort_by{|u| [u.last_name || '', u.first_name || '']}
     end

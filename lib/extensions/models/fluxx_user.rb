@@ -53,6 +53,15 @@ module FluxxUser
     base.insta_export
     base.insta_lock
     
+    base.insta_json do |insta|
+      insta.add_method 'primary_org_name'
+      insta.add_method 'primary_org_title'
+      insta.add_only 'first_name'
+      insta.add_only 'last_name'
+      insta.copy_style :simple, :detailed
+      insta.add_method 'related_organizations', :detailed
+    end
+    
     base.validates_presence_of     :first_name
     base.validates_presence_of     :last_name
 
@@ -494,6 +503,14 @@ module FluxxUser
     def personal_country_name
       personal_geo_country.name if personal_geo_country
     end
+    
+    def primary_org_name
+      primary_organization.name if primary_organization
+    end
+    def primary_org_title
+      primary_user_organization.title if primary_user_organization
+    end
+    
     
     ######################################### AUTHLOGIC / LDAP
     

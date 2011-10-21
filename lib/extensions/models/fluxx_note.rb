@@ -19,6 +19,12 @@ module FluxxNote
       insta.delta_attributes = [:updated_at, :notable_id, :notable_type]
       insta.updated_by_field = :updated_by_id
     end
+    base.insta_json do |insta|
+      insta.add_only 'note'
+      insta.add_only 'notable_type'
+      
+      insta.copy_style :simple, :detailed
+    end
     
     base.extend(ModelClassMethods)
     base.class_eval do

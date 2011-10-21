@@ -33,6 +33,17 @@ module FluxxOrganization
       insta.delta_attributes = SEARCH_ATTRIBUTES
       insta.updated_by_field = :updated_by_id
     end
+    base.insta_json do |insta|
+      insta.add_method 'state_name'
+      insta.add_method 'country_name'
+      insta.add_only 'name'
+      insta.add_only 'street_address'
+      insta.add_only 'street_address2'
+      insta.add_only 'city'
+      insta.copy_style :simple, :detailed
+      insta.add_method 'related_users', :detailed
+    end
+    
     base.insta_multi
     base.insta_export
     base.insta_lock
