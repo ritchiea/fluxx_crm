@@ -46,6 +46,13 @@ module FluxxModelDocument
       u.instance_variable_set '@human', 'Document'
       u
     end
+    
+    def common_filetypes
+      "txt,zip,zipx,gz,pdf,png,jpg,gif,xls,doc,xlsx,xlr,docx,ppt,pptx," +
+      "doc,docx,rtf,txt,wpd,wps,csv,pps,ppt,pptx,vcf,xml,aif,iff,m3u,m4a,mid,mp3,mpa,ra,wav,wma,3g2,3gp,asf,asx,avi,flv,mov,mp4,mpg,rm,swf,vob,wmv," +
+      "3dm,max,aster,bmp,gif,jpg,png,psd,pspimage,thm,tif,yuv,ai,drw,eps,ps,svg," +
+      "htm,html,xhtml,css,tar"
+    end
   end
 
   module ModelInstanceMethods
