@@ -65,6 +65,10 @@ module FluxxProject
     def related_organizations
       project_organizations.map{|ro| ro.organization unless ro.organization.deleted_at}.compact.sort_by{|o| o.name || ''}
     end
+    
+    def related_work_tasks limit_amount=50
+      work_tasks.order('due_at desc').limit(limit_amount)
+    end
 
     def to_liquid
       {"title" => title, "description" => description}

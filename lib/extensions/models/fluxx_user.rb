@@ -26,6 +26,8 @@ module FluxxUser
     base.has_many :roles, :through => :role_users
     base.has_many :user_permissions
     base.has_many :bank_accounts, :foreign_key => :owner_user_id
+    base.has_many :work_tasks, :foreign_key => :assigned_user_id, :conditions => {:deleted_at => nil}
+    
     base.acts_as_audited({:full_model_enabled => false, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
     base.before_save :preprocess_user
     base.send :attr_accessor, :temp_organization_title
@@ -495,6 +497,11 @@ module FluxxUser
     def related_organizations limit_amount=50
       organizations.order('name asc').limit(limit_amount)
     end
+    
+    def related_work_tasks limit_amount=50
+      work_tasks.order('due_at desc').limit(limit_amount)
+    end
+    
     
     def personal_state_name
       personal_geo_state.name if personal_geo_state

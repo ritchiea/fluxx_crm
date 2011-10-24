@@ -1,0 +1,10 @@
+- if model.task_completed
+  %span.fluxx-card-content-metadata-section-title= "Task completed at #{model.completed_at ? model.completed_at.mdy : ''}"
+  %span.fluxx-card-content-metadata-section-info
+    Owned By: 
+    = model.assigned_user.full_name if model.assigned_user
+- else
+  %span.fluxx-card-content-metadata-section-title= "Task due at #{model.due_at ? model.due_at.mdy : ''}"
+  %span.fluxx-card-content-metadata-section-info
+    Owned By: 
+    = model.assigned_user.full_name if model.assigned_user
