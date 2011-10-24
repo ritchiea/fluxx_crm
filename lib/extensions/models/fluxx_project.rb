@@ -40,6 +40,7 @@ module FluxxProject
       insta.copy_style :simple, :detailed
       insta.add_method 'related_users', :detailed
       insta.add_method 'related_organizations', :detailed
+      insta.add_method 'related_work_tasks', :detailed
     end
     
     

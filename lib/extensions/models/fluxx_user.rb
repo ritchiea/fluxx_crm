@@ -62,6 +62,7 @@ module FluxxUser
       insta.add_only 'last_name'
       insta.copy_style :simple, :detailed
       insta.add_method 'related_organizations', :detailed
+      insta.add_method 'related_work_tasks', :detailed
     end
     
     base.validates_presence_of     :first_name
