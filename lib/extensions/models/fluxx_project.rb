@@ -59,11 +59,11 @@ module FluxxProject
     end
     
     def related_users
-      project_users.map{|pu| pu.user}.compact.sort_by{|u| [u.last_name || '', u.first_name || '']}
+      project_users.map{|pu| pu.user unless pu.user.deleted_at}.compact.sort_by{|u| [u.last_name || '', u.first_name || '']}
     end
     
     def related_organizations
-      project_organizations.map{|ro| ro.organization}.compact.sort_by{|o| o.name || ''}
+      project_organizations.map{|ro| ro.organization unless ro.organization.deleted_at}.compact.sort_by{|o| o.name || ''}
     end
 
     def to_liquid

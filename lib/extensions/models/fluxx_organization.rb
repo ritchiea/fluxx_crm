@@ -141,7 +141,7 @@ module FluxxOrganization
       [self.id] + satellite_ids
     end
     
-    def related_users limit_amount=20
+    def related_users limit_amount=50
       users.where(:deleted_at => nil).order('last_name asc, first_name asc').limit(limit_amount)
       User.find_by_sql ["SELECT users.* FROM users, user_organizations 
                              WHERE user_organizations.organization_id IN 

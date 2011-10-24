@@ -6,7 +6,7 @@ module FluxxUser
 
   def self.included(base)
     base.has_many :user_organizations
-    base.has_many :organizations, :through => :user_organizations
+    base.has_many :organizations, :through => :user_organizations, :conditions => {:organizations => {:deleted_at => nil}}
     base.belongs_to :personal_geo_country, :class_name => 'GeoCountry', :foreign_key => :personal_geo_country_id
     base.belongs_to :personal_geo_state, :class_name => 'GeoState', :foreign_key => :personal_geo_state_id
     base.belongs_to :primary_user_organization, :class_name => 'UserOrganization', :foreign_key => :primary_user_organization_id
@@ -492,7 +492,7 @@ module FluxxUser
       "#{full_name} <#{email}>"
     end
     
-    def related_organizations limit_amount=20
+    def related_organizations limit_amount=50
       organizations.order('name asc').limit(limit_amount)
     end
     
