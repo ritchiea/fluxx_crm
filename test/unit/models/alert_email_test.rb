@@ -7,10 +7,10 @@ class AlertEmailTest < ActiveSupport::TestCase
     alert.body = "the body for {{recipient.email}} on project '{{model.title}}'"
     alert.save!
 
-    johndoe = User.make(:email => "johndoe@fakemailaddress.com")
+    johndoe = User.make(:email => "johndoe@fakemailaddress.com", :first_name => 'John', :last_name => 'Doe')
     alert.alert_recipients.create!(:user_id => johndoe.id)
 
-    janedoe = User.make(:email => "janedoe@fakemailaddress.com")
+    janedoe = User.make(:email => "janedoe@fakemailaddress.com", :first_name => 'Jane', :last_name => 'Doe')
     project = Project.make(:title => "conquer the world", :created_by_id => janedoe.id)
     alert.alert_recipients.create!(:rtu_model_user_method => :creator)
 
@@ -21,7 +21,7 @@ class AlertEmailTest < ActiveSupport::TestCase
     AlertEmail.deliver_all
 
     assert_equal 2, ActionMailer::Base.deliveries.size
-    assert_equal ["johndoe@fakemailaddress.com", "janedoe@fakemailaddress.com"], ActionMailer::Base.deliveries.map{|e| e["to"].value}
+    assert_equal ["John Doe <johndoe@fakemailaddress.com>", "Jane Doe <janedoe@fakemailaddress.com>"], ActionMailer::Base.deliveries.map{|e| e["to"].value}
     assert_equal "the subject for johndoe@fakemailaddress.com on project 'conquer the world'", ActionMailer::Base.deliveries.first.subject
     assert_equal "the body for johndoe@fakemailaddress.com on project 'conquer the world'", ActionMailer::Base.deliveries.first.body.to_s
     assert_equal "the subject for janedoe@fakemailaddress.com on project 'conquer the world'", ActionMailer::Base.deliveries.last.subject
