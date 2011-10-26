@@ -519,6 +519,10 @@ module FluxxUser
       primary_user_organization.title if primary_user_organization
     end
     
+    def is_external_user?
+      (self.respond_to?(:is_portal_user?) ? self.is_portal_user? : false)
+    end
+    
     
     ######################################### AUTHLOGIC / LDAP
     
