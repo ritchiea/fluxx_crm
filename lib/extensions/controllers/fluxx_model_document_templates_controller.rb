@@ -1,6 +1,7 @@
 module FluxxModelDocumentTemplatesController
   def self.included(base)
     base.insta_index ModelDocumentTemplate do |insta|
+      insta.suppress_model_iteration = true
       insta.template = 'model_document_template_list'
     end
     base.insta_show ModelDocumentTemplate do |insta|
