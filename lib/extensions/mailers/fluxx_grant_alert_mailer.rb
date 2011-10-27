@@ -3,7 +3,8 @@ module FluxxCrmAlertMailer
 
   instance_methods do
     def alert(recipient, alert, locals={})
-      mail(:from => (defined?(DEFAULT_EMAIL_SENDER) && DEFAULT_EMAIL_SENDER ? DEFAULT_EMAIL_SENDER : 'do-not-reply@fluxxlabs.com'), :to => recipient.is_a?(User) ? recipient.mailer_email : recipient.to_s,
+      mail(:from => (defined?(DEFAULT_EMAIL_SENDER) && DEFAULT_EMAIL_SENDER ? DEFAULT_EMAIL_SENDER : 'do-not-reply@fluxxlabs.com'), :to => recipient.is_a?(User) ? recipient.mailer_email : recipient.to_s, 
+           :cc => alert.cc_emails, :bcc => alert.bcc_emails,
            :subject => alert.liquid_subject(locals.merge('recipient' => recipient))) do |format|
              format.html { render :text => alert.liquid_body(locals.merge('recipient' => recipient)) }
       end

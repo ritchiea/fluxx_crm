@@ -9,6 +9,8 @@
         = form.input :name
         = form.input :subject
         = form.input :body
+        = form.input :cc_emails, :label => 'CC Email Addresses'
+        = form.input :bcc_emails, :label => 'BCC Email Addresses'
         = form.input :recipients, :as => :select, :collection => Alert.board_or_employee_recipients
 
         - if model_klass.respond_to?(:all_states) && defined?(MachineState)
