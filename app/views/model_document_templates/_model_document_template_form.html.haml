@@ -10,7 +10,7 @@
 %p
 - unless model.new_record? || !model.model_type
   model id: <input name=test_model_id class='code-model-id'>
-  = link_to "Generate Test Document", model_document_template_path(:generate_document => 1, :printable => 1), :class => "generate-test", :target => "_blank"
+  = link_to "Generate Test Document", model_document_template_path(:generate_document => 1, :printable => 1), :class => "generate-test-document", :target => "_blank"
 
 
 = form.commit_button
