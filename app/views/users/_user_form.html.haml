@@ -10,7 +10,10 @@
     - if current_user.is_admin? || current_user.id == model.id 
       = form.input :password, :label => 'Password:'
       = form.input :password_confirmation, :label => 'Password Confirmation:'
+      -if model.new_record? && Fluxx.config(:priority_time_zones)
+        -form.object.time_zone = Fluxx.config(:priority_time_zones)
       = form.input :time_zone, :as => :time_zone, :priority_zones => /#{Fluxx.config(:priority_time_zones)}/ || /Pacific Time|Beijing/
+
 %fieldset.inputs
   %ol 
     = form.input :prefix, :label => "Prefix"

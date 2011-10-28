@@ -1,6 +1,32 @@
-%h2= model.filename
+.show
+  %h3
+    Letters & Templates
+    - if current_user.has_create_for_model?(ModelDocumentTemplate)
+      &nbsp;&nbsp;
+      = link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_model_document_template_path, :title => 'Add A Document Template', :class => 'to-modal wide', 'data-on-success' => 'refreshCaller,close'
 
-%h4= model.model_type
-%h4= model.document_type
-%h4= model.category
-%p= model.description
+  - if !models || models.empty?
+    %p= "No Document Templates available"
+  - else
+    - models.each do |template|
+      %div
+        %span.actions
+          - if current_user.has_delete_for_model?(template)
+            = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), template, :class => 'as-delete', 'data-on-success' => 'refreshCaller'
+        %dl.inline
+          %dt Description:
+          %dd
+            - if current_user.has_update_for_model?(template)
+              = link_to template, edit_model_document_template_path(:id => template, :as_modal => '1'), :class => 'to-modal wide', 'data-on-success' => 'refreshCaller,close'
+            - else
+              = template.description
+          %dt Model Type:
+          %dd= template.model_type
+          %dt Document Type:
+          %dd= template.document_type
+          %dt Category:
+          %dd= template.category
+          %dt Generate State:
+          %dd= template.generate_state
+        %hr
+
