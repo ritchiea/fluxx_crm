@@ -1,1 +1,9 @@
-= model.document
+-if current_user.is_admin?
+  -test_model = Kernel.const_get(model.model_type).find(params['test-model-id']) rescue nil
+  -if test_model
+    %p= raw test_model.process_liquid_template model.document, view_context
+  -else
+    -if params['test-model-id'] && !params['test-model-id'].empty?
+      = "Could not find #{model.model_type} with ID #{params['test-model-id']}"
+    -else
+      No test model ID entered

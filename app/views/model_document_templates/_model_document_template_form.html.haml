@@ -1,8 +1,16 @@
 = form.input :document, :label => "Document:", :as => :text, :input_html => {:class => 'wysiwyg', 'data-wysiwyg-buttons' => 'bold,italic,underline,strikethrough,unorderedlist,link,image,disable'}
-= form.input :model_type
-= form.input :document_type
-= form.input :filename
 = form.input :description
+= form.input :model_type
+-unless model.id
+  -form.object.document_type = "Document"
+  = form.input :document_type
+= form.input :generate_state
 = form.input :category
+%hr
+%p
+- unless model.new_record? || !model.model_type
+  model id: <input name=test_model_id class='code-model-id'>
+  = link_to "Generate Test Document", model_document_template_path(:generate_document => 1, :printable => 1), :class => "generate-test", :target => "_blank"
+
 
 = form.commit_button
