@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111027132103) do
+ActiveRecord::Schema.define(:version => 20111031192956) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -311,14 +311,15 @@ ActiveRecord::Schema.define(:version => 20111027132103) do
     t.string   "document_content_type"
     t.integer  "document_file_size"
     t.datetime "document_updated_at"
-    t.string   "documentable_type",                              :null => false
-    t.integer  "documentable_id",                                :null => false
+    t.string   "documentable_type",                                 :null => false
+    t.integer  "documentable_id",                                   :null => false
     t.datetime "locked_until"
     t.integer  "locked_by_id"
     t.integer  "model_document_type_id"
     t.string   "document_type",              :default => "file"
     t.text     "document_text"
     t.integer  "model_document_template_id"
+    t.string   "label",                      :default => "default", :null => false
   end
 
   add_index "model_documents", ["documentable_id", "documentable_type"], :name => "model_documents_docid_type"
