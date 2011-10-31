@@ -319,10 +319,12 @@ ActiveRecord::Schema.define(:version => 20111031192956) do
     t.string   "document_type",              :default => "file"
     t.text     "document_text"
     t.integer  "model_document_template_id"
-    t.string   "label",                      :default => "default", :null => false
+    t.string   "doc_label",                  :default => "default", :null => false
   end
 
+  add_index "model_documents", ["doc_label"], :name => "index_model_documents_on_doc_label"
   add_index "model_documents", ["documentable_id", "documentable_type"], :name => "model_documents_docid_type"
+  add_index "model_documents", ["documentable_type", "documentable_id", "doc_label"], :name => "mod_docs_type_docid_label"
   add_index "model_documents", ["documentable_type", "documentable_id"], :name => "model_documents_doc_type_id"
   add_index "model_documents", ["model_document_template_id"], :name => "model_documents_template_id"
   add_index "model_documents", ["model_document_type_id"], :name => "model_documents_model_document_type_id"
