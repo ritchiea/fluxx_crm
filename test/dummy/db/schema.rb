@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111031192956) do
+ActiveRecord::Schema.define(:version => 20111031215600) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -293,12 +293,15 @@ ActiveRecord::Schema.define(:version => 20111031192956) do
     t.datetime "updated_at"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
-    t.string   "name",                            :null => false
-    t.string   "model_type",                      :null => false
-    t.boolean  "required",      :default => true, :null => false
+    t.string   "name",                                 :null => false
+    t.string   "model_type",                           :null => false
+    t.boolean  "required",      :default => true,      :null => false
+    t.string   "doc_label",     :default => "default", :null => false
   end
 
   add_index "model_document_types", ["created_by_id"], :name => "model_document_types_created_by_id"
+  add_index "model_document_types", ["doc_label"], :name => "index_model_document_types_on_doc_label"
+  add_index "model_document_types", ["model_type", "doc_label"], :name => "mod_doc_types_type_docid_label"
   add_index "model_document_types", ["model_type"], :name => "index_model_document_types_on_model_type"
   add_index "model_document_types", ["updated_by_id"], :name => "model_document_types_updated_by_id"
 

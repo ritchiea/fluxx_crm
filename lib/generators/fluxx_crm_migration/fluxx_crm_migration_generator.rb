@@ -90,6 +90,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_foreign_language_to_user.rb', 'db/migrate/fluxx_crm_add_foreign_language_to_user.rb'
     handle_migration 'add_cc_to_email_for_alerts.rb', 'db/migrate/fluxx_crm_add_cc_to_email_for_alerts.rb'
     handle_migration 'add_model_document_document_type_field.rb', 'db/migrate/fluxx_crm_add_model_document_document_type_field.rb'
+    handle_migration 'add_model_document_type_doclabel_field.rb', 'db/migrate/fluxx_crm_add_model_document_type_doclabel_field.rb'
   end
   
   private
