@@ -1,5 +1,5 @@
 module FluxxModelDocument
-  SEARCH_ATTRIBUTES = [:documentable_id, :documentable_type, :created_by_id]
+  SEARCH_ATTRIBUTES = [:documentable_id, :documentable_type, :created_by_id, :doc_label]
 
   def self.included(base)
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'

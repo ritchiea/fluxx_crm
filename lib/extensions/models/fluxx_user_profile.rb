@@ -43,6 +43,10 @@ module FluxxUserProfile
     def employee_profile
       UserProfile.where(:name => 'Employee').first
     end
+    
+    def board_profile
+      UserProfile.where(:name => 'Board').first
+    end
   end
 
   module ModelInstanceMethods
