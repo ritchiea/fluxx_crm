@@ -1,32 +1,34 @@
-.show
-  %h3
-    Letters & Templates
-    - if current_user.has_create_for_model?(ModelDocumentTemplate)
-      &nbsp;&nbsp;
-      = link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_model_document_template_path, :title => 'Add A Document Template', :class => 'to-modal wide', 'data-on-success' => 'refreshCaller,close'
+-model_type = params['model_document_template']['model_type']
+%h3
+  Letters & Templates
+  - if current_user.has_create_for_model?(ModelDocumentTemplate)
+    &nbsp;&nbsp;
+    = link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_model_document_template_path(:model_document_template => {:model_type => model_type}), :title => 'Add A Document Template', :class => 'to-modal wide', 'data-on-success' => 'refreshCaller,close'
 
-  - if !models || models.empty?
-    %p= "No Document Templates available"
-  - else
-    - models.each do |template|
-      %div
-        %span.actions
-          - if current_user.has_delete_for_model?(template)
-            = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), template, :class => 'as-delete', 'data-on-success' => 'refreshCaller'
-        %dl.inline
-          %dt Description:
-          %dd
-            - if current_user.has_update_for_model?(template)
-              = link_to template, edit_model_document_template_path(:id => template, :as_modal => '1'), :class => 'to-modal wide', 'data-on-success' => 'refreshCaller,close'
-            - else
-              = template.description
-          %dt Model Type:
-          %dd= template.model_type
-          %dt Document Type:
-          %dd= template.document_type
-          %dt Category:
-          %dd= template.category
+- if !models || models.empty?
+  %p= "No Document Templates available"
+- else
+  - models.each do |template|
+    %div
+      %span.actions
+        - if current_user.has_delete_for_model?(template)
+          = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), template, :class => 'as-delete', 'data-on-success' => 'refreshCaller'
+      %dl.inline
+        %dt Description:
+        %dd
+          - if current_user.has_update_for_model?(template)
+            = link_to template, edit_model_document_template_path(:id => template, :as_modal => '1'), :class => 'to-modal wide', 'data-on-success' => 'refreshCaller,close'
+          - else
+            = template.description
+        %dt Model Type:
+        %dd= template.model_type
+        %dt Document Type:
+        %dd= template.document_type
+        %dt Category:
+        %dd= template.category
+        - model_type = Kernel.const_get(template.model_type) rescue nil
+        - if model_type and model_type.respond_to? :all_states
           %dt Generate State:
-          %dd= template.generate_state
-        %hr
+          %dd= model_type.state_to_english_translation(template.generate_state)
+      %hr
 

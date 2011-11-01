@@ -14,7 +14,7 @@ module FluxxAdminItemsController
 
     base.insta_edit do |insta|
       insta.template = "model_types"
-      insta.template_map = {:alerts => "alerts"}
+      insta.template_map = {:alerts => "alerts", :model_document_templates => "model_document_templates"}
       allowed_models = ["Deal", "Request", "RequestReport", "User", "Organization", "ProjectList", "Project", "Program", "Loi", "FundingSourceAllocationAuthority"]
       insta.icon_style = ICON_STYLE
       all_model_types = Module.constants.select do |constant_name|

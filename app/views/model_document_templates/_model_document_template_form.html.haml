@@ -1,14 +1,16 @@
 = form.input :document, :label => "Document:", :as => :text, :input_html => {:class => 'wysiwyg', 'data-wysiwyg-buttons' => 'bold,italic,underline,strikethrough,unorderedlist,link,image,disable'}
 = form.input :description
-= form.input :model_type
+= form.input :model_type, :as => :hidden
 -unless model.id
   -form.object.document_type = "Document"
-  = form.input :document_type
-= form.input :generate_state
+  = form.input :document_type, :as => :hidden
+- model_type = Kernel.const_get(form.object.model_type) rescue nil
+- if model_type and model_type.respond_to? :all_states
+  = form.input :generate_state, :collection => ((model_type.all_states).map{|state| [model_type.state_to_english_translation(state), state]}.compact)
 = form.input :category
-%hr
-%p
 - unless model.new_record? || !model.model_type
+  %hr
+  %p
   model id: <input name=test_model_id class='code-model-id'>
   = link_to "Generate Test Document", model_document_template_path(:generate_document => 1, :printable => 1), :class => "generate-test-document", :target => "_blank"
 
