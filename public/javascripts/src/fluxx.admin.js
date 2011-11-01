@@ -14,7 +14,12 @@ jQuery(function($){
               dataId: $elem.attr('data-container-id') ? $elem.attr('data-container-id') : 'simplemodal-data',
               onOpen: function(dialog) {
                 $.my.stage.resizeFluxxStage();
-                $('#fluxx-admin li.entry:first').click();
+                var lastItem =  $.cookie('fluxx-admin-last-item');
+                if (lastItem)
+                  lastItem =  $('#fluxx-admin li.entry[href="' + lastItem + '"]');
+                if (!lastItem || !lastItem[0] || lastItem.length > 1)
+                  lastItem = $('#fluxx-admin li.entry:first');
+                lastItem.click();
                 dialog.overlay.fadeIn(200, function () {
                   dialog.container.fadeIn(200, function () {
                     dialog.data.fadeIn(200)
@@ -40,6 +45,7 @@ jQuery(function($){
         $.fluxx.util.itEndsWithMe(e);
         var $elem = $(this);
         if ($elem.attr('href') != "") {
+          $.cookie('fluxx-admin-last-item', $elem.attr('href'));
           $('#admin-buttons').fadeOut();
           $('#fluxx-admin li.entry').removeClass('selected');
           $elem.addClass('selected');
