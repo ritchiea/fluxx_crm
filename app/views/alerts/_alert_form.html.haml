@@ -8,7 +8,7 @@
         = form.input :model_controller_type, :as => :hidden
         = form.input :name
         = form.input :subject
-        = form.input :body
+        = form.input :body, :input_html => {:class => 'wysiwyg', 'data-wysiwyg-buttons' => 'bold,italic,underline,strikethrough,unorderedlist,link,image,disable'}
         = form.input :cc_emails, :label => 'CC Email Addresses', :input_html => { :rows => 5 }
         = form.input :bcc_emails, :label => 'BCC Email Addresses', :input_html => { :rows => 5 }
         = form.input :recipients, :as => :select, :collection => Alert.board_or_employee_recipients

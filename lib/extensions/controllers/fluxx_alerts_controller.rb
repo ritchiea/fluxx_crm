@@ -6,11 +6,23 @@ module FluxxAlertsController
   when_included do
     insta_index Alert do |insta|
       insta.template = 'alert_list'
+      insta.template_map = {:admin => 'alter_list_admin'}
       insta.filter_title = "Alerts Filter"
       insta.filter_template = 'alerts/alert_filter'
       insta.order_clause = 'updated_at desc'
       insta.icon_style = ICON_STYLE
       insta.search_conditions = 'group_models = 0'
+      insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          if params[:admin]
+            @suppress_model_iteration = true
+          else
+            @suppress_model_iteration = false
+          end
+          default_block.call
+        end
+      end
     end
     insta_show Alert do |insta|
       insta.template = 'alert_show'

@@ -1,4 +1,5 @@
 module FluxxCrmAlert
+  SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :name, :model_controller_type]
   class ComparingWrapper
     include Comparable
 
@@ -45,7 +46,16 @@ module FluxxCrmAlert
     end
 
     acts_as_audited({:full_model_enabled => false, :except => [:type, :last_realtime_update_id]})
-    insta_search
+
+    insta_search do |insta|
+      insta.filter_fields = SEARCH_ATTRIBUTES
+      insta.derived_filters = {}
+    end
+
+    insta_realtime do |insta|
+      insta.delta_attributes = SEARCH_ATTRIBUTES
+    end
+
     insta_lock
     insta_export
 
