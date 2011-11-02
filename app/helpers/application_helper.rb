@@ -61,7 +61,7 @@ module ApplicationHelper
 
   # Note: we cannot count on audits to be in numerically ascending order by id; use created_at instead
   def load_audits model
-    model.audits.sort_by{|aud| [aud.created_at.to_i * -1, aud.id * -1]}
+    model.audits.includes(:user).sort_by{|aud| [aud.created_at.to_i * -1, aud.id * -1]}
   end
   
   # Convert mime type to a class that can be used 

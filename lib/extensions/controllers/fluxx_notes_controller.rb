@@ -3,6 +3,7 @@ module FluxxNotesController
     base.insta_index Note do |insta|
       insta.template = 'note_list'
       insta.suppress_model_iteration = true
+      insta.include_relation = :updated_by
     end
     base.insta_show Note do |insta|
       insta.template = 'note_show'
