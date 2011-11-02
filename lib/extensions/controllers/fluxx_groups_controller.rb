@@ -12,6 +12,18 @@ module FluxxGroupsController
           '(groups.deprecated is null or groups.deprecated = 0)'
         end
       end)
+      insta.template_map = {:admin => 'group_list_admin'}
+      insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          if params[:admin]
+            @suppress_model_iteration = true
+          else
+            @suppress_model_iteration = false
+          end
+          default_block.call
+        end
+      end
     end
     base.insta_show Group do |insta|
       insta.template = 'group_show'

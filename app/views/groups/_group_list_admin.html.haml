@@ -1,0 +1,25 @@
+%h3
+  = link_to "Groups", current_index_path, :title => "Groups", :class => 'new-listing'
+  - if current_user.has_create_for_model?(Group)
+    &nbsp;&nbsp;
+    = link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_group_path, :title => 'Add A Group', :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
+
+- if !models || models.empty?
+  %p= "No Groups available"
+- else
+  - models.each do |model|
+    %div
+      %span.actions
+        - if current_user.has_delete_for_model?(model)
+          = link_to image_tag("/images/fluxx_engine/theme/default/icons/delete.png", :class => 'delete-button'), model, :class => 'as-delete', 'data-on-success' => 'refreshCaller'
+      %dl.inline
+        %dt Name:
+        %dd
+          - if current_user.has_update_for_model?(model)
+            = link_to model.name, edit_group_path(:id => model, :as_modal => '1'), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
+          - else
+            = model.name
+        - if model.deprecated
+          Group is Retired
+
+      %hr
