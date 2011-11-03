@@ -24,4 +24,11 @@
             = link_to model.name, edit_path, :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
           - else
             = model.name
+        %dt Model Type:
+        %dd= model.model_type
+        =render :partial => "model_document_type_list_extra.html.haml", :locals => {:model => model}
+        %br
+        -if model.required
+          %strong
+            This document type is required
       %hr
