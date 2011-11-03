@@ -112,7 +112,8 @@ module FluxxCrmAlert
           subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
           filter = card[:filter]
           alert.filter = filter ? filter.to_json : ''
-          alert.model_controller_type = card[:model_controller_type]
+          # NOTE ESH: this is important; we do *not* want to plugin the actual controller here
+          alert.model_controller_type = card[:model_controller_type] ? card[:model_controller_type].to_s : card[:model_controller_type]
           alert.subject = subject
           alert.body = body
           alert.save
@@ -122,19 +123,23 @@ module FluxxCrmAlert
         existing_dashboard_alert_ids = existing_dashboard_alerts.map{|alert| alert.dashboard_card_id}
         alerts_to_create = updated_dashboard_cards.reject{|key, card| existing_dashboard_alert_ids.include?(card[:dashboard_card_id])}.values.compact
         last_rtu = RealtimeUpdate.last
-        alerts_to_create.each do |card| 
-          filter = card['filter']
-          controller_klass = card[:model_controller_type]
-          subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
-          alert = Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
-            :last_realtime_update_id => (last_rtu ? last_rtu.id : 0),
-            :model_controller_type => card[:model_controller_type],
-            :filter => (filter ? filter.to_json : ''),
-            :group_models => true,
-            :subject => subject,
-            :body => body
-          alert_expr = AlertRecipient.where(:alert_id => alert.id, :user_id => dashboard.user_id)
-          alert_expr.create! unless alert_expr.first
+
+                # Don't trigger a realtime update; this can cause a circular reference when it is saved
+        self.without_realtime do
+          alerts_to_create.each do |card| 
+            filter = card['filter']
+            controller_klass = card[:model_controller_type]
+            subject, body = generate_dashboard_alert_subject_body controller_klass, dashboard.name, card[:title]
+            alert = Alert.create :dashboard_id => dashboard.id, :dashboard_card_id => card[:dashboard_card_id], 
+              :last_realtime_update_id => (last_rtu ? last_rtu.id : 0),
+              :model_controller_type => card[:model_controller_type],
+              :filter => (filter ? filter.to_json : ''),
+              :group_models => true,
+              :subject => subject,
+              :body => body
+            alert_expr = AlertRecipient.where(:alert_id => alert.id, :user_id => dashboard.user_id)
+            alert_expr.create! unless alert_expr.first
+          end
         end
       end
     end

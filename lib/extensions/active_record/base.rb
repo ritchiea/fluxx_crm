@@ -34,7 +34,7 @@ class ActiveRecord::Base
       
       define_method :event_allowed? do |events, user|
         events = [events] unless events.is_a?(Array)
-        related_object_model = extract_related_model self
+        related_object_model = extract_related_model
         role_object.check_if_events_allowed?(user, events, related_object_model)
       end
       
@@ -50,7 +50,7 @@ class ActiveRecord::Base
       end
       
       define_method :admin_edit_allowed_for_user? do |user|
-        related_object_model = extract_related_model self
+        related_object_model = extract_related_model
         role_object.admin_edit_allowed_for_user?(user, related_object_model)
       end
     end

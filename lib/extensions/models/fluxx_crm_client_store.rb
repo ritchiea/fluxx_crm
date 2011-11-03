@@ -38,7 +38,6 @@ module FluxxCrmClientStore
           {:model_controller_type => controller_klass, :dashboard_card_id => card_id, :filter => ClientStore.dashboard_card_params(card), :title => card_title}
         end
       end.compact
-      p "ESH: calling resolve_for_dashboard"
       Alert.resolve_for_dashboard self, alerted_cards
     end
   end

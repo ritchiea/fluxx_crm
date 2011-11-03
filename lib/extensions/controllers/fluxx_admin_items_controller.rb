@@ -19,13 +19,6 @@ module FluxxAdminItemsController
     end
   end
 
-
-
-    #base.extend(ModelClassMethods)
-    #base.class_eval do
-    #  include ModelInstanceMethods
-    #end
-
   module ModelClassMethods
   end
 
