@@ -1,5 +1,23 @@
 = form.input :name
-= form.input :model_type, :as => :select, :label => "Type", :collection => all_model_types
+= render :partial => "model_type_form", :locals => {:form => form}
 = form.input :required
+- unless Fluxx.config(:hide_program) == "1"
+  = form.input :program_id, :label => I18n.t(:program_name), :as => :select, :collection => Program.load_all_nonrollup.map{|program| [program.name, program.id]}, :input_html => {:class => 'program-dropdown-select', 'data-related-child' => ".program-lead-select,.sub-program-select"}
+
+- unless Fluxx.config(:hide_sub_program) == "1"
+  - sub_programs = []
+  - sub_programs = Program.find(form.object.program_id).load_sub_programs if form.object.program_id
+  = form.input :sub_program_id, :label => I18n.t(:sub_program_name), :as => :select, :collection => sub_programs.map{|sub_program| [sub_program.name, sub_program.id]}, :input_html => {:class => 'sub-program-select', 'data-param'.to_sym => 'program_id', 'data-src'.to_sym => sub_programs_path(:format => 'autocomplete', :all_results => 1), 'data-related-child' => ".initiative-select"}
+
+- unless Fluxx.config(:hide_initiative) == "1"
+  - initiatives = []
+  - initiatives = SubProgram.find(model.sub_program_id).load_initiatives if form.object.sub_program_id
+  = form.input :initiative_id, :label => I18n.t(:initiative_name), :as => :select, :collection => initiatives.map{|initiative| [initiative.name, initiative.id]}, :input_html => {:class => 'initiative-select', 'data-param'.to_sym => 'sub_program_id', 'data-src'.to_sym => initiatives_path(:format => 'autocomplete', :all_results => 1), 'data-related-child' => ".sub-initiative-select"}
+
+- unless Fluxx.config(:hide_sub_initiative) == "1"
+  - sub_initiatives = []
+  - sub_initiatives = Initiative.find(model.initiative_id).load_sub_initiatives if form.object.initiative_id
+  = form.input :sub_initiative_id, :label => I18n.t(:sub_initiative_name), :as => :select, :collection => sub_initiatives.map{|sub_initiative| [sub_initiative.name, sub_initiative.id]}, :input_html => {:class => 'sub-initiative-select', 'data-param'.to_sym => 'initiative_id', 'data-src'.to_sym => sub_initiatives_path(:format => 'autocomplete', :all_results => 1)}
+
 = form.input :doc_label
 = form.commit_button
