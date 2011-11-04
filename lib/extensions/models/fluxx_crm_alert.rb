@@ -400,7 +400,17 @@ module FluxxCrmAlert
           name.gsub('[]', '') =~ /(.*)\[(.*)\]/
           model_key, attr_name = [$1, $2]
           acc[model_key] ||= HashWithIndifferentAccess.new
-          acc[model_key][attr_name] = value unless ['sort_order', 'sort_attribute'].include?(attr_name) || value.blank?
+          unless ['sort_order', 'sort_attribute'].include?(attr_name) || value.blank?
+            if acc[model_key][attr_name]
+              # Avoid writing over other attribute values as they may be ennumerated separately rather than in a big list
+              hash_value = acc[model_key][attr_name]
+              hash_value = [hash_value] unless hash_value.is_a?(Array)
+              hash_value << value
+              acc[model_key][attr_name] = hash_value.flatten
+            else
+              acc[model_key][attr_name] = value
+            end
+          end
         end
         acc
       end
