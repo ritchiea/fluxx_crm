@@ -2,13 +2,28 @@
   %h3
     = "Roles"
     - if current_user.is_admin?
-      - user_admin_permission = model.is_admin?
       %span.caption
-        - if user_admin_permission
-          %span.caption= "(Admin)"
-          %span.actions= link_to 'remove admin role', user_admin_permission, {:class => 'as-delete', 'data-on-success' => 'refreshCaller', 'data-message' => 'You will remove admin access for this user. Are you sure?'}
-        - else
-          %span.actions= link_to 'add admin role', user_permissions_path(:user_permission => {:user_id => model.id, :name => 'admin'}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
+        - if current_user.is_super_admin?
+          - user_admin_permission = model.is_super_admin?
+          - if user_admin_permission
+            %span.caption= "(Super Admin)"
+            %span.actions= link_to 'remove super admin role', user_admin_permission, {:class => 'as-delete', 'data-on-success' => 'refreshCaller', 'data-message' => 'You will remove super admin access for this user. Are you sure?'}
+          - else
+            %span.actions= link_to 'add super admin role', user_permissions_path(:user_permission => {:user_id => model.id, :name => 'super_admin'}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
+    
+        - if current_user.is_admin?
+          - user_admin_permission = model.has_permission?('admin')
+          - if user_admin_permission
+            %span.caption= "(Admin)"
+            %span.actions
+              = link_to 'remove admin role', user_admin_permission, {:class => 'as-delete', 'data-on-success' => 'refreshCaller', 'data-message' => 'You will remove admin access for this user. Are you sure?'}
+              - if current_user.is_super_admin?
+                ||
+          - else
+            %span.actions
+              = link_to 'add admin role', user_permissions_path(:user_permission => {:user_id => model.id, :name => 'admin'}), {:class => 'as-post', 'data-on-success' => 'refreshCaller'}
+              - if current_user.is_super_admin?
+                ||
 
   - if current_user.is_admin?
     %h4
@@ -23,3 +38,8 @@
           ,
           = program.name
         %span.actions= link_to "delete", ru, {:class => 'as-delete', 'data-on-success' => 'refreshCaller'}
+  - if current_user.is_admin? && model.login
+    %h4
+      Impersonate
+      %span.actions= link_to 'switch to this user', users_impersonate_path(:user_id => model.id), :target => '_blank'
+      

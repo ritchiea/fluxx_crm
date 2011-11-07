@@ -387,7 +387,11 @@ module FluxxUser
     end
 
     def is_admin?
-      self.has_permission?('admin')
+      self.has_permission?('admin') || is_super_admin?
+    end
+    
+    def is_super_admin?
+      self.has_permission?('super_admin')
     end
     
     # permission_name: name of permission to check for this user
@@ -528,7 +532,7 @@ module FluxxUser
     
     # check ldap credentials(and sync info), or db credentials(normal authlogic pw check)
     def valid_credentials?(password)
-      ldap_authenticate?(password) || valid_password?(password)
+      saml_authenticate?(password) || ldap_authenticate?(password) || valid_password?(password)
     end
 
     def ldap_authenticate?(password)
@@ -554,6 +558,37 @@ module FluxxUser
       rescue Exception => e
       end
       false
+    end
+    
+    # Save a saml token and return the generated token
+    def saml_store
+      saml_name = generate_saml_name
+      token = generate_saml_token
+      Rails.cache.write(saml_name, token)
+      token
+    end
+    
+    # Check to see if the user passed in a saml token instead of a password
+    def saml_authenticate?(password)
+      saml_name = generate_saml_name
+      saml_token = Rails.cache.read(saml_name)
+      if saml_token 
+        Rails.cache.delete(saml_name)
+        token_parts = saml_token.split '_'
+        if token_parts.size == 3
+          saml_date = token_parts[1].to_i rescue nil
+          saml_date > (Time.now - 5.minute).utc.to_i && saml_token == password
+        end
+      end
+    end
+    
+    private
+    def generate_saml_name
+      saml_name = "Authlogic_SAML_Token_#{login}"
+    end
+    
+    def generate_saml_token
+      token = "#{ActiveSupport::SecureRandom.hex(15)}_#{Time.now.utc.to_i}_#{Digest::MD5.hexdigest(self.login)}"
     end
   end
 end

@@ -39,5 +39,9 @@ Rails.application.routes.draw do
   resources :wiki_document_templates
   resources :model_document_templates
   resources :alerts
+  
+  match 'users_impersonate', :to => 'users#impersonate', :as => "users_impersonate"
+  match 'user_sessions_impersonate', :to => 'user_sessions#impersonate', :as => "user_sessions_impersonate"
+  
 end
 

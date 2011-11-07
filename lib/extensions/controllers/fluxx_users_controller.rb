@@ -64,5 +64,13 @@ module FluxxUsersController
   end
 
   module ModelInstanceMethods
+    def impersonate
+      user = User.where(:id => params[:user_id], :deleted_at => nil).first
+      if user
+        redirect_to user_sessions_impersonate_path(:user_session => {:login => user.login, :password => user.saml_store})
+      else
+        redirect_back_or_default
+      end
+    end
   end
 end
