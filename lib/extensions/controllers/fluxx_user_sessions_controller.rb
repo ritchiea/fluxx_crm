@@ -73,11 +73,7 @@ module FluxxUserSessionsController
     end
     
     def forgot_password
-      if current_user
-        redirect_to edit_account_url
-      else
-        @user_session = UserSession.new()
-      end
+      @user_session = UserSession.new()
     end
 
     def forgot_password_lookup_email
