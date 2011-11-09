@@ -1,0 +1,3 @@
+class UserSessionsController < ApplicationController
+  include FluxxUserSessionsController
+end

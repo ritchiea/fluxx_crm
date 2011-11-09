@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111031215600) do
+ActiveRecord::Schema.define(:version => 20111109182846) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -24,6 +24,9 @@ ActiveRecord::Schema.define(:version => 20111031215600) do
     t.string   "model_type"
     t.datetime "send_at"
     t.text     "email_params"
+    t.boolean  "active",          :default => true
+    t.boolean  "approved",        :default => true
+    t.boolean  "confirmed",       :default => true
   end
 
   create_table "alert_recipients", :force => true do |t|
@@ -415,7 +418,7 @@ ActiveRecord::Schema.define(:version => 20111031215600) do
   add_index "organizations", ["created_by_id"], :name => "organizations_created_by_id"
   add_index "organizations", ["geo_country_id"], :name => "organizations_geo_country_id"
   add_index "organizations", ["geo_state_id"], :name => "organizations_geo_state_id"
-  add_index "organizations", ["name"], :name => "index_organizations_on_name", :length => {"name"=>"255"}
+  add_index "organizations", ["name"], :name => "index_organizations_on_name", :length => {"name"=>255}
   add_index "organizations", ["parent_org_id", "deleted_at"], :name => "index_organizations_on_parent_org_id_and_deleted_at"
   add_index "organizations", ["parent_org_id"], :name => "index_organizations_on_parent_org_id"
   add_index "organizations", ["updated_by_id"], :name => "organizations_updated_by_id"
@@ -679,6 +682,10 @@ ActiveRecord::Schema.define(:version => 20111031215600) do
     t.string   "first_name_foreign_language",  :limit => 500
     t.string   "middle_name_foreign_language", :limit => 500
     t.string   "last_name_foreign_language",   :limit => 500
+    t.string   "perishable_token"
+    t.boolean  "active",                                       :default => true
+    t.boolean  "approved",                                     :default => true
+    t.boolean  "confirmed",                                    :default => true
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"

@@ -582,6 +582,13 @@ module FluxxUser
       end
     end
     
+    def send_forgot_password! controller
+      # deactivate!
+      reset_perishable_token!
+      reset_url = controller.send(:reset_password_url, self.perishable_token)
+      UserMailer.forgot_password(self, reset_url).deliver 
+    end
+    
     private
     def generate_saml_name
       saml_name = "Authlogic_SAML_Token_#{login}"

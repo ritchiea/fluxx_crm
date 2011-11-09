@@ -1,6 +1,9 @@
 module FluxxUsersController
   ICON_STYLE = 'style-users'
   def self.included(base)
+    base.skip_before_filter :require_user, :only => [:reset_password, :reset_password_submit]
+    base.skip_before_filter :verify_authenticity_token, :only => [:reset_password, :reset_password_submit]
+    
     base.insta_index User do |insta|
       insta.template = 'user_list'
       insta.icon_style = ICON_STYLE
@@ -72,5 +75,22 @@ module FluxxUsersController
         redirect_back_or_default
       end
     end
+    
+    def reset_password
+      @user = User.find_using_perishable_token(params[:reset_password_code], 1.week) || (raise Exception)
+    end
+
+    def reset_password_submit
+      @user = User.find_using_perishable_token(params[:reset_password_code], 1.week) || (raise Exception)
+      @user.active = true
+      if @user.update_attributes(params[:user].merge({:active => true}))
+        flash[:notice] = "Successfully reset password."
+        redirect_back_or_default dashboard_index_path
+      else
+        flash[:notice] = "There was a problem resetting your password."
+        render :action => :reset_password
+      end
+    end
+    
   end
 end
