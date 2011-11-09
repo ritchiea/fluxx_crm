@@ -92,6 +92,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_model_document_document_type_field.rb', 'db/migrate/fluxx_crm_add_model_document_document_type_field.rb'
     handle_migration 'add_model_document_type_doclabel_field.rb', 'db/migrate/fluxx_crm_add_model_document_type_doclabel_field.rb'
     handle_migration 'add_perishable_token_to_users_table.rb', 'db/migrate/fluxx_crm_add_perishable_token_to_users_table.rb'
+    handle_migration 'add_even_more_authlogic_columns_to_user_table.rb', 'db/migrate/fluxx_crm_add_even_more_authlogic_columns_to_user_table.rb'
   end
   
   private
