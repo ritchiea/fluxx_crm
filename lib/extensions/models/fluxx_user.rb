@@ -30,6 +30,7 @@ module FluxxUser
     
     base.acts_as_audited({:full_model_enabled => false, :except => [:activated_at, :created_by_id, :updated_by_id, :updated_by, :created_by, :audits, :role_users, :locked_until, :locked_by_id, :delta, :crypted_password, :password, :last_logged_in_at]})
     base.before_save :preprocess_user
+    base.after_save :email_login_pass_callback
     base.send :attr_accessor, :temp_organization_title
     base.send :attr_accessor, :temp_organization_id
     
@@ -191,6 +192,13 @@ module FluxxUser
     
     def preprocess_user
       self.login = nil if login == ''
+    end
+    
+    def email_login_pass_callback
+      if password && !changed_attributes['password'] && login && !changed_attributes['login'] && email
+        # The user has never had a login/password assigned before, let's send them an email with the information
+        UserMailer.new_user(self).deliver
+      end
     end
     
     def before_create

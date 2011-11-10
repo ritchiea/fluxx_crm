@@ -16,5 +16,21 @@ module FluxxUserMailer
       end
     end
     
+    def new_user(user)
+      from          (defined?(DEFAULT_EMAIL_SENDER) && DEFAULT_EMAIL_SENDER ? DEFAULT_EMAIL_SENDER : 'do-not-reply@fluxxlabs.com')
+
+      @fluxx_link = FluxxManageHost.current_host
+      @new_user = user
+
+      mail(:to => user.mailer_email,
+           :subject => "New User Information",
+           :from => from,
+           :fail_to => from
+      ) do |format|
+        format.text
+      end
+      
+    end
+    
   end
 end
