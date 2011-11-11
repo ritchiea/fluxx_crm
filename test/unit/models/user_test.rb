@@ -255,6 +255,22 @@ class UserTest < ActiveSupport::TestCase
     assert user2.id
     assert user.id != user2.id
   end
+
+  test "try generating a login and password; make sure a dupe login is not generated" do
+    user = User.make
+    user.login = nil
+    test_login = "#{user.first_name}_#{"#{user.middle_initial}_" if user.middle_initial}#{user.last_name}"
+    user2 = User.make :login => test_login
+    generated_login = user.generate_unique_login
+    assert generated_login != test_login
+  end
+  
+  test "try generating a random password" do
+    user = User.make
+    random_pass = user.generate_random_password 8
+    assert random_pass
+    assert_equal 8, random_pass.size
+  end
   
 end
 

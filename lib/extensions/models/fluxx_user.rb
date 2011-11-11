@@ -597,6 +597,37 @@ module FluxxUser
       UserMailer.forgot_password(self, reset_url).deliver 
     end
     
+    LOWER_UPPER_ALPHA_NUMERIC_WITHOUT_O = ("a".."z").to_a + (("A".."Z").to_a - ["O"]) + ("1".."9").to_a
+    def generate_random_password len=8
+      newpass = ""
+      1.upto(len) { |i| newpass << LOWER_UPPER_ALPHA_NUMERIC_WITHOUT_O[rand(LOWER_UPPER_ALPHA_NUMERIC_WITHOUT_O.size-1)] }
+      self.password_confirmation = self.password = newpass
+    end
+    
+    # Try the user's first and last names.  If taken, add successively randomly incrementing numbers up to 5000
+    def generate_unique_login
+      if login
+        login
+      else
+        test_login = "#{first_name}_#{"#{middle_initial}_" if middle_initial}#{last_name}"
+        found_login = nil
+        counter = 0
+        while !found_login && counter < 5000
+          cur_login = if counter > 0
+            "#{test_login}#{counter}"
+          else
+            test_login
+          end
+          if User.where(:login => cur_login).count == 0
+            found_login = cur_login
+          else
+            counter += rand(30)
+          end
+        end
+        self.login = found_login.downcase if found_login
+      end
+    end
+    
     private
     def generate_saml_name
       saml_name = "Authlogic_SAML_Token_#{login}"
