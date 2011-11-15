@@ -1,5 +1,5 @@
 - doc_label ||= 'default'
-- if current_user.is_admin? || current_user.is_employee? || Fluxx.config("documents_allowed_#{doc_label}_#{current_user && current_user.user_profile && current_user.user_profile.name}")
+- if current_user.is_admin? || current_user.is_employee? || current_user.has_listview_for_model?(ModelDocument) || current_user.has_listview_for_own_model?(ModelDocument, {:doc_label => doc_label})
   - required_doc_ids ||= []
   - force_show ||= false
   - if force_show || (model.respond_to?(:model_documents) && model.id)
