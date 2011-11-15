@@ -395,7 +395,7 @@ module FluxxUser
     end
     
     def user_related_to_class? model_class, options={}
-      (model.respond_to?(:relates_to_class?) && model.relates_to_class?(self, options))
+      (model_class.respond_to?(:relates_to_class?) && model_class.relates_to_class?(self, options))
     end
 
     def is_admin?
@@ -467,7 +467,7 @@ module FluxxUser
     end
 
     def has_listview_for_own_model? model_class, options={}
-      is_admin? || has_permission_for_object?("listview_own", model_class) && user_related_to_class?(model_class, options)
+      is_admin? || (has_permission_for_object?("listview_own", model_class) && user_related_to_class?(model_class, options))
     end
     
     def has_view_for_own_model? model
