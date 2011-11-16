@@ -32,6 +32,14 @@ class OrganizationTest < ActiveSupport::TestCase
   test "Setting up hq/satellite organizations" do
     hq_org = Organization.make :name => 'freddie mac'
   end
+  
+  test "TEst looking up the hq parent" do
+    assert_equal @organization, @organization.find_parent_or_self
+    sub_org = Organization.make :parent_org_id => @organization.id
+    sub_sub_org = Organization.make :parent_org_id => sub_org.id
+    assert_equal @organization, sub_sub_org.find_parent_or_self
+    
+  end
 
   # test "merge remove duplicated organization" do
   #   # build organizations
