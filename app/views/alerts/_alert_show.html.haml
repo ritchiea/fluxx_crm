@@ -1,4 +1,9 @@
 %h2= model.name
+%p
+  - if model.alert_enabled?
+    Alert is <strong>Enabled</strong>
+  - else
+    Alert is <strong>Disabled</strong>
 
 %h3
   Subject
@@ -7,6 +12,7 @@
 %h3
   Body
 %p= model.body
+
 
 %h3
   Recipients

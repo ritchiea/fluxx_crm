@@ -4,6 +4,7 @@
     = semantic_form_for @model, :as => :alert, :url => new_alert_path do |form|
       = form.semantic_errors
       = form.inputs do
+        = form.input :alert_enabled, :label => "Alert Enabled?"
         = form.input :filter, :as => :hidden, :input_html => {:class => "filter"}
         = form.input :model_controller_type, :as => :hidden
         = form.input :name

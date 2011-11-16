@@ -248,7 +248,7 @@ module FluxxCrmAlert
     end
 
     def any_for? klass
-      Alert.where(:model_controller_type => klass.all_controllers.map(&:name)).exists? rescue nil
+      Alert.where(:alert_enabled => true, :model_controller_type => klass.all_controllers.map(&:name)).exists? rescue nil
     end
 
     def time_based_filtered_attrs
@@ -266,7 +266,7 @@ module FluxxCrmAlert
     def trigger_and_mail_state_change_alerts_for model_id, controller_klass_names, new_state
       
       if defined? MachineState
-        Alert.joins(:alert_transition_states => :machine_state).where({:model_controller_type => controller_klass_names, :state_driven => 1, :alert_transition_states => {:machine_state_id => {:machine_states => {:name => new_state}}}}).all.each do |alert|
+        Alert.joins(:alert_transition_states => :machine_state).where({:alert_enabled => true, :model_controller_type => controller_klass_names, :state_driven => 1, :alert_transition_states => {:machine_state_id => {:machine_states => {:name => new_state}}}}).all.each do |alert|
           alert.with_triggered_alert!([model_id]) do |cur_alert, models|
             alert_emails = cur_alert.enqueue_for models
             if alert_emails.is_a?(Array)
@@ -280,7 +280,7 @@ module FluxxCrmAlert
     end
     
     def trigger_and_mail_alerts_for controller_klass_names
-      Alert.find_each(:conditions => {:model_controller_type => controller_klass_names, :group_models => 1}) do |alert|
+      Alert.find_each(:conditions => {:alert_enabled => true, :model_controller_type => controller_klass_names, :group_models => 1}) do |alert|
         alert.with_triggered_alert! do |cur_alert, models|
           alert_emails = cur_alert.enqueue_for models
           if alert_emails.is_a?(Array)
@@ -294,7 +294,7 @@ module FluxxCrmAlert
     
     # These are programmed alerts that are not driven as state changes or from checked cards in dashboards
     def with_triggered_alerts!(&alert_processing_block)
-      Alert.where(:group_models => 0, :state_driven => 0).all.each do |alert|
+      Alert.where(:alert_enabled => true, :group_models => 0, :state_driven => 0).all.each do |alert|
         alert.with_triggered_alert!(&alert_processing_block)
       end
     end
