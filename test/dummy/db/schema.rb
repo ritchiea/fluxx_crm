@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111115232427) do
+ActiveRecord::Schema.define(:version => 20111116170514) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(:version => 20111115232427) do
     t.boolean  "state_driven",            :default => false, :null => false
     t.text     "cc_emails"
     t.text     "bcc_emails"
+    t.boolean  "alert_enabled",           :default => true,  :null => false
   end
 
   add_index "alerts", ["dashboard_id"], :name => "alerts_dashboard_id"
