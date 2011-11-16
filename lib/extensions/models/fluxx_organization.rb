@@ -100,6 +100,18 @@ module FluxxOrganization
         write_attribute(:geo_country, GeoCountry.find_by_name(val))
       end
     end
+    
+    # Go up the chain of parents until finding the root parent org without getting into an infinite loop
+    def find_parent_or_self
+      current_org = self
+      counter = 0
+      while counter < 500 && current_org.parent_org_id
+        current_org = current_org.parent_org
+        counter += 1 
+      end
+      current_org
+    end
+    
 
     def geo_state= val
       if val.is_a? GeoState
