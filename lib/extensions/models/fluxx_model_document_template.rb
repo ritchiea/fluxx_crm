@@ -23,6 +23,10 @@ module FluxxModelDocumentTemplate
   end
 
   module ModelClassMethods
+    def potential_parents
+      ModelDocumentTemplate.where(:deleted_at => nil, :related_model_document_id => nil)
+    end
+    
     def for_type_and_category(model_type, category=nil)
       clause = where(:model_type => model_type)
       clause = clause.where(:category => category) if category
