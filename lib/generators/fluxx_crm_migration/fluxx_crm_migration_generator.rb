@@ -95,6 +95,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'add_even_more_authlogic_columns_to_user_table.rb', 'db/migrate/fluxx_crm_add_even_more_authlogic_columns_to_user_table.rb'
     handle_migration 'adjust_board_permissions.rb', 'db/migrate/fluxx_crm_adjust_board_permissions.rb'
     handle_migration 'add_toggle_to_alert_table.rb', 'db/migrate/fluxx_crm_add_toggle_to_alert_table.rb'
+    handle_migration 'adjust_model_document_to_have_related_docs_fields.rb', 'db/migrate/fluxx_crm_adjust_model_document_to_have_related_docs_fields.rb'
   end
   
   private

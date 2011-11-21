@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111116170514) do
+ActiveRecord::Schema.define(:version => 20111121144553) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -280,16 +280,19 @@ ActiveRecord::Schema.define(:version => 20111116170514) do
     t.string   "category"
     t.text     "document"
     t.datetime "deleted_at"
-    t.boolean  "delta",                 :default => true,  :null => false
-    t.boolean  "display_in_adhoc_list", :default => false, :null => false
+    t.boolean  "delta",                     :default => true,  :null => false
+    t.boolean  "display_in_adhoc_list",     :default => false, :null => false
     t.string   "generate_state"
     t.string   "document_content_type"
+    t.string   "disposition"
+    t.integer  "related_model_document_id"
   end
 
   add_index "model_document_templates", ["category"], :name => "index_model_document_templates_on_category"
   add_index "model_document_templates", ["created_by_id"], :name => "modeldoctemplate_created_by_id"
   add_index "model_document_templates", ["document_type"], :name => "index_model_document_templates_on_document_type"
   add_index "model_document_templates", ["model_type"], :name => "index_model_document_templates_on_model_type"
+  add_index "model_document_templates", ["related_model_document_id"], :name => "mdt_related_model_document_id"
   add_index "model_document_templates", ["updated_by_id"], :name => "modeldoctemplate_updated_by_id"
 
   create_table "model_document_types", :force => true do |t|
