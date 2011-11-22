@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111121144553) do
+ActiveRecord::Schema.define(:version => 20111122181306) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -280,12 +280,13 @@ ActiveRecord::Schema.define(:version => 20111121144553) do
     t.string   "category"
     t.text     "document"
     t.datetime "deleted_at"
-    t.boolean  "delta",                     :default => true,  :null => false
-    t.boolean  "display_in_adhoc_list",     :default => false, :null => false
+    t.boolean  "delta",                          :default => true,  :null => false
+    t.boolean  "display_in_adhoc_list",          :default => false, :null => false
     t.string   "generate_state"
     t.string   "document_content_type"
     t.string   "disposition"
     t.integer  "related_model_document_id"
+    t.boolean  "insert_page_break_between_flag"
   end
 
   add_index "model_document_templates", ["category"], :name => "index_model_document_templates_on_category"

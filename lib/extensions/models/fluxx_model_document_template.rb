@@ -24,7 +24,7 @@ module FluxxModelDocumentTemplate
 
   module ModelClassMethods
     def potential_parents
-      ModelDocumentTemplate.where(:deleted_at => nil, :related_model_document_id => nil)
+      ModelDocumentTemplate.where(:deleted_at => nil, :related_model_document_template_id => nil)
     end
     
     def for_type_and_category(model_type, category=nil)
@@ -46,13 +46,7 @@ module FluxxModelDocumentTemplate
     
     def reload_all_doc_templates
       ModelDocumentTemplate.all.each do |doc_template|
-        possible_files = ActionController::Base.view_paths.map {|v| "#{v.instance_variable_get '@path'}/doc_templates/#{doc_template.filename}"}
-        filename = possible_files.map{|file_name| file_name if File.exist?(file_name) }.compact.first
-        if filename
-          p "Loading file #{filename}"
-          doc_contents = File.open(filename, 'r').read_whole_file
-          doc_template.update_attribute :document, doc_contents
-        end
+        doc_template.reload_from_file
       end
     end
   end
@@ -60,6 +54,16 @@ module FluxxModelDocumentTemplate
   module ModelInstanceMethods
     def to_s
       description
+    end
+
+    def reload_from_file
+      possible_files = ActionController::Base.view_paths.map {|v| "#{v.instance_variable_get '@path'}/doc_templates/#{self.filename}"}
+      filename = possible_files.map{|file_name| file_name if File.exist?(file_name) }.compact.first
+      if filename
+        p "Loading file #{filename}"
+        doc_contents = File.open(filename, 'r').read_whole_file
+        self.update_attribute :document, doc_contents
+      end
     end
   end
 end
