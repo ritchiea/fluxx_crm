@@ -9,9 +9,9 @@
   = form.input :generate_state, :collection => ((model_type.all_states).map{|state| [model_type.state_to_english_translation(state), state]}.compact)
 = form.input :category
 - parent_docs = ModelDocumentTemplate.potential_parents.all
-= form.input :parent, :as => :select, :collection => parent_docs.map {|doc| [doc.description, doc.id]}
+= form.input :related_model_document_template, :as => :select, :collection => parent_docs.map {|doc| [doc.description, doc.id]}
 = form.input :disposition, :label => "Disposition", :as => :select, :collection => [['Body', 'body'], ['Header', 'header'], ['Footer', 'footer']]
-= form.input :insert_page_break_between_flag, :label => "Insert page break between iterations?", :as => :boolean
+= form.input :do_not_insert_page_break, :label => "Do not insert page break between iterations?", :as => :boolean
 - unless model.new_record? || !model.model_type
   %hr
   %p
