@@ -64,7 +64,7 @@ module FluxxProject
     end
     
     def related_organizations
-      project_organizations.map{|ro| ro.organization unless ro.organization.deleted_at}.compact.sort_by{|o| o.name || ''}
+      project_organizations.select{|ro| ro.organization}.map{|ro| ro.organization unless ro.organization.deleted_at}.compact.sort_by{|o| o.name || ''}
     end
     
     def related_work_tasks limit_amount=50
