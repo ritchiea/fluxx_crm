@@ -56,8 +56,8 @@ class ActiveRecord::Base
     end
   end
   
-  def self.insta_formbuilder
-    @@all_formbuilder_classnames << self.name
+  def self.insta_formbuilder display_name=nil
+    @@all_formbuilder_classnames << display_name || self.name
   end
 
   def self.insta_workflow
@@ -271,7 +271,7 @@ class ActiveRecord::Base
   end
 
   def self.all_formbuilder_classnames
-    (@@all_formbuilder_classnames + @@all_workflow_classnames).compact.sort
+    (@@all_formbuilder_classnames + @@all_workflow_classnames).compact.sort.reject{|name| name == 'MachineModel'}
   end
   
   def state_past state_array, marker_state, current_state
