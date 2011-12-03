@@ -60,11 +60,11 @@ class ActiveRecord::Base
     @@all_formbuilder_classnames << display_name || self.name
   end
 
-  def self.insta_workflow
+  def self.insta_workflow display_name=nil
+    @@all_workflow_classnames << (display_name || self.name)
     if respond_to?(:workflow_object) && workflow_object
       yield workflow_object if block_given?
     else
-      @@all_workflow_classnames << self.name
       local_workflow_object = ActiveRecord::ModelDslWorkflow.new(self)
       class_inheritable_reader :workflow_object
       write_inheritable_attribute :workflow_object, local_workflow_object
@@ -267,11 +267,11 @@ class ActiveRecord::Base
   end
 
   def self.all_workflow_classnames
-    @@all_workflow_classnames.sort
+    @@all_workflow_classnames.compact.sort.uniq.reject{|name| name == 'MachineModel'}
   end
 
   def self.all_formbuilder_classnames
-    (@@all_formbuilder_classnames + @@all_workflow_classnames).compact.sort.reject{|name| name == 'MachineModel'}
+    (@@all_formbuilder_classnames + @@all_workflow_classnames).compact.sort.uniq.reject{|name| name == 'MachineModel'}
   end
   
   def state_past state_array, marker_state, current_state
