@@ -197,7 +197,11 @@ module FluxxUser
     def email_login_pass_callback
       if password && !changed_attributes['password'] && login && !changed_attributes['login'] && email
         # The user has never had a login/password assigned before, let's send them an email with the information
-        UserMailer.new_user(self).deliver
+        begin
+          UserMailer.new_user(self).deliver 
+        rescue Exception => e
+          ActiveRecord::Base.logger.error "exception sending a new password email #{e.inspect}, #{e.backtrace.inspect}, email=#{email}"
+        end
       end
     end
     
