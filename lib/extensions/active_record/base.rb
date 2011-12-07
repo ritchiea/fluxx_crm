@@ -61,7 +61,7 @@ class ActiveRecord::Base
   end
 
   def self.insta_workflow display_name=nil
-    @@all_workflow_classnames << (display_name || self.name)
+    @@all_workflow_classnames << (display_name && !display_name.empty? ? display_name : self.name)
     if respond_to?(:workflow_object) && workflow_object
       yield workflow_object if block_given?
     else
