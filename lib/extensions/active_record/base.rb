@@ -57,7 +57,7 @@ class ActiveRecord::Base
   end
   
   def self.insta_formbuilder display_name=nil
-    @@all_formbuilder_classnames << display_name || self.name
+    @@all_formbuilder_classnames << (display_name && !display_name.empty? ? display_name : self.name)
   end
 
   def self.insta_workflow display_name=nil
