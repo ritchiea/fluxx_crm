@@ -12,6 +12,7 @@
 = form.input :related_model_document_template, :as => :select, :collection => parent_docs.map {|doc| [doc.description, doc.id]}
 = form.input :disposition, :label => "Disposition", :as => :select, :collection => [['Body', 'body'], ['Header', 'header'], ['Footer', 'footer']]
 = form.input :do_not_insert_page_break, :label => "Do not insert page break between iterations?", :as => :boolean
+= form.input :display_in_adhoc_list, :label => "Display in the ad-hoc document/letter generation list?", :as => :boolean
 - unless model.new_record? || !model.model_type
   %hr
   %p
