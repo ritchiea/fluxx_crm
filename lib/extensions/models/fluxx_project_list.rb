@@ -9,6 +9,8 @@ module FluxxProjectList
     base.has_many :work_tasks, :as => :taskable, :conditions => {:deleted_at => nil}
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
     
+    base.insta_formbuilder
+
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
     end
