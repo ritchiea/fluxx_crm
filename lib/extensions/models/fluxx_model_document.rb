@@ -70,10 +70,5 @@ module FluxxModelDocument
         self.document.instance_write(:uploaded_filename, CGI::unescape(model_document_actual_filename)) 
       end
     end
-
-    def relates_to_user? user
-      (self.documentable.class.name == 'RequestReport') ?
-        (user.primary_organization.id == self.documentable.request.program_organization_id) || (user.primary_organization.id == self.documentable.request.fiscal_organization_id) : false
-    end
   end
 end
