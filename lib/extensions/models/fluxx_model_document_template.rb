@@ -29,7 +29,7 @@ module FluxxModelDocumentTemplate
     end
     
     def for_type_and_category(model_type, category=nil)
-      clause = where(:model_type => model_type)
+      clause = where(:model_type => model_type, :deleted_at => nil)
       clause = clause.where(:category => category) if category
       clause
     end
