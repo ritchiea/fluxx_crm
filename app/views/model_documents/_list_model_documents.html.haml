@@ -5,6 +5,8 @@
   - if force_show || (model.respond_to?(:model_documents) && model.id)
     - partial_data_src_url = url_for(model_documents_path({:documentable_id => model.id, :documentable_type => model.class.name, :required_doc_ids => required_doc_ids, :skip_wrapper => true, :doc_label => doc_label}))
     .partial{'data-src' => partial_data_src_url, 'class' => 'partial'}
-      = render :partial => "model_documents/model_document_list", :locals => { :models => (model == nil ? [] : model.model_documents.select([:id, :client_id, :created_at, :updated_at, :created_by_id, :updated_by_id, :document_file_name, :document_content_type, :document_file_size, :document_updated_at, :documentable_type, :documentable_id, :locked_until, :locked_by_id, :model_document_type_id, :document_type, :model_document_template_id, :doc_label]).where(:doc_label => doc_label)), :documentable => model, :required_doc_ids => required_doc_ids, :doc_label => doc_label }
+      - model_document_fields = [:id, :created_at, :updated_at, :created_by_id, :updated_by_id, :document_file_name, :document_content_type, :document_file_size, :document_updated_at, :documentable_type, :documentable_id, :locked_until, :locked_by_id, :model_document_type_id, :document_type, :model_document_template_id, :doc_label]
+      - model_document_fields << :client_id if ModelDocument.attribute_method? :client_id
+      = render :partial => "model_documents/model_document_list", :locals => { :models => (model == nil ? [] : model.model_documents.select(model_document_fields).where(:doc_label => doc_label)), :documentable => model, :required_doc_ids => required_doc_ids, :doc_label => doc_label }
       
       
