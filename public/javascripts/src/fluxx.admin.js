@@ -88,8 +88,8 @@ jQuery(function($){
             var oldVal = $input.val();
             var curPos = $input.getCursorPosition();
             $input.val(oldVal.slice(0, curPos) + field + oldVal.slice(curPos));
+            $input.change();
             $('#fluxx-admin .close-modal').click();
-
           }
         }
       }
