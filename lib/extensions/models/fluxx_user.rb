@@ -336,19 +336,16 @@ module FluxxUser
       user_permission.destroy if user_permission
     end
     
-    def all_user_permissions
-      @cached_all_user_permissions = UserPermission.all unless @cached_all_user_permissions
-      @cached_all_user_permissions
-    end
-
     # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
     def has_user_permission? permission_name, related_object = nil
-      # Load up all user_permissions
+      # Load up all user_permissions once per user object; only grab required fields
+      @local_cached_permissions ||= user_permissions.select([:model_type, :name, :id]).all
       
       if related_object
-        user_permissions.where(:model_type => derive_class_name(related_object), :name => permission_name).all
+        related_class_name = derive_class_name(related_object)
+        @local_cached_permissions.select{|perm| related_class_name == perm.model_type && permission_name == perm.name}
       else
-        user_permissions.where(:name => permission_name).all
+        @local_cached_permissions.select{|perm| permission_name == perm.name}
       end.first
     end
 
