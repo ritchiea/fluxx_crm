@@ -64,6 +64,54 @@ jQuery(function($){
           });
         }
       }
+    ],
+    'a.insert-liquid-field' : [
+      'click', function(e) {
+        $.fluxx.util.itEndsWithMe(e);
+        alert('foo');
+      }
     ]
   });
+  $.extend(true, {
+      fluxx: {
+        utility: {
+          insertLiquidField: function ($form) {
+            var field = '',
+                $attribute = $form.find('#form_element_attribute_name'),
+                i = 0;
+            while ($attribute.length > 0) {
+              field += $attribute.val() + '.';
+              $attribute = $form.find('#form_element_config_attribute_name_' + i++);
+            }
+            field = '{{ model.' + field.slice(0, - 1) + ' }}';
+            var $input = $('#fluxx-admin #view_template_template_text');
+            var oldVal = $input.val();
+            var curPos = $input.getCursorPosition();
+            $input.val(oldVal.slice(0, curPos) + field + oldVal.slice(curPos));
+            $('#fluxx-admin .close-modal').click();
+
+          }
+        }
+      }
+  });
 });
+
+new function($) {
+  $.fn.getCursorPosition = function() {
+    var pos = 0;
+    var el = $(this).get(0);
+    // IE Support
+    if (document.selection) {
+        el.focus();
+        var Sel = document.selection.createRange();
+        var SelLength = document.selection.createRange().text.length;
+        Sel.moveStart('character', -el.value.length);
+        pos = Sel.text.length - SelLength;
+    }
+    // Firefox support
+    else if (el.selectionStart || el.selectionStart == '0')
+        pos = el.selectionStart;
+
+    return pos;
+  }
+} (jQuery);
