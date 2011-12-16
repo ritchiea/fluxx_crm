@@ -83,7 +83,8 @@ jQuery(function($){
               field += $attribute.val() + '.';
               $attribute = $form.find('#form_element_config_attribute_name_' + i++);
             }
-            field = '{{ model.' + field.slice(0, - 1) + ' }}';
+            var object_name = $form.find('input[name=insert_object_name]').val();
+            field = '{{ ' + (object_name || 'model') + '.' + field.slice(0, - 1) + ' }}';
             var $input = $('#fluxx-admin #view_template_template_text');
             var $close = $('#fluxx-admin .close-modal');
             if (!$input[0]) {
