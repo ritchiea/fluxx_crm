@@ -17,7 +17,7 @@
         %dt Description:
         %dd
           - if current_user.has_update_for_model?(template)
-            = link_to template, edit_model_document_template_path(:id => template, :as_modal => '1'), :class => 'to-modal wide', 'data-on-success' => 'refreshCaller,close'
+            = link_to template, edit_model_document_template_path(:id => template, :as_modal => '1'), :class => 'new-detail', 'data-on-success' => 'refreshCaller,close'
           - else
             = template.description
         %dt Model Type:

@@ -1,3 +1,10 @@
+-workflow, trans_workflow = MachineWorkflow.find_workflow Request.new
+-if workflow
+  -element = FormElement.new({:machine_workflow_id => workflow.id})
+  -fields = element.all_attributes(:show)
+  -if fields && !fields.empty?
+    =link_to 'Add Existing Field To Template', new_form_element_path(:view => :index, :form_element => {:machine_workflow_id => workflow.id, :element_type => :attribute, :attribute_name => fields.first[0]}), :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
+
 = form.input :document, :label => "Document:", :as => :text, :input_html => {:class => 'wysiwyg', 'data-wysiwyg-buttons' => 'bold,italic,underline,strikethrough,unorderedlist,link,image,disable'}
 = form.input :description
 = form.input :model_type, :as => :hidden

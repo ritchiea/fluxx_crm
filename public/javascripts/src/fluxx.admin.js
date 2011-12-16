@@ -85,11 +85,19 @@ jQuery(function($){
             }
             field = '{{ model.' + field.slice(0, - 1) + ' }}';
             var $input = $('#fluxx-admin #view_template_template_text');
+            var $close = $('#fluxx-admin .close-modal');
+            if (!$input[0]) {
+              $input = $('iframe', $form.fluxxCard());
+              if ($input[0])
+                $input.rteInsertHTML(field);
+              $input = $('.wysiwyg', $form.fluxxCard());
+              $close = $('.close-modal', $form.fluxxCard());
+            }
             var oldVal = $input.val();
             var curPos = $input.getCursorPosition();
             $input.val(oldVal.slice(0, curPos) + field + oldVal.slice(curPos));
             $input.change();
-            $('#fluxx-admin .close-modal').click();
+            $close.click();
           }
         }
       }

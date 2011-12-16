@@ -5,5 +5,37 @@
   -else
     -if params['test-model-id'] && !params['test-model-id'].empty?
       = "Could not find #{model.model_type} with ID #{params['test-model-id']}"
+    -elsif !params['test-model-id']
+      %h1= model.description
+      %div.partial
+        .pairs
+          .key Model Type:
+          .value= model.model_type
+        .pairs
+          .key Document Type:
+          .value= model.document_type
+        - model_type = Kernel.const_get(model.model_type) rescue nil
+        - if model_type and model_type.respond_to? :all_states
+          .pairs
+            .key Generate State:
+            .value= model_type.state_to_english_translation(model.generate_state)
+        .pairs
+          .key Category:
+          .value= model.category
+        .pairs
+          .key Related Model Document Template:
+          .value= model.related_model_document_template
+        .pairs
+          .key Disposition:
+          .value= model.disposition
+        .pairs
+          .key Do not insert page break between iterations:
+          .value= model.do_not_insert_page_break
+        .pairs
+          .key Display in the ad-hoc document/letter generation list:
+          .value= model.display_in_adhoc_list
+      %hr
+      %p
+        =raw model.document
     -else
       No test model ID entered
