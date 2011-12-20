@@ -1,8 +1,12 @@
-Welcome to Fluxx!
+- text = Fluxx.config(:new_user_text)
+- unless text.blank?
+  = raw Liquid::Template.parse(text).render({'new_user' => @new_user, 'login' => @new_user.login, 'password' => @new_user.password, "fluxx_link" => @fluxx_link})
+-else
+  Welcome to Fluxx!
 
-= "Go to: #{@fluxx_link}"
+  = "Go to: #{@fluxx_link}"
 
-= "Your login is: #{@new_user.login}"
+  = "Your login is: #{@new_user.login}"
 
-= "Your password is: #{@new_user.password}"
+  = "Your password is: #{@new_user.password}"
 
