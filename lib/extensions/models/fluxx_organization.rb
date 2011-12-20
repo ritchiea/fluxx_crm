@@ -216,7 +216,9 @@ module FluxxOrganization
       UserOrganization.update_all ['organization_id = ?', self.id], ['organization_id = ?', dup.id] # Now take care of the rest of the user orgs
       
       Organization.update_all ['parent_org_id = ?', id], ['parent_org_id = ?', dup.id]
-      RequestTransaction.update_all ['organization_payee_id = ?', id], ['organization_payee_id = ?', dup.id]
+      if defined? RequestTransaction
+        RequestTransaction.update_all ['organization_payee_id = ?', id], ['organization_payee_id = ?', dup.id]
+      end
     
       # Need to be sure for our polymorphic relations that we're covered
       Note.update_all ['notable_id = ?', self.id], ['notable_type = ? AND notable_id = ?', 'Organization', dup.id]
