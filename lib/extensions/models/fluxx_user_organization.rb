@@ -1,6 +1,5 @@
 module FluxxUserOrganization
   SEARCH_ATTRIBUTES = [:user_id]
-  LIQUID_METHODS = [ :title, :department, :email, :phone ]  
   
   def self.included(base)
     base.belongs_to :user
@@ -21,7 +20,11 @@ module FluxxUserOrganization
     end
     base.insta_export
     base.insta_lock
-    base.liquid_methods *( LIQUID_METHODS )
+    base.insta_template do |insta|
+      insta.entity_name = 'user_organization'
+      insta.add_methods [:title, :department, :email, :phone]
+      insta.remove_methods [:id]
+    end
     
     # If the userorganization was connected as a primary organization, nil out the primary_organization of the use
     base.before_destroy :clear_out_related_primary_organizations

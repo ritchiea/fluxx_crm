@@ -2,7 +2,6 @@ require 'net/ldap'
 module FluxxUser
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :updated_at, :first_name, :last_name, :user_profile_id]
-  LIQUID_METHODS = [:salutation, :prefix, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization, :personal_street_address, :personal_street_address2, :personal_city, :personal_state_name, :personal_postal_code, :personal_country_name]  
 
   def self.included(base)
     base.has_many :user_organizations
@@ -82,10 +81,9 @@ module FluxxUser
     
     base.insta_template do |insta|
       insta.entity_name = 'user'
-      insta.add_methods [:full_name, :main_phone]
+      insta.add_methods [:full_name, :main_phone, :salutation, :prefix, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization, :personal_street_address, :personal_street_address2, :personal_city, :personal_state_name, :personal_postal_code, :personal_country_name]
       insta.remove_methods [:id]
     end
-    base.liquid_methods *( LIQUID_METHODS )    
 
     base.extend(ModelClassMethods)
     base.class_eval do

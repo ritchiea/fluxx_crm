@@ -1,6 +1,5 @@
 module FluxxBankAccount
   SEARCH_ATTRIBUTES = [:created_at, :updated_at, :id, :name, :owner_organization_id, :owner_user_id]
-  LIQUID_METHODS = [ :bank_name, :account_name, :account_number, :special_instructions, :street_address, :street_address2, :city, :state_name, :country_name, :postal_code, :phone, :fax, :bank_code, :bank_contact_name, :bank_contact_phone, :domestic_wire_aba_routing, :domestic_special_wire_instructions, :foreign_wire_intermediary_bank_name, :foreign_wire_intermediary_bank_swift, :foreign_wire_beneficiary_bank_swift, :foreign_special_wire_instructions ]  
   
   def self.included(base)
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
@@ -23,10 +22,9 @@ module FluxxBankAccount
 
     base.insta_template do |insta|
       insta.entity_name = 'bank_account'
-      insta.add_methods []
+      insta.add_methods [:bank_name, :account_name, :account_number, :special_instructions, :street_address, :street_address2, :city, :state_name, :country_name, :postal_code, :phone, :fax, :bank_code, :bank_contact_name, :bank_contact_phone, :domestic_wire_aba_routing, :domestic_special_wire_instructions, :foreign_wire_intermediary_bank_name, :foreign_wire_intermediary_bank_swift, :foreign_wire_beneficiary_bank_swift, :foreign_special_wire_instructions ]  
       insta.remove_methods [:id]
     end
-    base.liquid_methods *( LIQUID_METHODS )    
 
     base.insta_utc do |insta|
       insta.time_attributes = [] 

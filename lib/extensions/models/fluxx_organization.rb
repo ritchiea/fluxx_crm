@@ -2,8 +2,6 @@ module FluxxOrganization
   include ::URLCleaner
   SEARCH_ATTRIBUTES = [:state, :created_at, :updated_at, :name, :id, :city, :geo_country_id, :geo_state_id, :postal_code]
   
-  LIQUID_METHODS = [:name, :display_name, :street_address, :street_address2, :city, :state_name, :state_abbreviation, :postal_code, :country_name, :url, :acronym, :bank_accounts, :tax_id, :tax_class_name]  
-  
   def self.included(base)
     base.has_many :user_organizations
     base.has_many :users, :through => :user_organizations, :conditions => {:users => {:deleted_at => nil}}
@@ -51,10 +49,9 @@ module FluxxOrganization
 
     base.insta_template do |insta|
       insta.entity_name = 'organization'
-      insta.add_methods [:geo_country, :geo_state, :name_and_location]
+      insta.add_methods [:geo_country, :geo_state, :name_and_location, :name, :display_name, :street_address, :street_address2, :city, :state_name, :state_abbreviation, :postal_code, :country_name, :url, :acronym, :bank_accounts, :tax_id, :tax_class_name]
       insta.remove_methods [:id]
     end
-    base.liquid_methods *( LIQUID_METHODS )  
 
     base.validates_presence_of     :name
     base.validates_length_of       :name,    :within => 3..255
