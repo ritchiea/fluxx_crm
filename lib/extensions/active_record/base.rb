@@ -271,7 +271,7 @@ class ActiveRecord::Base
   end
 
   def self.all_formbuilder_classnames
-    (@@all_formbuilder_classnames + @@all_workflow_classnames).compact.sort.uniq.reject{|name| name == 'MachineModel'}
+    (@@all_formbuilder_classnames).compact.sort.uniq.reject{|name| name == 'MachineModel'}
   end
   
   def state_past state_array, marker_state, current_state

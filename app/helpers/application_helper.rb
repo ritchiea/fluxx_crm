@@ -14,7 +14,7 @@ module ApplicationHelper
   end
 
   def show_path_for_model model, options={}
-    send("#{model.class.name.tableize.pluralize.downcase}_path", options)
+    send("#{model.class.calculate_form_name.to_s}_path", options)
   end
 
   def plural_by_list list, singular, plural=nil
