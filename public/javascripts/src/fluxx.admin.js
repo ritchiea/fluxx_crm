@@ -79,9 +79,11 @@ jQuery(function($){
             var field = '',
                 $attribute = $form.find('#form_element_attribute_name'),
                 i = 0;
-            while ($attribute.length > 0) {
-              field += $attribute.val() + '.';
-              $attribute = $form.find('#form_element_config_attribute_name_' + i++);
+            while ($attribute[0] && $attribute.val()) {
+              var $nextAttr = $form.find('#form_element_config_attribute_name_' + i++);
+              var attr = ($nextAttr[0] && $nextAttr.val() ? $attribute.val().replace(/\_id$/, '') : $attribute.val());
+              field += attr + '.';
+              $attribute = $nextAttr;
             }
             var object_name = $form.find('input[name=insert_object_name]').val();
             field = '{{ ' + (object_name || 'model') + '.' + field.slice(0, - 1) + ' }}';
