@@ -49,7 +49,7 @@ module FluxxOrganization
 
     base.insta_template do |insta|
       insta.entity_name = 'organization'
-      insta.add_methods [:geo_country, :geo_state, :name_and_location, :name, :display_name, :street_address, :street_address2, :city, :state_name, :state_abbreviation, :postal_code, :country_name, :url, :acronym, :bank_accounts, :tax_id, :tax_class_name]
+      insta.add_methods [:created_by, :updated_by, :geo_country, :geo_state, :name_and_location, :name, :display_name, :street_address, :street_address2, :city, :state_name, :state_abbreviation, :postal_code, :country_name, :url, :acronym, :bank_accounts, :tax_id, :tax_class_name]
       insta.remove_methods [:id]
     end
 

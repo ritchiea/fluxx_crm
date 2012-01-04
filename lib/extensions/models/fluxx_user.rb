@@ -81,7 +81,7 @@ module FluxxUser
     
     base.insta_template do |insta|
       insta.entity_name = 'user'
-      insta.add_methods [:full_name, :main_phone, :salutation, :prefix, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization, :personal_street_address, :personal_street_address2, :personal_city, :personal_state_name, :personal_postal_code, :personal_country_name]
+      insta.add_methods [:full_name, :main_phone, :salutation, :prefix, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization, :personal_street_address, :personal_street_address2, :personal_city, :personal_state_name, :personal_postal_code, :personal_country_name, :created_by, :updated_by]
       insta.remove_methods [:id]
     end
 
