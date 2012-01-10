@@ -322,16 +322,20 @@ module FluxxUser
 ######################################### PERMISSIONS
 
     def add_permission permission_name, related_object = nil
-      if related_object
+      perm = if related_object
         user_permissions.create :name => permission_name, :model_type => derive_class_name(related_object) if related_object
       else
         user_permissions.create :name => permission_name
       end
+      @local_cached_permissions = nil
+      perm
     end
 
     def remove_permission permission_name, related_object = nil
       user_permission = has_permission? permission_name, related_object
-      user_permission.destroy if user_permission
+      result = user_permission.destroy if user_permission
+      @local_cached_permissions = nil
+      result
     end
     
     # Includes a device to map related_objects to their parents, so if a user does not have a relationship to the related_object, they may have one to the parent
@@ -350,7 +354,7 @@ module FluxxUser
     # Add a permission if none exists
     def has_permission! permission_name, related_object = nil, remove_permission=false
       permission = has_permission? permission_name, derive_class_name(related_object)
-      if remove_permission
+      result = if remove_permission
         permission.destroy
       else
         if permission
@@ -359,6 +363,8 @@ module FluxxUser
           permission = add_permission permission_name, related_object
         end
       end
+      @local_cached_permissions = nil
+      result
     end
     
     def derive_class_name related_object
@@ -372,7 +378,9 @@ module FluxxUser
     end
 
     def clear_permission permission_name, related_object = nil
-      has_permission! permission_name, related_object, true
+      result = has_permission! permission_name, related_object, true
+      @local_cached_permissions = nil
+      result
     end
 
     # Check for either a simple permission or a profile rule for the permission associated with this user
