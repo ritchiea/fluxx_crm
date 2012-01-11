@@ -29,6 +29,11 @@ module FluxxModelDocument
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
     end
+    
+    base.insta_json do |insta|
+      insta.add_method 'full_url'
+    end
+    
 
     base.validates_presence_of :documentable
     base.validates_attachment_presence :document
@@ -69,6 +74,10 @@ module FluxxModelDocument
         self.document.instance_write(:file_name, CGI::unescape(model_document_actual_filename)) 
         self.document.instance_write(:uploaded_filename, CGI::unescape(model_document_actual_filename)) 
       end
+    end
+    
+    def full_url
+      self.document.url
     end
   end
 end
