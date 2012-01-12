@@ -41,7 +41,9 @@ module FluxxGroup
     end
     
     def delete_all_group_members
-      group_members.destroy
+      # Note: group_members.destroy_all will instantiate each group_member and call destroy on it, which is inefficient; but that is the way to go if you want to account for a ripple effect if other records need to be deleted as well.  "Instantiation, callback execution, and deletion of each record can be time consuming when you’re removing many records at once. It generates at least one SQL DELETE query per record (or possibly more, to enforce your callbacks). If you want to delete many rows quickly, without concern for their associations or callbacks, use delete_all instead."
+      # Note: group_members.delete_all will set the group_id to null for any members that match the group_id, which is pretty useless
+      GroupMember.delete_all ['group_id = ?', self.id] # This is straight SQL.  Note this does not update sphinx for the element associated with the group_member for performance reasons
     end
   end
 end
