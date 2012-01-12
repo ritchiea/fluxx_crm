@@ -5,6 +5,7 @@ module FluxxGroup
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
     base.validates_length_of       :name,    :within => 2..250
     base.validates_uniqueness_of   :name
+    base.before_destroy :delete_all_group_members
     
     base.insta_search
 
@@ -29,6 +30,18 @@ module FluxxGroup
   module ModelInstanceMethods
     def update_related_data
       favorable.update_attribute :delta, 1 if favorable
+    end
+
+    def deletable?
+      true
+    end
+    
+    def number_of_associated_records
+      group_members.count
+    end
+    
+    def delete_all_group_members
+      group_members.destroy
     end
   end
 end
