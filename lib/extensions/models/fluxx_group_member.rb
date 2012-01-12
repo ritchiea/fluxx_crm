@@ -6,6 +6,7 @@ module FluxxGroupMember
     base.belongs_to :group
     base.belongs_to :created_by, :class_name => 'User', :foreign_key => 'created_by_id'
     base.belongs_to :updated_by, :class_name => 'User', :foreign_key => 'updated_by_id'
+    base.after_save :update_related_object
     
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
@@ -25,5 +26,15 @@ module FluxxGroupMember
   end
 
   module ModelInstanceMethods
+    def update_related_object
+      # Force the groupable object to update
+      related_type = Object.const_get groupable_type rescue nil
+      if related_type && groupable.respond_to?(:delta)
+        related_type.update_all 'delta = 1', ['id = ?', groupable_id]
+        o = related_type.find(groupable_id)
+        o.delta = 1
+        o.save 
+      end
+    end
   end
 end
