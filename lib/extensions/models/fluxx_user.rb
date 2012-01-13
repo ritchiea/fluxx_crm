@@ -167,6 +167,88 @@ module FluxxUser
   end
 
   module ModelInstanceMethods
+    
+    # maps our user object to standard LDAP schemas
+    def to_ldap_entry
+      # id, login, first_name, last_name, email, personal_email, salutation, prefix, middle_initial, 
+      # personal_phone, personal_mobile, personal_fax, 
+      # personal_street_address, personal_street_address2, personal_city, personal_geo_state_id, personal_geo_country_id, personal_postal_code, 
+      # work_phone, work_fax, other_contact, assistant_name, assistant_phone, assistant_email, 
+      # blog_url, twitter_url, birth_at, user_salutation, 
+      # primary_user_organization_id, time_zone, linkedin_url, facebook_url, first_name_foreign_language, middle_name_foreign_language, last_name_foreign_language
+      { 
+        # top
+        "objectclass" =>  [ "top", "person", "organizationalPerson", "inetOrgPerson", "mozillaOrgPerson"],
+        
+        # person
+        # MAY ( description $ seeAlso $ telephoneNumber $ userPassword ) 
+        # MUST ( cn $ sn )
+        "sn" => [last_name],
+        "cn" => [full_name],
+        "telephoneNumber" => [work_phone],
+        # "description" => ["description"],
+        
+        # organizationalPerson
+        # MAY ( destinationIndicator $ facsimileTelephoneNumber $ internationaliSDNNumber $ l $ ou $ physicalDeliveryOfficeName $ postOfficeBox $ postalAddress $ postalCode $ preferredDeliveryMethod $ registeredAddress $ st $ street $ telephoneNumber $ teletexTerminalIdentifier $ telexNumber $ title $ x121Address )
+        "ou" => [primary_user_organization.present? ? primary_user_organization.department : ""],
+        "facsimileTelephoneNumber" => [work_fax],
+        # "facsimileTelephoneNumber" => [personal_fax],
+        "title" => [title],
+        "street" => [ primary_organization ? primary_organization.street_address : nil],
+        "street2" => [primary_organization ? primary_organization.street_address2 : nil], #?? TODO
+        "l" => [primary_organization ? primary_organization.city : nil],
+        "st" => [primary_organization ? primary_organization.state_name : nil],
+        "c" => [primary_organization ? primary_organization.country_name : nil],
+        # "postalAddress" => ["postalAddress"], # ??
+        "postalCode" => [primary_organization ? primary_organization.postal_code : nil],
+        
+        # inetOrgPerson
+        # MAY ( audio $ businessCategory $ carLicense $ departmentNumber $ displayName $ employeeNumber $ employeeType $ givenName $ homePhone $ homePostalAddress $ initials $ jpegPhoto $ labeledURI $ mail $ manager $ mobile $ o $ pager $ photo $ preferredLanguage $ roomNumber $ secretary $ uid $ userCertificate $ userPKCS12 $ userSMIMECertificate $ x500uniqueIdentifier )
+        "o" => [primary_org_name],
+        "givenName" => [first_name],
+        "homePhone" => [personal_phone],
+        "homePostalAddress" => [full_personal_address],        
+        "mail" => [email],
+        "mobile" => [personal_mobile],
+        # "pager" => ["pager"],
+        "secretary" => [assistant_name],
+        "uid" => [login]
+        
+        # mozillaOrgPerson
+        # MAY ( sn $ givenName $ cn $ displayName $ mozillaNickname $ title $ telephoneNumber $ facsimileTelephoneNumber $ mobile $ pager $ homePhone $ street $ postalCode $ mozillaPostalAddress2 $ mozillaHomeStreet $ mozillaHomePostalAddress2 $ l $ mozillaHomeLocalityName $ st $ mozillaHomeState $ mozillaHomePostalCode $ c $ mozillaHomeCountryName $ co $ mozillaHomeFriendlyCountryName $  ou $ o $ mail $ mozillaSecondEmail $ mozillaUseHtmlMail $ nsAIMid $ mozillaHomeUrl $ mozillaWorkUrl $ description $ mozillaCustom1 $ mozillaCustom2 $ mozillaCustom3 $ mozillaCustom4 )        
+        # "mozillaPostalAddress2" => ["mozillaPostalAddress2"],
+        # "mozillaHomeStreet" => ["mozillaHomeStreet"],
+        # "mozillaHomePostalAddress2" => ["mozillaHomePostalAddress2"],
+        # "mozillaHomeLocalityName" => ["mozillaHomeLocalityName"],
+        # "mozillaHomeState" => ["mozillaHomeState"],
+        # "mozillaHomePostalCode" => ["mozillaHomePostalCode"],
+        # "mozillaHomeCountryName" => ["mozillaHomeCountryName"]
+        # "mozillaHomeFriendlyCountryName" => ["mozillaHomeFriendlyCountryName"],
+        # "mozillaSecondEmail" => ["mozillaSecondEmail"],
+        # "mozillaUseHtmlMail" => ["mozillaUseHtmlMail"],
+        # "nsAIMid" => ["nsAIMid"],
+        # "mozillaHomeUrl" => ["mozillaHomeUrl"],
+        # "mozillaWorkUrl" => ["mozillaWorkUrl"],
+        # "mozillaCustom1" => ["mozillaCustom1"],
+        # "mozillaCustom2" => ["mozillaCustom2"],
+        # "mozillaCustom3" => ["mozillaCustom3"],
+        # "mozillaCustom4" => ["mozillaCustom4"]
+      }
+    end
+    
+    def full_personal_address
+      str = []
+      str << personal_street_address if personal_street_address.present?
+      str << personal_street_address2 if personal_street_address2.present?
+      str << personal_city if personal_city.present?
+      state_str = []
+      state_str << personal_state_name if personal_state_name.present?
+      state_str << personal_postal_code if personal_postal_code.present?
+      state_str << personal_country_name if personal_country_name.present?
+      str << state_str.join(' ') unless state_str.empty?
+      str.compact.join(', ')
+    end
+    
     def login=(value)
       write_attribute :login, (value.blank? ? nil : value)
     end

@@ -272,6 +272,21 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 8, random_pass.size
   end
   
+  test "to_ldap_entry" do
+    user = User.make
+    ldap_entry = user.to_ldap_entry
+    assert_equal [user.login], ldap_entry['uid']
+    assert_equal [user.first_name], ldap_entry['givenName']
+    assert_equal [user.last_name], ldap_entry['sn']
+    assert_equal [user.full_name], ldap_entry['cn']
+  end
+
+  test 'full_personal_address' do
+    user = User.make(:personal_street_address=> 'a', :personal_street_address2=>"a2", :personal_city=>"c", :personal_postal_code=>'p')
+    addr = user.full_personal_address
+    assert_equal "a, a2, c, p", addr
+  end
+  
 end
 
 class TestModel

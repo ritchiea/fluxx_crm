@@ -152,3 +152,12 @@ namespace :fluxx_crm do
     end
   end
 end
+
+namespace :fluxx_ldap_server do
+  desc "Start Fluxx LDAP server"
+  task :start => :environment do
+    ldap_logger = ActiveSupport::BufferedLogger.new("#{Rails.root}/log/fluxx_ldap_server.log")
+    ldap_config = File.join(Rails.root, 'config', "fluxx_ldap_server.yml")
+    FluxxLdapServer.new(:logger => ldap_logger, :config => ldap_config).start
+  end
+end

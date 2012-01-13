@@ -1,0 +1,21 @@
+development: &defaults
+  basedn: dc=fluxx,dc=io
+  port: 1389
+  operation_class: FluxxUserOperation
+  allow_anonymous_access: false
+
+fastdev:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+demo:
+  <<: *defaults
+
+production:
+  <<: *defaults
+
