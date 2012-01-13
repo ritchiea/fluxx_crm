@@ -13,13 +13,16 @@
       -if model.new_record? && Fluxx.config(:priority_time_zones)
         -form.object.time_zone = Fluxx.config(:priority_time_zones)
       = form.input :time_zone, :as => :time_zone, :priority_zones => /#{Fluxx.config(:priority_time_zones)}/ || /Pacific Time|Beijing/
-
 %fieldset.inputs
   %ol 
     = form.input :prefix, :label => "Prefix"
     = form.input :first_name, :label => "First Name", :input_html => {"data-duplicate-lookup" => "/users.autocomplete", "data-related" => "#user_last_name"}
     = form.input :middle_initial, :label => "Middle Name"
     = form.input :last_name, :label => "Last Name", :input_html => {"data-duplicate-lookup" => "/users.autocomplete", "data-related" => "#user_first_name"}
+    = form.input :first_name_foreign_language, :label => "First Name (Foreign Language)"
+    = form.input :middle_name_foreign_language, :label => "Middle Name (Foreign Language)"
+    = form.input :last_name_foreign_language, :label => "Last Name (Foreign Language)"
+
 %fieldset.inputs
   %ol  
     = form.input :email, :label => "Email"
@@ -40,7 +43,7 @@
   %ol
     = form.input :personal_email, :label => "Personal Email"
     = form.input :blog_url, :label => "Personal Blog", :placeholder => 'http://'
-    = form.input :twitter_url, :label => 'Personal Twitter:'
+    =render :partial => "users/social_network_fields", :locals => {:form => form}
     = form.input :birth_at, :label => 'Birthday:', :"data-year-range" => "-100:-5"
 %fieldset.inputs
   %ol

@@ -1,4 +1,9 @@
-%h1.minimize-detail-pull= [model.prefix, model.first_name, model.middle_initial, model.last_name].join ' '
+%h1.minimize-detail-pull
+  = [model.prefix, model.first_name, model.middle_initial, model.last_name].join ' '
+  -foreign_name = [model.first_name_foreign_language, model.middle_name_foreign_language, model.last_name_foreign_language].join(' ').gsub(/\s+$/, '')
+  -unless foreign_name.chomp.empty?
+    %br
+    =foreign_name
 = model.user_profile.name if model.user_profile
 - primary_user_org = model.primary_user_organization
 - if primary_user_org
@@ -57,6 +62,10 @@
     - if model.personal_country_name
       %br
       %span.country= model.personal_country_name
+    - if model.personal_email
+      %br
+      %span.personal_email= model.personal_email
+
   - unless model.personal_phone.blank?
     .pairs
       .key Home Phone
