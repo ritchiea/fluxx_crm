@@ -16,6 +16,8 @@ Gem::Specification.new do |s|
   s.test_files        = `git ls-files -- {test}/*`.split("\n")
   s.require_paths     = ["lib"]
 
+  s.add_dependency 'ruby-ldapserver', '~> 0.3.1'
+
   s.add_development_dependency 'capybara', '0.3.7'
   s.add_development_dependency 'machinist', '~> 1.0.6'
   s.add_development_dependency 'faker', '>= 0.3.1'
