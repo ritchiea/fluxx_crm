@@ -441,11 +441,11 @@ module FluxxCrmAlert
       t = model_type.constantize.arel_table
 
       due_in_predicates = filter_as_hash.select{ |k,_| k == "due_in_days"}.map do |(k,val)|
-        t["due_at"].lteq_any([val].flatten.map{|v| v.to_i.days.from_now})
+        t["due_at"].lteq_any([val].flatten.map{|v| v.to_i.days.from_now.beginning_of_day})
       end
 
       overdue_by_predicates = filter_as_hash.select{ |k,_| k == "overdue_by_days"}.map do |(k,val)|
-        t["due_at"].lteq_any([val].flatten.map{|v| v.to_i.days.ago})
+        t["due_at"].lteq_any([val].flatten.map{|v| v.to_i.days.ago.beginning_of_day})
       end
 
       predicate = (due_in_predicates + overdue_by_predicates).inject(:or)
