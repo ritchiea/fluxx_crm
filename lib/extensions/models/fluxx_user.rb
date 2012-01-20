@@ -212,7 +212,7 @@ module FluxxUser
         "mobile" => [personal_mobile],
         # "pager" => ["pager"],
         "secretary" => [assistant_name],
-        "uid" => [login]
+        "uid" => [id] # make sure dn is unique
         
         # mozillaOrgPerson
         # MAY ( sn $ givenName $ cn $ displayName $ mozillaNickname $ title $ telephoneNumber $ facsimileTelephoneNumber $ mobile $ pager $ homePhone $ street $ postalCode $ mozillaPostalAddress2 $ mozillaHomeStreet $ mozillaHomePostalAddress2 $ l $ mozillaHomeLocalityName $ st $ mozillaHomeState $ mozillaHomePostalCode $ c $ mozillaHomeCountryName $ co $ mozillaHomeFriendlyCountryName $  ou $ o $ mail $ mozillaSecondEmail $ mozillaUseHtmlMail $ nsAIMid $ mozillaHomeUrl $ mozillaWorkUrl $ description $ mozillaCustom1 $ mozillaCustom2 $ mozillaCustom3 $ mozillaCustom4 )        

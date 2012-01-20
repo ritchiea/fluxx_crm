@@ -275,7 +275,7 @@ class UserTest < ActiveSupport::TestCase
   test "to_ldap_entry" do
     user = User.make
     ldap_entry = user.to_ldap_entry
-    assert_equal [user.login], ldap_entry['uid']
+    assert_equal [user.id], ldap_entry['uid']
     assert_equal [user.first_name], ldap_entry['givenName']
     assert_equal [user.last_name], ldap_entry['sn']
     assert_equal [user.full_name], ldap_entry['cn']
