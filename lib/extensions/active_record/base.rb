@@ -294,7 +294,7 @@ class ActiveRecord::Base
 
   def current_user_session
     return @current_user_session if defined?(@current_user_session)
-    @current_user_session = UserSession.find
+    @current_user_session = UserSession.find rescue nil
   end
 
   def current_user
@@ -304,7 +304,8 @@ class ActiveRecord::Base
           if defined?(@current_user)
             @current_user
           else
-            @current_user = current_user_session && current_user_session.user
+            session = current_user_session
+            @current_user = session.user if session
           end
         end
       end
