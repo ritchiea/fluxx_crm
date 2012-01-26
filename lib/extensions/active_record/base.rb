@@ -58,6 +58,15 @@ class ActiveRecord::Base
   
   def self.insta_formbuilder display_name=nil
     @@all_formbuilder_classnames << (display_name && !display_name.empty? ? display_name : self.name)
+    
+    if respond_to?(:form_builder_object) && form_builder_object
+      yield form_builder_object if block_given?
+    else
+      local_form_builder_object = ActiveRecord::ModelDslFormBuilder.new(self)
+      class_inheritable_reader :form_builder_object
+      write_inheritable_attribute :form_builder_object, local_form_builder_object
+      yield local_form_builder_object if block_given?
+    end
   end
 
   def self.insta_workflow display_name=nil

@@ -7,6 +7,7 @@ class AdminDefaults
   attr_accessor :methods
   attr_accessor :validations
   attr_accessor :pre_create 
+  attr_accessor :forms
   
   def initialize
   end
