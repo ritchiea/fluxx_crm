@@ -2,6 +2,12 @@
 %h1.organization-name= model.name
 %span.organization-id{:style => "display: none"}
   = model.id
+- avg_eval_rating = model.average_grant_rating if model.respond_to?(:average_grant_rating)
+- if avg_eval_rating
+  %p
+  Average Grant Rating: 
+  = number_with_precision avg_eval_rating, :precision => 1
+  
 %h2= "Headquarters"
 = render :partial => "insta/show/contact_info", :locals => {:location => model, :detailed => true}
 - unless params[:show_satellite]
