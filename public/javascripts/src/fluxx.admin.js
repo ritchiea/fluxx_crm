@@ -8,12 +8,11 @@ jQuery(function($){
           url: $elem.attr('href'),
           success: function(data) {
             $.modal(data, {
-              position: ["15%",],
+              position: ["10%", "10%"],
               overlayId: 'modal-overlay',
               containerId: 'modal-container',
               dataId: $elem.attr('data-container-id') ? $elem.attr('data-container-id') : 'simplemodal-data',
               onOpen: function(dialog) {
-                $.my.stage.resizeFluxxStage();
                 var lastItem =  $.cookie('fluxx-admin-last-item');
                 if (lastItem)
                   lastItem =  $('#fluxx-admin li.entry[href="' + lastItem + '"]');
@@ -22,7 +21,9 @@ jQuery(function($){
                 lastItem.click();
                 dialog.overlay.fadeIn(200, function () {
                   dialog.container.fadeIn(200, function () {
-                    dialog.data.fadeIn(200)
+                    dialog.data.fadeIn(200, function () {
+                      $.my.stage.resizeFluxxStage();
+                    });
                   });
                 });
               },
@@ -55,7 +56,7 @@ jQuery(function($){
             area: $detail,
             url: $elem.attr('href')
           };
-           $detail
+          $detail
             .addClass('updating')
             .children()
             .fadeTo(300, 0);
