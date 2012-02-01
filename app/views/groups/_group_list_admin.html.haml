@@ -5,7 +5,10 @@
     = link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_group_path, :title => 'Add A Group', :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
 
 - if !models || models.empty?
-  %p= "No Groups available"
+  .warning
+    No Groups available.
+    %br
+    = link_to "Add one now", new_group_path, :title => 'Add A Group', :class => 'to-modal', 'data-on-success' => 'refreshCaller,close'
 - else
   - models.each do |model|
     %div

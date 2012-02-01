@@ -10,6 +10,7 @@
         .body
   %ul{:id => "admin-buttons", :class => "buttons"}
     %li
-      =link_to "Save Changes", "#", :class => "admin-submit"
-      =link_to "Cancel", "#", :class => "refresh-partial"
+      =link_to "Apply", "#", :class => "admin-submit disabled"
+    %li
+      =link_to "Revert", "#", :class => "refresh-partial disabled"
 
