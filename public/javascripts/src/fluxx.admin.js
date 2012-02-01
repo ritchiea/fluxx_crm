@@ -47,7 +47,6 @@ jQuery(function($){
         var $elem = $(this);
         if ($elem.attr('href') != "") {
           $.cookie('fluxx-admin-last-item', $elem.attr('href'));
-          $('#admin-buttons').fadeOut();
           $('#fluxx-admin li.entry').removeClass('selected');
           $elem.addClass('selected');
           var $detail = $('#fluxx-admin .fluxx-admin-partial');
@@ -60,16 +59,16 @@ jQuery(function($){
             .addClass('updating')
             .children()
             .fadeTo(300, 0);
+          var $buttons = $('#fluxx-admin #admin-buttons');
+          if ($elem.hasClass('show-save-buttons'))
+            $buttons.show();
+          else
+            $buttons.hide();
           $elem.fluxxCardLoadContent(properties, function() {
             $detail.removeClass('updating').children().fadeTo(300, 1);
+            $.my.stage.resizeFluxxStage();
           });
         }
-      }
-    ],
-    'a.insert-liquid-field' : [
-      'click', function(e) {
-        $.fluxx.util.itEndsWithMe(e);
-        alert('foo');
       }
     ]
   });
