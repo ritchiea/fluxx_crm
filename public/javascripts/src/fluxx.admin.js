@@ -8,7 +8,7 @@ jQuery(function($){
           url: $elem.attr('href'),
           success: function(data) {
             $.modal(data, {
-              position: ["10%", "10%"],
+              position: ["10%"],
               overlayId: 'modal-overlay',
               containerId: 'modal-container',
               dataId: $elem.attr('data-container-id') ? $elem.attr('data-container-id') : 'simplemodal-data',
