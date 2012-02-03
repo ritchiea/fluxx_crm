@@ -75,32 +75,35 @@ jQuery(function($){
   $.extend(true, {
       fluxx: {
         utility: {
-          insertLiquidField: function ($form) {
+          insertLiquidField: function ($elem) {
+            var $form = $elem.parents('form:first')
             var field = '',
-                $attribute = $form.find('#form_element_attribute_name'),
+                $attribute = $form.find('[name="element_name"]'),
                 i = 0;
             while ($attribute[0] && $attribute.val()) {
-              var $nextAttr = $form.find('#form_element_config_attribute_name_' + i++);
+              var $nextAttr = $form.find('[name = "config_element_name_' + i++ + '"]');
               var attr = ($nextAttr[0] && $nextAttr.val() ? $attribute.val().replace(/\_id$/, '') : $attribute.val());
               field += attr + '.';
               $attribute = $nextAttr;
             }
             var object_name = $form.find('input[name=insert_object_name]').val();
-            field = '{{ ' + (object_name || 'model') + '.' + field.slice(0, - 1) + ' }}';
-            var $input = $('#fluxx-admin #view_template_template_text');
-            var $close = $('#fluxx-admin .close-modal');
-            if (!$input[0]) {
-              $input = $('iframe', $form.fluxxCard());
-              if ($input[0])
-                $input.rteInsertHTML(field);
-              $input = $('.wysiwyg', $form.fluxxCard());
-              $close = $('.close-modal', $form.fluxxCard());
+            if (field) {
+              field = '{{ ' + (object_name || 'model') + '.' + field.slice(0, - 1) + ' }}';
+              var $input = $('#fluxx-admin #view_template_template_text');
+              var $close = $('#fluxx-admin .close-modal');
+              if (!$input[0]) {
+                $input = $('iframe', $form.fluxxCard());
+                if ($input[0])
+                  $input.rteInsertHTML(field);
+                $input = $('.wysiwyg', $form.fluxxCard());
+                $close = $('.close-modal', $form.fluxxCard());
+              }
+              var oldVal = $input.val();
+              var curPos = $input.getCursorPosition();
+              if (field)
+                $input.val(oldVal.slice(0, curPos) + field + oldVal.slice(curPos));
+              $input.change();
             }
-            var oldVal = $input.val();
-            var curPos = $input.getCursorPosition();
-            $input.val(oldVal.slice(0, curPos) + field + oldVal.slice(curPos));
-            $input.change();
-            $close.click();
           }
         }
       }
