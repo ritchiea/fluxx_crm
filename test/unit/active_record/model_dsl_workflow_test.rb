@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ModelDslWorkflowTest < ActiveSupport::TestCase
   def setup
-    @dsl_workflow = ActiveRecord::ModelDslWorkflow.new Race
+    @dsl_workflow = Race.workflow_object
   end
   
   test 'state and events should both initally be empty' do
@@ -124,5 +124,34 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
     kicked_off_race2 = Race.make; kicked_off_race2.kick_off; kicked_off_race2.save!
 
     assert_equal [rejected_race1, rejected_race2, kicked_off_race1, kicked_off_race2].map(&:id).sort, rejected_or_kicked_off_races.map(&:id).sort
+  end
+  
+  test "make sure that validate_before_enter_state_category kicks off on state transitions" do
+    
+    angry_races = []
+    @dsl_workflow.validate_before_enter_state_category('angry') do |race|
+      angry_races << race
+    end
+    
+    middle_race = Race.make(:state => 'middle')
+    middle_race.send_back_starting_line; middle_race.save!
+    new_race = Race.make(:state => 'new')
+    new_race.kick_off; new_race.save!
+    new_race.state = 'rejected'; new_race.save!
+
+    assert_equal [new_race].map(&:id).sort, angry_races.map(&:id).sort
+  end
+  
+  test "make sure that we get a validation error on state transitions" do
+    error_message = 'at least one sprinter is missing'
+    error_id = :missing_sprinter
+    @dsl_workflow.validate_before_enter_state_category('angry') do |race|
+      errors[error_id] << error_message
+    end
+    new_race = Race.make(:state => 'new')
+    new_race.kick_off; 
+    retval = new_race.save
+    assert !retval
+    assert error_message, new_race.errors[error_id]
   end
 end

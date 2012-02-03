@@ -294,14 +294,17 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
 
   def on_enter_state_category(*state_category_names, &on_enter_behaviour)
-    cat_states = []
-    state_category_names.each do |state_category_name|
-      cat_states += states_for_category(state_category_name)
-    end
-
     self.model_class.after_save do
-      on_enter_behaviour.call(self) if state_changed? && cat_states.include?(state)
+      cat_states = state_category_names.map {|cat_name| self.class.all_states_with_category(cat_name)}.flatten.compact
+      on_enter_behaviour.call(self) if state_changed? && cat_states.include?(state && state.to_sym)
     end
+  end
+  
+  def validate_before_enter_state_category(*state_category_names, &validate_behaviour)
+    self.model_class.validate validate_behaviour, :if => (Proc.new do |model| 
+      cat_states = state_category_names.map {|cat_name| self.class.all_states_with_category(cat_name)}.flatten.compact
+      state_changed? && cat_states.include?(state && state.to_sym)
+    end)
   end
   
   def alert_on_state_change model, state

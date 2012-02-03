@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111122181306) do
+ActiveRecord::Schema.define(:version => 20120203231224) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -140,6 +140,18 @@ ActiveRecord::Schema.define(:version => 20111122181306) do
 
   add_index "client_stores", ["user_id", "client_store_type"], :name => "index_client_stores_on_user_id_and_client_store_type"
   add_index "client_stores", ["user_id"], :name => "index_client_stores_on_user_id"
+
+  create_table "dashboard_templates", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_id"
+    t.integer  "updated_by_id"
+    t.string   "name"
+    t.text     "data"
+  end
+
+  add_index "dashboard_templates", ["created_by_id"], :name => "dashboard_templates_created_by_id"
+  add_index "dashboard_templates", ["updated_by_id"], :name => "dashboard_templates_updated_by_id"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -280,13 +292,13 @@ ActiveRecord::Schema.define(:version => 20111122181306) do
     t.string   "category"
     t.text     "document"
     t.datetime "deleted_at"
-    t.boolean  "delta",                          :default => true,  :null => false
-    t.boolean  "display_in_adhoc_list",          :default => false, :null => false
+    t.boolean  "delta",                     :default => true,  :null => false
+    t.boolean  "display_in_adhoc_list",     :default => false, :null => false
     t.string   "generate_state"
     t.string   "document_content_type"
     t.string   "disposition"
     t.integer  "related_model_document_id"
-    t.boolean  "insert_page_break_between_flag"
+    t.boolean  "do_not_insert_page_break"
   end
 
   add_index "model_document_templates", ["category"], :name => "index_model_document_templates_on_category"
