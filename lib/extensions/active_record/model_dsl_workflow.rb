@@ -296,14 +296,16 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   def on_enter_state_category(*state_category_names, &on_enter_behaviour)
     self.model_class.after_save do
       cat_states = state_category_names.map {|cat_name| self.class.all_states_with_category(cat_name)}.flatten.compact
-      on_enter_behaviour.call(self) if state_changed? && cat_states.include?(state && state.to_sym)
+      # Handle either symbols or strings
+      on_enter_behaviour.call(self) if state_changed? && (cat_states.include?(state && state.to_sym) || cat_states.include?(state && state))
     end
   end
   
   def validate_before_enter_state_category(*state_category_names, &validate_behaviour)
     self.model_class.validate validate_behaviour, :if => (Proc.new do |model| 
       cat_states = state_category_names.map {|cat_name| self.class.all_states_with_category(cat_name)}.flatten.compact
-      state_changed? && cat_states.include?(state && state.to_sym)
+      # Handle either symbols or strings
+      state_changed? && (cat_states.include?(model.state && model.state.to_sym) || cat_states.include?(model.state && model.state))
     end)
   end
   
