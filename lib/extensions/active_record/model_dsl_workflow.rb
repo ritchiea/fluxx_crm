@@ -17,6 +17,8 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   attr_accessor :workflow_disabled
   # Alternate workflow model block returns the ID of a different related 
   attr_accessor :alternate_note_model_block
+  # List of validations related to specific state categories to be executed
+  attr_accessor :state_based_validations
 
   def initialize model_class
     super model_class
@@ -25,6 +27,7 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
     self.events_to_english = HashWithIndifferentAccess.new
     self.ordered_states = []
     self.ordered_events = []
+    self.state_based_validations = []
     self.non_validating_events = []
   end
   
@@ -302,11 +305,20 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
   end
   
   def validate_before_enter_state_category(*state_category_names, &validate_behaviour)
-    self.model_class.validate validate_behaviour, :if => (Proc.new do |model| 
-      cat_states = state_category_names.map {|cat_name| self.class.all_states_with_category(cat_name)}.flatten.compact
+    self.state_based_validations << {:category_names => state_category_names, :validate_behaviour => validate_behaviour}
+  end
+  
+  def fire_state_based_validations model
+    state_based_validations.each do |sbv|
+      state_category_names = sbv[:category_names]
+      validate_behaviour = sbv[:validate_behaviour]
+      cat_states = state_category_names.map {|cat_name| model.class.all_states_with_category(cat_name)}.flatten.compact
       # Handle either symbols or strings
-      state_changed? && (cat_states.include?(model.state && model.state.to_sym) || cat_states.include?(model.state && model.state))
-    end)
+      if model.state_changed? && (cat_states.include?(model.state && model.state.to_sym) || cat_states.include?(model.state && model.state))
+        validate_behaviour.call model
+        model.instance_exec(model, &validate_behaviour)
+      end
+    end
   end
   
   def alert_on_state_change model, state

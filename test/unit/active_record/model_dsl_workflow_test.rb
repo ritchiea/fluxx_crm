@@ -139,14 +139,14 @@ class ModelDslWorkflowTest < ActiveSupport::TestCase
     new_race.kick_off; new_race.save!
     new_race.state = 'rejected'; new_race.save!
 
-    assert_equal [new_race].map(&:id).sort, angry_races.map(&:id).sort
+    assert_equal [new_race].map(&:id).sort, angry_races.map(&:id).sort.uniq
   end
   
   test "make sure that we get a validation error on state transitions" do
     error_message = 'at least one sprinter is missing'
     error_id = :missing_sprinter
     @dsl_workflow.validate_before_enter_state_category('angry') do |race|
-      errors[error_id] << error_message
+      race.errors[error_id] << error_message
     end
     new_race = Race.make(:state => 'new')
     new_race.kick_off; 

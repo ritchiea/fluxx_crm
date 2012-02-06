@@ -19,6 +19,9 @@ module FluxxModelDocument
          :s3_credentials => "#{Rails.root}/config/amazon_s3.yml",
          # :s3_options => {:server => (defined?(S3_HOST) ? S3_HOST : nil)},
          :path => "/documents/:primary_uid/:filename"
+         # :s3_headers => lambda {|attachment|
+         #   {'Content-Disposition' => "attachment; filename=\"#{attachment.name}\""}
+         # }
     else
       # Use primary_uid instead of the default id
       base.has_attached_file :document, :path => ":rails_root/public/system/:attachment/:primary_uid/:style/:filename", :url => "/system/:attachment/:primary_uid/:style/:filename"
@@ -73,6 +76,7 @@ module FluxxModelDocument
       if model_document_actual_filename
         self.document.instance_write(:file_name, CGI::unescape(model_document_actual_filename)) 
         self.document.instance_write(:uploaded_filename, CGI::unescape(model_document_actual_filename)) 
+        self.document.options.merge({:s3_headers => {"Content-Disposition" => "attachment; filename="+CGI::unescape(model_document_actual_filename)}})
       end
     end
     

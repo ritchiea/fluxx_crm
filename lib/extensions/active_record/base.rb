@@ -116,6 +116,7 @@ class ActiveRecord::Base
         before_save :generate_docs
         after_save :alert_on_state_change
         after_create :alert_on_state_change
+        validate :fire_state_based_validations
         
         def without_workflow(&block)
           workflow_was_disabled = workflow_object.workflow_disabled
@@ -182,6 +183,10 @@ class ActiveRecord::Base
         def all_state_categories_with_descriptions 
           workflow_object.all_state_categories_with_descriptions self
         end
+      end
+      
+      define_method :fire_state_based_validations do
+        workflow_object.fire_state_based_validations self
       end
       
       define_method :alert_on_state_change do
