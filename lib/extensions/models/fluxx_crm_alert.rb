@@ -325,7 +325,6 @@ module FluxxCrmAlert
       # Before we call sphinx, make sure we reindex any delta indices that might be pending...
       # TODO ESH: consider this again; seems to be dangerous = see http://groups.google.com/group/thinking-sphinx/browse_thread/thread/4854326d6c388da2
       # model_klass.force_inline_delta_index
-      
       matched_models = if self.has_time_based_filtered_attrs?
         model_params['id'] = model_ids if model_ids && !model_ids.empty?
         self.controller_klass.class_index_object.load_results(filter_params, nil, nil, controller, Alert.max_time_based_alert_results)
