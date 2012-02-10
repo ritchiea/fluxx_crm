@@ -7,6 +7,7 @@ module FluxxWorkTasksController
       insta.filter_template = 'work_tasks/work_task_filter'
       insta.order_clause = 'due_at asc'
       insta.icon_style = ICON_STYLE
+      insta.create_link_title = "New Task"
     end
     base.insta_show WorkTask do |insta|
       insta.template = 'work_task_show'

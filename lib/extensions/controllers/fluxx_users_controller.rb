@@ -7,6 +7,7 @@ module FluxxUsersController
     base.insta_index User do |insta|
       insta.template = 'user_list'
       insta.icon_style = ICON_STYLE
+      insta.create_link_title = "New Person"
       insta.filter_template = 'users/user_filter'
       insta.order_clause = 'last_name asc, first_name asc'
       insta.pre do |controller_dsl|

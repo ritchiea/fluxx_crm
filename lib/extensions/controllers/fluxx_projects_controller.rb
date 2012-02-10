@@ -7,6 +7,7 @@ module FluxxProjectsController
       insta.filter_template = 'projects/project_filter'
       insta.order_clause = 'created_at desc'
       insta.icon_style = ICON_STYLE
+      insta.create_link_title = "New Project"
     end
     base.insta_show Project do |insta|
       insta.template = 'project_show'

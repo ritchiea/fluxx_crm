@@ -6,6 +6,7 @@ module FluxxOrganizationsController
       insta.order_clause = 'name asc'
       insta.search_conditions = {:parent_org_id => nil}
       insta.icon_style = ICON_STYLE
+      insta.create_link_title = "New Organization"
     end
     base.insta_show Organization do |insta|
       insta.template = 'organization_show'
