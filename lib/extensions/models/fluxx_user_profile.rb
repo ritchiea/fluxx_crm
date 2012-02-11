@@ -47,6 +47,10 @@ module FluxxUserProfile
     def board_profile
       UserProfile.where(:name => 'Board').first
     end
+    
+    def reviewer_profile
+      UserProfile.where(:name => 'Reviewer').first
+    end
   end
 
   module ModelInstanceMethods
