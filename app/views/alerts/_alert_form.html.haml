@@ -1,5 +1,6 @@
 - model_klass = @model.controller_klass.class_index_object.model_class
-=render :partial => "form_elements/liquid_field_selector", :locals=> { :model_class => model_klass, :var_name => "model" }
+- if defined? FormElement
+  = render :partial => "form_elements/liquid_field_selector", :locals=> { :model_class => model_klass, :var_name => "model" }
 %fieldset.inputs
   %ol
     = semantic_form_for @model, :as => :alert, :url => new_alert_path do |form|

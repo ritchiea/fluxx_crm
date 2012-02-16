@@ -78,7 +78,7 @@ module FluxxUserSessionsController
 
     def forgot_password_lookup_email
       if current_user
-        redirect_to edit_account_url
+        redirect_to dashboard_path
       else
         user = User.find_by_email(params[:user_session][:email])
         if user
