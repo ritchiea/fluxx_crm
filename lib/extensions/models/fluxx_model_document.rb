@@ -21,6 +21,9 @@ module FluxxModelDocument
          :path => "/documents/:primary_uid/:filename",
          :s3_headers => lambda {|attachment|
            {'Content-Disposition' => "attachment; filename=\"#{attachment.model_document_actual_filename}\""}
+         },
+         :s3_permissions => lambda {|attachment, style|
+           attachment.instance && attachment.instance.s3_permission ? attachment.instance.s3_permission : :private
          }
     else
       # Use primary_uid instead of the default id

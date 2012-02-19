@@ -98,6 +98,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'adjust_model_document_to_have_related_docs_fields.rb', 'db/migrate/fluxx_crm_adjust_model_document_to_have_related_docs_fields.rb'
     handle_migration 'add_indicator_to_model_doc_templates_to_insert_page_br_or_not.rb', 'db/migrate/fluxx_crm_add_indicator_to_model_doc_templates_to_insert_page_br_or_not.rb'
     handle_migration 'correct_model_doc_template_field_names.rb', 'db/migrate/fluxx_crm_correct_model_doc_template_field_names.rb'
+    handle_migration 'add_model_document_permission_type.rb', 'db/migrate/fluxx_grant_add_model_document_permission_type.rb'
   end
   
   private

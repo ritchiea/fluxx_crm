@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120203231224) do
+ActiveRecord::Schema.define(:version => 20120218171532) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -343,6 +343,7 @@ ActiveRecord::Schema.define(:version => 20120203231224) do
     t.text     "document_text"
     t.integer  "model_document_template_id"
     t.string   "doc_label",                  :default => "default", :null => false
+    t.string   "s3_permission"
   end
 
   add_index "model_documents", ["doc_label"], :name => "index_model_documents_on_doc_label"
