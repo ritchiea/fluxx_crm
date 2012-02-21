@@ -14,7 +14,7 @@ module FluxxAdminItemsController
 
     base.insta_edit do |insta|
       insta.template = "model_types"
-      insta.template_map = {:alerts => "alerts", :model_document_templates => "model_document_templates", :additional_settings => "additional_settings", :dynamic_cards => "dynamic_cards"}
+      insta.template_map = {:alerts => "alerts", :model_document_templates => "model_document_templates", :additional_settings => "additional_settings", :dynamic_cards => "dynamic_cards", :roles_and_profiles => "roles_and_profiles"}
       insta.icon_style = ICON_STYLE
       insta.post do |triple|
         controller_dsl, model, outcome = triple

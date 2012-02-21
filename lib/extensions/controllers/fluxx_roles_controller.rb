@@ -7,6 +7,17 @@ module FluxxRolesController
       insta.filter_template = 'roles/role_filter'
       insta.order_clause = 'name asc, updated_at desc'
       insta.icon_style = ICON_STYLE
+      insta.format do |format|
+        format.html do |triple|
+          controller_dsl, outcome, default_block = triple
+          if params[:admin]
+            @suppress_model_iteration = true
+          else
+            @suppress_model_iteration = false
+          end
+          default_block.call
+        end
+      end
     end
     base.insta_show Role do |insta|
       insta.template = 'role_show'
