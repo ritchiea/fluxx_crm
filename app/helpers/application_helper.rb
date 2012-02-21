@@ -1,9 +1,7 @@
 module ApplicationHelper
-  USE_S3 = defined?(USE_MODEL_DOCUMENT_S3) && USE_MODEL_DOCUMENT_S3
-  
   def s3_or_file_path model_document
     client_id = defined?(Client) ? Client.current_client_id : 0
-    if USE_S3
+    if defined?(USE_MODEL_DOCUMENT_S3) && USE_MODEL_DOCUMENT_S3
       "/s3/#{client_id}/#{model_document.id}"
     else
       model_document.document.url
