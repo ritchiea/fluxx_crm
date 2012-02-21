@@ -1,9 +1,13 @@
 module FluxxUserMailer
   extend FluxxModuleHelper
 
+  when_included do
+    default :return_path => 'system@fluxxlabs.com'
+  end
+
   instance_methods do
     def from_email_address
-      Fluxx.config(:from_email_address)
+      Fluxx.config(:from_email_address) || 'do-not-reply@fluxxlabs.com'
     end
     
     def forgot_password(user, reset_link)
@@ -11,7 +15,7 @@ module FluxxUserMailer
 
       mail(:to => user.mailer_email,
            :subject => "Password Reset",
-           :from => 'do-not-reply@fluxxlabs.com', :reply_to => from_email_address,
+           :from => from_email_address, :reply_to => from_email_address,
            :fail_to => from
       ) do |format|
         format.text
@@ -24,7 +28,7 @@ module FluxxUserMailer
 
       mail(:to => user.mailer_email,
            :subject => "New User Information",
-           :from => 'do-not-reply@fluxxlabs.com', :reply_to => from_email_address,
+           :from => from_email_address, :reply_to => from_email_address,
            :fail_to => from
       ) do |format|
         format.text
