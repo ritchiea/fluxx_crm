@@ -53,7 +53,7 @@ module FluxxCrmAlertEmail
           if alert.group_models
             email_params_from_json = self.email_params.de_json if self.email_params
             models = if email_params_from_json && alert.controller_klass && alert.controller_klass.class_index_object
-              alert.controller_klass.class_index_object.model_class.where({:id => email_params_from_json['models']}).all
+              alert.related_model_type.where({:id => email_params_from_json['models']}).all
             end
             
             AlertMailer.send(mailer_method, recipient, alert, "models" => models).deliver

@@ -26,6 +26,7 @@ module FluxxAlertsController
     end
     insta_show Alert do |insta|
       insta.template = 'alert_show'
+      insta.template_map = { :generate_document => "alert_show_test" }
       insta.icon_style = ICON_STYLE
       insta.add_workflow
     end

@@ -1,4 +1,4 @@
-- model_klass = @model.controller_klass.class_index_object.model_class
+- model_klass = @model.related_model_type
 - if defined? FormElement
   = render :partial => "form_elements/liquid_field_selector", :locals=> { :model_class => model_klass, :var_name => "model" }
 %fieldset.inputs
@@ -22,6 +22,11 @@
         - @model.class.recipient_roles.keys.map(&:to_s).sort.each do |role_name|
           = form.input role_name, :as => :boolean, :label => @model.class.recipient_roles[role_name.to_sym][:friendly_name]
       = form.buttons :commit
+      - unless model.new_record?
+        %hr
+        %p
+        model id: <input name=test_model_id class='code-model-id'>
+        = link_to "Generate Test Document", alert_path(:generate_document => 1, :printable => 1), :class => "generate-test-document", :target => "_blank"
     #filter{"data-serialize-to-field" => '.filter'}
       = semantic_form_for ModelStub.generate_class_instance(model_klass), :url => current_index_path do |form|
         = render :partial => @model.controller_klass.class_index_object.filter_template, :locals => { :form => form }

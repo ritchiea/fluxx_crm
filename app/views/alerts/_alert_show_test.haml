@@ -1,0 +1,14 @@
+-if current_user.is_admin?
+  -test_model = model.related_model_type.find(params['test-model-id']) rescue nil
+  -if test_model
+    %p
+      Subject:
+      %br
+      = raw model.liquid_subject({'model' => test_model})
+    %p
+      Body:
+      %br
+      = raw model.liquid_body({'model' => test_model})
+  -else
+    -if params['test-model-id'] && !params['test-model-id'].empty?
+      = "Could not find #{model.related_model_type} with ID #{params['test-model-id']}"

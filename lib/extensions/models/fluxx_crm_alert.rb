@@ -305,6 +305,10 @@ module FluxxCrmAlert
     def controller_klass
       model_controller_type.constantize
     end
+    
+    def related_model_type
+      model_klass = self.controller_klass.class_index_object.model_class
+    end
 
     def with_triggered_alert!(model_ids=[], &alert_processing_block)
       # Find models that match this filter
@@ -318,7 +322,7 @@ module FluxxCrmAlert
       controller = self.controller_klass.new
       # Add an admin user as the current user for doing the search to bypass the controller perms check
       controller.instance_variable_set '@current_user', User.joins(:user_permissions).where(:user_permissions => {:name => 'admin'}).first || User.first
-      model_klass = self.controller_klass.class_index_object.model_class
+      model_klass = related_model_type
       form_name = model_klass.calculate_form_name
       model_params = filter_params[form_name] || {}
       
@@ -363,7 +367,7 @@ module FluxxCrmAlert
     end
     
     def all_base_model_classes
-      klass = controller_klass.class_index_object.model_class
+      klass = related_model_type
       klass.descendant_base_classes
     end
     
