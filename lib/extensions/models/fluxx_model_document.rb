@@ -88,7 +88,12 @@ module FluxxModelDocument
     end
     
     def full_url
-      self.document.url
+      client_id = defined?(Client) ? Client.current_client_id : 0
+      if defined?(USE_MODEL_DOCUMENT_S3) && USE_MODEL_DOCUMENT_S3
+        "/s3/#{client_id}/#{self.id}"
+      else
+        self.document.url
+      end
     end
   end
 end
