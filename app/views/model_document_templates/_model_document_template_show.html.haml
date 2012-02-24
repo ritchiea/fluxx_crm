@@ -36,6 +36,10 @@
           .value= model.display_in_adhoc_list
       %hr
       %p
+        model id: <input name=test_model_id class='code-model-id'>
+        = link_to "Generate Test Document", model_document_template_path(:generate_document => 1, :printable => 1), :class => "generate-test-document", :target => "_blank"
+      %hr
+      %p
       .wiki-document
         =raw model.document
     -else

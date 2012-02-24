@@ -26,7 +26,7 @@
         %hr
         %p
         model id: <input name=test_model_id class='code-model-id'>
-        = link_to "Generate Test Document", alert_path(:generate_document => 1, :printable => 1), :class => "generate-test-document", :target => "_blank"
+        = link_to "Generate Test Alert", alert_path(:generate_document => 1, :printable => 1), :class => "generate-test-document", :target => "_blank"
     #filter{"data-serialize-to-field" => '.filter'}
       = semantic_form_for ModelStub.generate_class_instance(model_klass), :url => current_index_path do |form|
         = render :partial => @model.controller_klass.class_index_object.filter_template, :locals => { :form => form }

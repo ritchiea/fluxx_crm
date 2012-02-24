@@ -25,3 +25,7 @@
   %p= recipient_roles.empty? ? "None" : recipient_roles.to_sentence
 
 = render :partial => "show_#{model.class.name.underscore}", :locals => { :model => model } unless model.class == Alert
+%hr
+%p
+model id: <input name=test_model_id class='code-model-id'>
+= link_to "Generate Test Alert", alert_path(:generate_document => 1, :printable => 1), :class => "generate-test-document", :target => "_blank"
