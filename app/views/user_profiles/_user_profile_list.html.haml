@@ -1,0 +1,28 @@
+-#TODO AML: Read only for now until we make user_profile_rules client specific
+-#    Add/edit/delete all disabled
+
+%h3
+  User Profiles
+  - if current_user.has_create_for_model?(UserProfile)
+    &nbsp;&nbsp;
+    = link_to image_tag('/images/fluxx_engine/theme/default/icons/add.png', :class=> 'add-button'), new_user_profile_path, :title => 'Add A User Profile', :class => 'to-modal disabled', 'data-on-success' => 'refreshCaller,close'
+
+- if !models || models.empty?
+  .warning
+    No User Profiles are set up.
+    %br
+    = link_to "Add one now", new_user_profile_path, :title => 'Add A User Profile', :class => 'to-modal disabled', 'data-on-success' => 'refreshCaller,close'
+- else
+  - models.each do |profile|
+    %div
+      %span.actions
+        - if current_user.has_update_for_model?(profile)
+          = link_to 'edit', edit_user_profile_path(:id => profile), :class => 'to-modal disabled', 'data-on-success' => 'refreshCaller,close'
+        - if current_user.has_delete_for_model?(profile)
+          = link_to 'delete', profile, :class => 'as-delete disabled', 'data-on-success' => 'refreshCaller'
+
+      %dl.inline
+        %h2= profile.name
+        =render :partial => "user_profile_rules/user_profile_rule_list", :locals => {:models => UserProfileRule.where(:user_profile_id => profile.id)}
+
+

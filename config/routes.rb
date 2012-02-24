@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   resources :user_permissions
 
   resources :roles
+  resources :user_profiles
+  resources :user_profile_rules
 
   resources :modules
 
