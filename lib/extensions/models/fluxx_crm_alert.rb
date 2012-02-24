@@ -252,7 +252,7 @@ module FluxxCrmAlert
     end
 
     def time_based_filtered_attrs
-      ["due_within_days", "due_in_days", "overdue_by_days"]
+      ["due_within_days", "due_in_days", "overdue_by_days", "ending_within_days"]
     end
     
     def max_alert_results
