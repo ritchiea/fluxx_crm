@@ -1,3 +1,4 @@
+require 'aws/s3'
 module FluxxModelDocument
   SEARCH_ATTRIBUTES = [:documentable_id, :documentable_type, :created_by_id, :doc_label]
 
@@ -14,13 +15,18 @@ module FluxxModelDocument
      attachment.instance.primary_uid
     end
     if defined?(USE_MODEL_DOCUMENT_S3) && USE_MODEL_DOCUMENT_S3
+      p "ESH: defining has_attached_file in model_document"
       base.has_attached_file :document,
+         # :s3_host_name => '127.0.0.2', # ESH: Use to test timeout
          :storage => :s3,
          :s3_credentials => "#{Rails.root}/config/amazon_s3.yml",
          # :s3_options => {:server => (defined?(S3_HOST) ? S3_HOST : nil)},
          :path => "/documents/:primary_uid/:filename",
          :s3_headers => lambda {|attachment|
            {'Content-Disposition' => "attachment; filename=\"#{attachment.model_document_actual_filename}\""}
+         },
+         :s3_options => {
+           :http_handler => AWS::Http::HTTPartyHandler.new(:timeout => 5)
          },
          :s3_permissions => lambda {|attachment, style|
            if attachment.instance && attachment.instance.respond_to?(:s3_permission)
