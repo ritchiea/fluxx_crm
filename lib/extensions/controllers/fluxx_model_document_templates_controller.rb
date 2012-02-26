@@ -3,6 +3,7 @@ module FluxxModelDocumentTemplatesController
     base.insta_index ModelDocumentTemplate do |insta|
       insta.suppress_model_iteration = true
       insta.template = 'model_document_template_list'
+      insta.order_clause = 'description'
     end
     base.insta_show ModelDocumentTemplate do |insta|
       insta.template = 'model_document_template_show'
