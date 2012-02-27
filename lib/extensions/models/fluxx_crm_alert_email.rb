@@ -26,11 +26,11 @@ module FluxxCrmAlertEmail
     end
 
     def no_previous_time_based_email_exist_for(alert, model)
-      !alert.has_time_based_filtered_attrs? || !where(:alert_id => alert.id, :model_id => model.id, :model_type => model.class).exists?
+      !alert.has_time_based_filtered_attrs? || !where(:alert_id => alert.id, :model_id => model.id, :model_type => model.class.descendant_base_classes.map(&:name)).exists?
     end
 
     def there_are_undelivered_alerts_with(alert, model)
-      where(:delivered => false, :alert_id => alert.id, :model_id => model.id, :model_type => model.class).exists?
+      where(:delivered => false, :alert_id => alert.id, :model_id => model.id, :model_type => model.class.descendant_base_classes.map(&:name)).exists?
     end
 
     def deliver_all
@@ -69,7 +69,7 @@ module FluxxCrmAlertEmail
     end
 
     def set_send_at
-      last_matching_delivered_alert = self.class.where(:delivered => true, :alert_id => alert.id, :model_id => model.id, :model_type => model.class).order("send_at ASC").last
+      last_matching_delivered_alert = self.class.where(:delivered => true, :alert_id => alert.id, :model_id => model.id, :model_type => model.class.descendant_base_classes.map(&:name)).order("send_at ASC").last
       self.send_at = if last_matching_delivered_alert && last_matching_delivered_alert.send_at
         last_matching_delivered_alert.send_at + self.class.minimum_time_between_emails
       else
