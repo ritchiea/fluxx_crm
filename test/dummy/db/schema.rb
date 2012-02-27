@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120218171532) do
+ActiveRecord::Schema.define(:version => 20120227220841) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -24,9 +24,6 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
     t.string   "model_type"
     t.datetime "send_at"
     t.text     "email_params"
-    t.boolean  "active",          :default => true
-    t.boolean  "approved",        :default => true
-    t.boolean  "confirmed",       :default => true
   end
 
   create_table "alert_recipients", :force => true do |t|
@@ -138,7 +135,7 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
     t.text     "data",              :limit => 2147483647
   end
 
-  add_index "client_stores", ["user_id", "client_store_type"], :name => "index_client_stores_on_user_id_and_client_store_type"
+  add_index "client_stores", ["user_id", "client_store_type"], :name => "client_store_idx_usr_id_clt_stor_type"
   add_index "client_stores", ["user_id"], :name => "index_client_stores_on_user_id"
 
   create_table "dashboard_templates", :force => true do |t|
@@ -190,7 +187,7 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
     t.integer  "favorable_id",   :null => false
   end
 
-  add_index "favorites", ["favorable_type", "favorable_id"], :name => "index_favorites_on_favorable_type_and_favorable_id"
+  add_index "favorites", ["favorable_type", "favorable_id"], :name => "favorites_favtype_favid"
   add_index "favorites", ["user_id"], :name => "favorites_user_id"
 
   create_table "geo_cities", :force => true do |t|
@@ -267,7 +264,7 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
   end
 
   add_index "group_members", ["group_id"], :name => "index_group_members_on_group_id"
-  add_index "group_members", ["groupable_id", "groupable_type"], :name => "index_group_members_on_groupable_id_and_groupable_type"
+  add_index "group_members", ["groupable_id", "groupable_type"], :name => "group_members_grp_id_grp_type"
 
   create_table "groups", :force => true do |t|
     t.datetime "created_at"
@@ -292,12 +289,12 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
     t.string   "category"
     t.text     "document"
     t.datetime "deleted_at"
-    t.boolean  "delta",                     :default => true,  :null => false
-    t.boolean  "display_in_adhoc_list",     :default => false, :null => false
+    t.boolean  "delta",                              :default => true,  :null => false
+    t.boolean  "display_in_adhoc_list",              :default => false, :null => false
     t.string   "generate_state"
     t.string   "document_content_type"
     t.string   "disposition"
-    t.integer  "related_model_document_id"
+    t.integer  "related_model_document_template_id"
     t.boolean  "do_not_insert_page_break"
   end
 
@@ -305,7 +302,7 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
   add_index "model_document_templates", ["created_by_id"], :name => "modeldoctemplate_created_by_id"
   add_index "model_document_templates", ["document_type"], :name => "index_model_document_templates_on_document_type"
   add_index "model_document_templates", ["model_type"], :name => "index_model_document_templates_on_model_type"
-  add_index "model_document_templates", ["related_model_document_id"], :name => "mdt_related_model_document_id"
+  add_index "model_document_templates", ["related_model_document_template_id"], :name => "mdt_related_model_doc_templt_id"
   add_index "model_document_templates", ["updated_by_id"], :name => "modeldoctemplate_updated_by_id"
 
   create_table "model_document_types", :force => true do |t|
@@ -430,7 +427,9 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
     t.string   "vendor_number"
     t.string   "tax_id"
     t.boolean  "is_grantor",                            :default => false
-    t.string   "name_foreign_language"
+    t.string   "name_foreign_language", :limit => 1500
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
   add_index "organizations", ["created_by_id"], :name => "organizations_created_by_id"
@@ -586,6 +585,7 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "check_ts"
+    t.boolean  "delta",      :default => true, :null => false
   end
 
   create_table "user_organizations", :force => true do |t|
@@ -797,6 +797,6 @@ ActiveRecord::Schema.define(:version => 20120218171532) do
 
   add_index "workflow_events", ["created_by_id"], :name => "workflow_events_created_by_id"
   add_index "workflow_events", ["updated_by_id"], :name => "workflow_events_updated_by_id"
-  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "workflow_events_id_type"
+  add_index "workflow_events", ["workflowable_id", "workflowable_type"], :name => "workflow_events_flowid_type"
 
 end
