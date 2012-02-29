@@ -13,13 +13,12 @@ module FluxxCrmAlertEmail
       alert = attrs[:alert]
       if alert.group_models
         # In the case of sending alerts for a particular user, we group the models and send them all at once
-        model = attrs[:model]
         create(attrs.merge(:mailer_method => method.to_s))
       else
         # In the case of sending alerts to users related to an email, we send an alert per model as the recipient may change
         model = attrs[:model]
 
-        if !there_are_undelivered_alerts_with(alert, model) && no_previous_time_based_email_exist_for(alert, model)
+        if model && !there_are_undelivered_alerts_with(alert, model) && no_previous_time_based_email_exist_for(alert, model)
           create(attrs.merge(:mailer_method => method.to_s, :model => model))
         end
       end
