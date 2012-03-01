@@ -41,6 +41,49 @@ class OrganizationTest < ActiveSupport::TestCase
     
   end
 
+  test "full_address removes empty and nil strings" do
+    @organization.street_address = 'street_address'
+    @organization.street_address2 = 'street_address2'
+    @organization.city = '  '
+    @organization.postal_code = nil
+    assert_equal @organization.full_address, "street_address, street_address2"
+  end
+
+  test "not geocodable if we dont have postal code or city and state" do
+    @organization.state = nil
+    @organization.postal_code = nil
+    assert !@organization.geocodable?
+  end
+
+  test "geocodable if we have city and state" do
+    @organization.city = "Kailua"
+    @organization.geo_state = GeoState.make(:name => 'Hawaii')
+    assert @organization.geocodable?
+    @organization.save!
+  end
+  
+  test "geocodable if we have postal code" do
+    @organization.postal_code = '96734'
+    assert @organization.geocodable?
+  end
+  
+  test "wont block save if geocoding quota is hit" do
+    Geocoder::Lookup::Google.any_instance.stubs(:fetch_raw_data).returns(Geocoder::GOOGLE_OVER_QUERY_LIMIT)
+    @organization.postal_code = '96734'
+    assert_nothing_raised do
+      @organization.save!
+    end
+  end
+
+  test "geocoding sets latitude and longitude post validation" do
+    @organization.postal_code = '96734'
+    assert_nil @organization.latitude
+    assert_nil @organization.longitude
+    @organization.valid?
+    assert_equal @organization.latitude, 1.0
+    assert_equal @organization.longitude, 2.0
+  end
+  
   # test "merge remove duplicated organization" do
   #   # build organizations
   #   org1 = Organization.make

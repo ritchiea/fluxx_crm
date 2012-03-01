@@ -24,6 +24,9 @@ module FluxxOrganization
     
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
+    base.geocoded_by :full_address
+    base.after_validation :geocode, :if => lambda{ |obj| obj.full_address_changed? && obj.geocodable? }
+
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
     end
@@ -78,6 +81,18 @@ module FluxxOrganization
 
     def current_grantor
       where(:is_grantor => true).first
+    end
+    
+    # geocode all orgs that havent already been geocoded.  called via rake tasks
+    def geocode_all
+      Organization.not_geocoded.each do |org|
+        unless org.geocodable?
+          puts "skipping:  #{org.name} | #{org.full_address}"
+          next
+        end
+        puts "geocoding:  #{org.name} | #{org.full_address}"
+        org.geocode; org.save
+      end
     end
   end
   
@@ -245,4 +260,19 @@ module FluxxOrganization
       end
     end
   end
+  
+  def full_address
+    [street_address, street_address2, city, state_name, postal_code, country_name].delete_if{|x| x.blank?}.compact.join(', ')
+  end
+
+  def full_address_changed?
+    street_address_changed? || street_address2_changed? || city_changed? || geo_state_id_changed? || postal_code_changed? || geo_country_id_changed?
+  end
+
+  # geocodable if we have either a postal_code, or city and state.
+  # This avoids a bunch of records geocoded to same spot if it just has country - i.e. US (which wouldn't add much value)
+  def geocodable?
+    postal_code.present? || (city.present? && state_name.present?)
+  end
+
 end
