@@ -151,6 +151,12 @@ namespace :fluxx_crm do
       end
     end
   end
+
+  desc "Geocode all Organizations without coordinates."
+  task :geocode_orgs => :environment do
+    Organization.geocode_all
+  end
+
 end
 
 namespace :fluxx_ldap_server do

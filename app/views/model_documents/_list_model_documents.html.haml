@@ -2,8 +2,8 @@
 - if current_user.is_admin? || current_user.is_employee? || current_user.has_listview_for_model?(ModelDocument) || current_user.has_listview_for_own_model?(ModelDocument, {:doc_label => doc_label})
   - required_doc_ids ||= []
   - force_show ||= false
-  - if force_show || (model.respond_to?(:model_documents) && model.id)
-    - partial_data_src_url = url_for(model_documents_path({:documentable_id => model.id, :documentable_type => model.class.name, :required_doc_ids => required_doc_ids, :skip_wrapper => true, :doc_label => doc_label}))
+  - if force_show || (model.respond_to?(:model_documents) && !model.new_record?)
+    - partial_data_src_url = url_for(model_documents_path({:documentable_id => (model.id if model), :documentable_type => model.class.name, :required_doc_ids => required_doc_ids, :skip_wrapper => true, :doc_label => doc_label}))
     .partial{'data-src' => partial_data_src_url, 'class' => 'partial'}
       - model_document_fields = [:id, :created_at, :updated_at, :created_by_id, :updated_by_id, :document_file_name, :document_content_type, :document_file_size, :document_updated_at, :documentable_type, :documentable_id, :locked_until, :locked_by_id, :model_document_type_id, :document_type, :model_document_template_id, :doc_label]
       - model_document_fields << :client_id if ModelDocument.attribute_method? :client_id

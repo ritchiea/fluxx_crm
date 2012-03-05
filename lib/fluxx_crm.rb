@@ -1,5 +1,6 @@
 require "rails"
 require "fluxx_engine"
+require "geocoder" 
 
 # Some classes need to be required before or after; put those in these lists
 CRM_EXTENSION_CLASSES_TO_PRELOAD = []
