@@ -34,7 +34,7 @@ class AlertsControllerTest < ActionController::TestCase
   end
 
   test "should get new" do
-    get :new
+    get :new, :alert => {:model_controller_type => 'OrganizationsController'}
     assert_response :success
   end
 

@@ -3,39 +3,40 @@ require 'test_helper'
 class ModelDslWorkflowTest < ActiveSupport::TestCase
   def setup
     @dsl_workflow = Race.workflow_object
+    @simple_workflow = NutCracker.workflow_object
   end
   
   test 'state and events should both initally be empty' do
-    assert @dsl_workflow.states_to_english.empty?
-    assert @dsl_workflow.events_to_english.empty?    
+    assert @simple_workflow.states_to_english.empty?
+    assert @simple_workflow.events_to_english.empty?    
   end
   
   test "add state via add_state_to_english" do
-    assert_equal Hash.new, @dsl_workflow.states_to_english
-    @dsl_workflow.add_state_to_english :a_new_state, 'A New State'
-    assert_equal @dsl_workflow.states_to_english[:a_new_state], 'A New State'
+    assert_equal Hash.new, @simple_workflow.states_to_english
+    @simple_workflow.add_state_to_english :a_new_state, 'A New State'
+    assert_equal @simple_workflow.states_to_english[:a_new_state], 'A New State'
   end
   test "add event via add_event_to_english" do
-    @dsl_workflow.add_event_to_english :a_new_event, 'A New Event'
-    assert_equal @dsl_workflow.events_to_english[:a_new_event], 'A New Event'
+    @simple_workflow.add_event_to_english :a_new_event, 'A New Event'
+    assert_equal @simple_workflow.events_to_english[:a_new_event], 'A New Event'
   end
 
   test 'clearing states' do
-    @dsl_workflow.add_state_to_english :a_new_state, 'A New State'
-    assert !@dsl_workflow.states_to_english.empty?
-    @dsl_workflow.clear_states_to_english
-    assert @dsl_workflow.states_to_english.empty?
+    @simple_workflow.add_state_to_english :a_new_state, 'A New State'
+    assert !@simple_workflow.states_to_english.empty?
+    @simple_workflow.clear_states_to_english
+    assert @simple_workflow.states_to_english.empty?
   end
   
   test 'clearing events' do
-    @dsl_workflow.add_event_to_english :a_new_event, 'A New Event'
-    assert !@dsl_workflow.events_to_english.empty?
-    @dsl_workflow.clear_events_to_english
-    assert @dsl_workflow.events_to_english.empty?
+    @simple_workflow.add_event_to_english :a_new_event, 'A New Event'
+    assert !@simple_workflow.events_to_english.empty?
+    @simple_workflow.clear_events_to_english
+    assert @simple_workflow.events_to_english.empty?
   end
   
   test 'clearing and adding' do
-    workflow = @dsl_workflow
+    workflow = @simple_workflow
     assert_equal workflow.states_to_english.size, 0
     workflow.clear_states_to_english
     assert workflow.states_to_english.empty?

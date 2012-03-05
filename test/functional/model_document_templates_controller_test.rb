@@ -16,7 +16,7 @@ class ModelDocumentTemplatesControllerTest < ActionController::TestCase
 
   test "should create model_document_template" do
     assert_difference('ModelDocumentTemplate.count') do
-      post :create, :model_document_template => { :model_type => Organization.name, :document => Sham.sentence}
+      post :create, :model_document_template => { :model_type => Organization.name, :document => Sham.sentence, :description => Sham.sentence}
     end
 
     assert 201, @response.status

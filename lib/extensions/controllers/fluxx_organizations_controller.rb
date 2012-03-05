@@ -3,6 +3,7 @@ module FluxxOrganizationsController
   def self.included(base)
     base.insta_index Organization do |insta|
       insta.template = 'organization_list'
+      insta.filter_template = 'organizations/organization_filter'
       insta.order_clause = 'name asc'
       insta.search_conditions = {:parent_org_id => nil}
       insta.icon_style = ICON_STYLE

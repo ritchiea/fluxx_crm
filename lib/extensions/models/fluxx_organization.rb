@@ -196,7 +196,7 @@ module FluxxOrganization
       unless dup.nil? || self == dup
         Organization.transaction do
           merge_associations dup
-        
+    
           # finally remove duplicate
           dup.destroy
         end
@@ -205,20 +205,26 @@ module FluxxOrganization
   
     # In the implementation, you can override this method or alias_method_chain to put it aside and call it as well 
     def merge_associations dup
-      User.connection.execute 'DROP TABLE IF EXISTS dupe_user_orgs'
+      User.connection.execute 'DROP TEMPORARY TABLE IF EXISTS dupe_user_orgs'
       User.connection.execute User.send(:sanitize_sql, ['CREATE TEMPORARY TABLE dupe_user_orgs AS SELECT organization_id, COUNT(*) tot 
           FROM user_organizations WHERE organization_id IN (?) GROUP BY user_id', [self.id]])
       User.connection.execute User.send(:sanitize_sql, ['DELETE FROM user_organizations 
           WHERE organization_id = ? AND user_organizations.organization_id IN (select organization_id from dupe_user_orgs)', dup.id])
       UserOrganization.update_all ['organization_id = ?', self.id], ['organization_id = ?', dup.id] # Now take care of the rest of the user orgs
-      
+
+      # SELECT table_name, column_name FROM information_schema.KEY_COLUMN_USAGE where TABLE_SCHEMA='ef_development' AND REFERENCED_TABLE_NAME='organizations';
       Organization.update_all ['parent_org_id = ?', id], ['parent_org_id = ?', dup.id]
-      if defined? RequestTransaction
-        RequestTransaction.update_all ['organization_payee_id = ?', id], ['organization_payee_id = ?', dup.id]
+      
+      ActiveRecord::Base.connection.execute("SELECT table_name, column_name FROM information_schema.KEY_COLUMN_USAGE where TABLE_SCHEMA='#{ActiveRecord::Base.connection.current_database}' AND REFERENCED_TABLE_NAME='#{self.class.table_name}' and REFERENCED_COLUMN_NAME = 'id'").each(:cache_rows => false, :symbolize_keys => true, :as => :hash) do |row|
+        klass = Kernel.const_get row[:table_name].to_s.camelize.singularize rescue nil
+        if klass
+          klass.update_all ['#{row[:column_name]} = ?', id], ['#{row[:column_name]} = ?', dup.id]
+        end
       end
     
       # Need to be sure for our polymorphic relations that we're covered
       Note.update_all ['notable_id = ?', self.id], ['notable_type = ? AND notable_id = ?', 'Organization', dup.id]
+      ModelDocument.update_all ['documentable_id = ?', self.id], ['documentable_type = ? AND documentable_id = ?', 'Organization', dup.id]
       Favorite.update_all ['favorable_id = ?', self.id], ['favorable_type = ? AND favorable_id = ?', 'Organization', dup.id]
     end
   end

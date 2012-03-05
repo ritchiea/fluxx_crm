@@ -27,13 +27,6 @@ class AlertTest < ActiveSupport::TestCase
     RealtimeUpdate.delete_all
   end
 
-  test "alerts should have a unique name" do
-    alert1 = Alert.make
-    alert2 = Alert.make_unsaved(:name => alert1.name)
-    alert2.valid?
-    assert_equal "has already been taken", alert2.errors[:name].first
-  end
-
   test "no alert is triggered if we don't have any alert" do
     assert_equal 0, Alert.count
     assert !alert_is_triggered
@@ -73,33 +66,33 @@ class AlertTest < ActiveSupport::TestCase
   end
 
   test "alert is triggered if the overdue matcher matches the rtu" do
-    create_work_task_alert(:name => "the name", :overdue_by_days => "8")
+    create_work_task_alert(:name => "the name", :overdue_by_days => 8)
     assert alert_is_triggered_for_work_task(:name => "the name", :due_at => 10.days.ago)
   end
 
   test "alert is not triggered if the overdue_by_days matcher does not match the rtu" do
-    create_work_task_alert(:name => "the name", :overdue_by_days => "11")
+    create_work_task_alert(:name => "the name", :overdue_by_days => 11)
     assert !alert_is_triggered_for_work_task(:name => "the name", :due_at => 10.days.ago)
   end
 
   test "alert is not triggered if the equality matcher does not match the name" do
-    create_work_task_alert(:name => "some name", :overdue_by_days => "8")
+    create_work_task_alert(:name => "some name", :overdue_by_days => 8)
     assert !alert_is_triggered_for_work_task(:name => "the name", :due_at => 10.days.ago)
   end
 
   test "alert is triggered if the due_in_days matcher matches the rtu" do
-    create_work_task_alert(:name => "the name", :due_in_days => "8")
+    create_work_task_alert(:name => "the name", :due_in_days => 8)
     assert alert_is_triggered_for_work_task(:name => "the name", :due_at => 7.days.from_now)
   end
 
   test "alert is not triggered if the due_in_days matcher does not match the rtu" do
     # TODO ESH: fix by adding due_in_days similar to due_within_days derived filter in fluxx_request_report
-    alert = create_work_task_alert(:name => "the name", :due_in_days => "11")
+    alert = create_work_task_alert(:name => "the name", :due_in_days => 11)
     assert !alert_is_triggered_for_work_task(:name => "the name", :due_at => 14.days.from_now)
   end
 
   test "rtus are not used to match overdue_by_days matchers" do
-    create_work_task_alert(:overdue_by_days => "8")
+    create_work_task_alert(:overdue_by_days => 8)
     WorkTask.make(:due_at => 10.days.ago)
     RealtimeUpdate.delete_all
 

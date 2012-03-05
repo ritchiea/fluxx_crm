@@ -16,7 +16,23 @@ module FluxxWorkTask
 
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
-      insta.derived_filters = {}
+      insta.derived_filters = {:due_in_days => (lambda do |search_with_attributes, request_params, name, value|
+          value = value.first if value && value.is_a?(Array)
+          if value.to_s.is_numeric?
+            due_date_check = Time.now + value.to_i.days
+            search_with_attributes[:due_at] = (Time.now.to_i..due_date_check.to_i)
+            search_with_attributes[:task_completed] = false
+          end || {}
+        end),
+        :overdue_by_days => (lambda do |search_with_attributes, request_params, name, value|
+          value = value.first if value && value.is_a?(Array)
+          if value.to_s.is_numeric?
+            due_date_check = Time.now - value.to_i.days
+            search_with_attributes[:due_at] = (0..due_date_check.to_i)
+            search_with_attributes[:task_completed] = false
+          end || {}
+        end),
+      }
     end
 
     base.insta_multi

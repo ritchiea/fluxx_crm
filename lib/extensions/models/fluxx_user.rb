@@ -84,7 +84,7 @@ module FluxxUser
       insta.add_methods [:full_name, :main_phone, :salutation, :prefix, :full_name, :first_name, :last_name, :title, :main_phone, :email, :work_phone, :work_fax, :primary_user_organization, :personal_street_address, :personal_street_address2, :personal_city, :personal_state_name, :personal_postal_code, :personal_country_name, :created_by, :updated_by]
       insta.remove_methods [:id]
     end
-
+    
     base.extend(ModelClassMethods)
     base.class_eval do
       include ModelInstanceMethods
@@ -126,9 +126,14 @@ module FluxxUser
     # Creates a User record in the database if there is an entry in LDAP with the given login
     def create_from_ldap_if_valid(login)
       return nil unless Fluxx.config(:ldap_enabled) == "1"
-      ldap_user = User.ldap_find(login)
-      if ldap_user
-        return User.create_or_update_user_from_ldap_entry(login, ldap_user)
+      begin
+        ldap_user = User.ldap_find(login)
+        if ldap_user
+          return User.create_or_update_user_from_ldap_entry(login, ldap_user)
+        end
+      rescue Exception => e
+        logger.error "Unable to do an ldap login, error=#{e.inspect} trace: #{e.backtrace.inspect}"
+        HoptoadNotifier.notify(:error_message => "Unable to do an ldap login, error=#{e.inspect} trace: #{e.backtrace.inspect}")
       end
       nil
     end
@@ -590,6 +595,10 @@ module FluxxUser
     
     def to_s
       full_name
+    end
+    
+    def to_liquid
+      {"email" => email}
     end
     
     def title

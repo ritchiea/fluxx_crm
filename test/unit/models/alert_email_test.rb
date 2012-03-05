@@ -17,9 +17,9 @@ class AlertEmailTest < ActiveSupport::TestCase
     rtu = RealtimeUpdate.make(:type_name => Project.name, :model_id => project.id)
     Alert.attr_recipient_role(:creator, :recipient_finder => lambda{|model| model.created_by})
     RealtimeUpdate.where(:type_name => 'Musician').each(&:destroy)
-    AlertEmail.enqueue(:alert, :alert => alert, :model => rtu.model)
+    AlertEmail.enqueue(:alert, :alert => alert.reload, :model => rtu.model)
     AlertEmail.deliver_all
-
+    
     assert_equal 2, ActionMailer::Base.deliveries.size
     assert_equal ["John Doe <johndoe@fakemailaddress.com>", "Jane Doe <janedoe@fakemailaddress.com>"], ActionMailer::Base.deliveries.map{|e| e["to"].value}
     assert_equal "the subject for johndoe@fakemailaddress.com on project 'conquer the world'", ActionMailer::Base.deliveries.first.subject

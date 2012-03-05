@@ -22,7 +22,7 @@ module FluxxCrmAlertMailer
       @return_path = return_path_email
       mail(:from => return_path_email, :reply_to => from_email_address, :to => recipient.is_a?(User) ? recipient.mailer_email : recipient.to_s, 
            :cc => alert.cc_emails, :bcc => alert.bcc_emails,
-           :subject => alert.liquid_subject(locals.merge('recipient' => recipient))) do |format|
+           :subject => alert.liquid_subject(locals.merge('recipient' => (recipient.respond_to?(:user) ? recipient.user : recipient)))) do |format|
              format.html { render :text => alert.liquid_body(locals.merge('recipient' => recipient)) }
       end
     end
@@ -31,7 +31,7 @@ module FluxxCrmAlertMailer
       @return_path = return_path_email
       
       mail(:from => return_path_email, :reply_to => from_email_address, :to => recipient.is_a?(User) ? recipient.mailer_email : recipient.to_s,
-           :subject => alert.liquid_subject(locals.merge('recipient' => recipient))) do |format|
+           :subject => alert.liquid_subject(locals.merge('recipient' => (recipient.respond_to?(:user) ? recipient.user : recipient)))) do |format|
              format.html { render :text => alert.liquid_body(locals.merge('recipient' => recipient)) }
       end
     end

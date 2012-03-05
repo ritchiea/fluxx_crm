@@ -8,6 +8,7 @@ require "rails/test_help"
 ActionMailer::Base.delivery_method = :test
 ActionMailer::Base.perform_deliveries = true
 ActionMailer::Base.default_url_options[:host] = "test.com"
+Delayed::Worker.delay_jobs = false
 
 Rails.backtrace_cleaner.remove_silencers!
 
