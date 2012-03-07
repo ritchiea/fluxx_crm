@@ -24,12 +24,16 @@ namespace :fluxx_crm do
   
   desc "load up all countries and states from the directory specified by variable geo_dir"
   task :geo => :environment do
-    require 'fastercsv' if RUBY_VERSION < '1.9'
+    if RUBY_VERSION < '1.9'
+      require 'fastercsv' 
+    else
+      require 'csv'
+    end
     geo_dir = ENV['geo_dir'] || "#{File.dirname(__FILE__).to_s}/../db/geo"
     p "Processing countries"
     # TODO ESH: FIX THIS; is not ruby 1.9 compatible
     GeoCountry.without_auditing do
-      FasterCSV.foreach("#{geo_dir}/countries.csv", :headers => true) do |row|
+      CSV.foreach("#{geo_dir}/countries.csv", :headers => true) do |row|
       
         name = row['Country']
         fips104 = row['FIPS104']
@@ -62,7 +66,7 @@ namespace :fluxx_crm do
 
     GeoState.without_auditing do
       p "Processing States"
-      FasterCSV.foreach("#{geo_dir}/states.csv", :headers => true) do |row|
+      CSV.foreach("#{geo_dir}/states.csv", :headers => true) do |row|
         country_name = row['country']
         region_id = row['region_id']
         region_name = row['region_name']
@@ -84,13 +88,17 @@ namespace :fluxx_crm do
   
   desc "load up all cities from the directory specified by variable geo_dir"
   task :geo_cities => :environment do
-    require 'fastercsv' if RUBY_VERSION < '1.9'
+    if RUBY_VERSION < '1.9'
+      require 'fastercsv' 
+    else
+      require 'csv' 
+    end
     geo_dir = ENV['geo_dir'] || "#{File.dirname(__FILE__).to_s}/../db/geo"
 
     p "Processing cities"
     # TODO ESH: FIX THIS; is not ruby 1.9 compatible
     GeoCity.without_auditing do
-      FasterCSV.foreach("#{geo_dir}/GeoLiteCity-Location.csv", :headers => true) do |row|
+      CSV.foreach("#{geo_dir}/GeoLiteCity-Location.csv", :headers => true) do |row|
         loc_id = row['locId']
         country_name = row['country']
         region_id = row['region']
