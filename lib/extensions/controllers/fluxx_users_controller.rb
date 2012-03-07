@@ -92,6 +92,40 @@ module FluxxUsersController
         render :action => :reset_password
       end
     end
+   
+    USER_QUERY_SELECT = "select users.id, first_name, last_name, soundex(first_name) first_name_soundex, soundex(last_name) last_name_soundex, email, personal_email, salutation, prefix, middle_initial, personal_phone, personal_mobile, personal_fax, personal_street_address, personal_street_address2, personal_city, (select name from geo_states where id = personal_geo_state_id) geo_state_name, (select name from geo_countries where id = personal_geo_country_id) geo_country_name, 
+     personal_postal_code, work_phone, work_fax, other_contact
+     "
+
+    def dedupe_list
+      @users = User.connection.execute "#{USER_QUERY_SELECT}
+        from users
+        where deleted_at is null 
+         order by first_name_soundex, last_name_soundex, first_name, last_name "
+      render :layout => false
+    end
+    
+    def dedupe_prep
+      @users = User.connection.execute ClientStore.send(:sanitize_sql, ["#{USER_QUERY_SELECT}
+        from users where id in (?) and deleted_at is null", params[:user_id]])
+      render :action => 'dedupe_prep', :layout => false
+    end
+    
+    def dedupe_complete
+      @users = User.where(:id => params[:user_id], :deleted_at => nil).all
+      @primary_user = User.where(:id => params[:primary_user_id], :deleted_at => nil).first
+      if @users && @primary_user
+        (@users - [@primary_user]).each do |dupe_user|
+          p "ESH: merging dupe_user #{dupe_user.id} into primary_user #{@primary_user.id}"
+          @primary_user.merge dupe_user
+        end
+        # TODO ESH: swap this out when it runs inside fluxx
+        # fluxx_redirect users_dedupe_path
+        redirect_to users_dedupe_path
+      else
+        dedupe_prep
+      end
+    end
     
   end
 end

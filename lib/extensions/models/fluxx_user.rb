@@ -324,24 +324,23 @@ module FluxxUser
       # Kill the primary_user_organization_id for this user
       dup.update_attribute :primary_user_organization_id, nil
 
-      User.connection.execute 'DROP TABLE IF EXISTS dupe_user_orgs'
+      User.connection.execute 'DROP TEMPORARY TABLE IF EXISTS dupe_user_orgs'
       User.connection.execute User.send(:sanitize_sql, ['CREATE TEMPORARY TABLE dupe_user_orgs AS SELECT organization_id, COUNT(*) tot 
           FROM user_organizations WHERE user_id IN (?) GROUP BY organization_id', [self.id]])
       User.connection.execute User.send(:sanitize_sql, ['DELETE FROM user_organizations 
           WHERE user_id = ? AND user_organizations.organization_id IN (select organization_id from dupe_user_orgs)', dup.id])
       UserOrganization.update_all ['user_id = ?', self.id], ['user_id = ?', dup.id] # Now take care of the rest of the user orgs
 
-      [UserOrganization, Note, Organization, User, ModelDocument, Group].each do |aclass|
-        aclass.update_all ['created_by_id = ?', self.id], ['created_by_id = ?', dup.id]
-        aclass.update_all ['updated_by_id = ?', self.id], ['updated_by_id = ?', dup.id]
-        unless aclass == Note || aclass == GroupMember || aclass == Group # not lockable
-          aclass.update_all 'locked_by_id = null, locked_until = null', ['locked_by_id = ?', dup.id]
+      ActiveRecord::Base.connection.execute("SELECT table_name, column_name FROM information_schema.KEY_COLUMN_USAGE where TABLE_SCHEMA='#{ActiveRecord::Base.connection.current_database}' AND REFERENCED_TABLE_NAME='#{self.class.rationalized_table_name}' and REFERENCED_COLUMN_NAME = 'id'").each(:cache_rows => false, :symbolize_keys => true, :as => :hash) do |row|
+        klass = self.class.rationalize_klass_from_name row[:table_name]
+        if klass
+          klass.update_all ["#{row[:column_name]} = ?", id], ["#{row[:column_name]} = ?", dup.id]
         end
       end
 
       # Need to be sure for our polymorphic relations that we're covered
       Note.update_all ['notable_id = ?', self.id], ['notable_type = ? AND notable_id = ?', 'User', dup.id]
-
+      ModelDocument.update_all ['documentable_id = ?', self.id], ['documentable_type = ? AND documentable_id = ?', 'User', dup.id]
       Favorite.update_all ['favorable_id = ?', self.id], ['favorable_type = ? AND favorable_id = ?', 'User', dup.id]
     end
     

@@ -55,5 +55,11 @@ Rails.application.routes.draw do
   put 'reset_password/:reset_password_code' => 'users#reset_password_submit', :as => :reset_password, :via => :put
   get 'reset_password/:reset_password_code' => 'users#reset_password', :as => :reset_password, :via => :get  
   
+  match "organizations_dedupe", :controller => 'organizations', :action => 'dedupe_list'
+  match "organizations_dedupe_prep", :controller => 'organizations', :action => 'dedupe_prep'
+  match "organizations_dedupe_complete", :controller => 'organizations', :action => 'dedupe_complete'
+  match "users_dedupe", :controller => 'users', :action => 'dedupe_list'
+  match "users_dedupe_prep", :controller => 'users', :action => 'dedupe_prep'
+  match "users_dedupe_complete", :controller => 'users', :action => 'dedupe_complete'
 end
 

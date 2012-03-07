@@ -1,0 +1,51 @@
+= form_tag users_dedupe_complete_path do |form|
+  - params[:user_id].each do |user_id|
+    = hidden_field_tag 'user_id[]', user_id
+  = submit_tag "Complete Merge"
+  %table{:border=>2}
+    %tr
+      %th Primary?
+      %th first_name
+      %th last_name
+      %th email
+      %th personal_email
+      %th salutation
+      %th prefix
+      %th middle_initial
+      %th personal_phone
+      %th personal_mobile
+      %th personal_fax
+      %th personal_street_address
+      %th personal_street_address2
+      %th personal_city
+      %th geo_state_name
+      %th geo_country_name
+      %th personal_postal_code
+      %th work_phone
+      %th work_fax
+      %th other_contact        
+    - @users.each(:cache_rows => false, :symbolize_keys => true, :as => :hash) do |user|
+      %tr
+        %td
+          = radio_button_tag 'primary_user_id', user[:id]
+          %td= user[:first_name]
+          %td= user[:last_name]
+          %td= user[:email]
+          %td= user[:personal_email]
+          %td= user[:salutation]
+          %td= user[:prefix]
+          %td= user[:middle_initial]
+          %td= user[:personal_phone]
+          %td= user[:personal_mobile]
+          %td= user[:personal_fax]
+          %td= user[:personal_street_address]
+          %td= user[:personal_street_address2]
+          %td= user[:personal_city]
+          %td= user[:geo_state_name]
+          %td= user[:geo_country_name]
+          %td= user[:personal_postal_code]
+          %td= user[:work_phone]
+          %td= user[:work_fax]
+          %td= user[:other_contact]
+        
+  = submit_tag "Complete Merge"
