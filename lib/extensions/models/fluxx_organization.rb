@@ -230,10 +230,10 @@ module FluxxOrganization
       # SELECT table_name, column_name FROM information_schema.KEY_COLUMN_USAGE where TABLE_SCHEMA='ef_development' AND REFERENCED_TABLE_NAME='organizations';
       Organization.update_all ['parent_org_id = ?', id], ['parent_org_id = ?', dup.id]
       
-      ActiveRecord::Base.connection.execute("SELECT table_name, column_name FROM information_schema.KEY_COLUMN_USAGE where TABLE_SCHEMA='#{ActiveRecord::Base.connection.current_database}' AND REFERENCED_TABLE_NAME='#{self.class.table_name}' and REFERENCED_COLUMN_NAME = 'id'").each(:cache_rows => false, :symbolize_keys => true, :as => :hash) do |row|
-        klass = Kernel.const_get row[:table_name].to_s.camelize.singularize rescue nil
+      ActiveRecord::Base.connection.execute("SELECT table_name, column_name FROM information_schema.KEY_COLUMN_USAGE where TABLE_SCHEMA='#{ActiveRecord::Base.connection.current_database}' AND REFERENCED_TABLE_NAME='#{self.class.rationalized_table_name}' and REFERENCED_COLUMN_NAME = 'id'").each(:cache_rows => false, :symbolize_keys => true, :as => :hash) do |row|
+        klass = self.class.rationalize_klass_from_name row[:table_name]
         if klass
-          klass.update_all ['#{row[:column_name]} = ?', id], ['#{row[:column_name]} = ?', dup.id]
+          klass.update_all ["#{row[:column_name]} = ?", id], ["#{row[:column_name]} = ?", dup.id]
         end
       end
     
