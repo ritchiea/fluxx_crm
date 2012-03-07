@@ -32,7 +32,8 @@ module FluxxUser
     base.after_save :email_login_pass_callback
     base.send :attr_accessor, :temp_organization_title
     base.send :attr_accessor, :temp_organization_id
-    
+
+    base.insta_formbuilder
     
     base.acts_as_authentic do |c|
       # c.my_config_option = my_value # for available options see documentation in: Authlogic::ActsAsAuthentic
