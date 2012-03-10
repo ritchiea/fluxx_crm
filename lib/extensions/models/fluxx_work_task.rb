@@ -37,6 +37,16 @@ module FluxxWorkTask
 
     base.insta_multi
     base.insta_lock
+    base.insta_export do |insta|
+      insta.filename = 'work_task'
+      insta.headers = ['Task', ['Date Created', :date], ['Date Updated', :date], 'Completed', ['Date Due', :date], ['Date Complete', :date], 'Assigned User', 'Created By']
+      insta.spreadsheet_cells = [:task_text, :created_at, :updated_at, :task_completed, :due_at, :completed_at, [:assigned_user, :full_name], [:created_by, :full_name]]
+      insta.sql_query = "work_tasks.task_text, work_tasks.created_at, work_tasks.updated_at, work_tasks.task_completed, work_tasks.due_at, work_tasks.completed_at,
+          (select concat(users.first_name, (concat(' ', users.last_name))) full_name from users where id = assigned_user_id),
+          (select concat(users.first_name, (concat(' ', users.last_name))) full_name from users where id = created_by_id)
+        from work_tasks
+        where work_tasks.id IN (?)"
+    end
     base.insta_realtime do |insta|
       insta.delta_attributes = SEARCH_ATTRIBUTES
       insta.updated_by_field = :updated_by_id
