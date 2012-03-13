@@ -7,5 +7,5 @@
       =form.input :wiki_document_template_id, :as => :select, :collection => templates.map {|template| [template.description, template.id]}
     = form.input :title, :label => "Title:"
     - unless params[:suppress_wiki_input]
-      = form.input :note, :label => "Content:", :as => :text, :input_html => {:class => 'wysiwyg', 'data-wysiwyg-buttons' => 'bold,italic,underline,strikethrough,unorderedlist,link,image,disable'}
+      = form.input :note, :label => "Content:", :as => :text, :input_html => {:class => 'wysiwyg', 'data-wysiwyg-buttons' => 'bold,italic,underline,strikethrough,unorderedlist,orderedlist,link,image,disable'}
     = form.commit_button
