@@ -108,10 +108,10 @@ class ActiveRecord::ModelDslWorkflow < ActiveRecord::ModelDsl
      unless workflow_disabled
         workflowable_hash = if alternate_note_model_block && alternate_note_model_block.is_a?(Proc)
          note_model = alternate_note_model_block.call model
-         {:related_workflowable_type => model.class.to_s, :related_workflowable_id => model.id, 
-           :workflowable_type => (note_model ? note_model.class.to_s : nil), :workflowable_id => (note_model ? note_model.id : nil)}
+         {:related_workflowable_type => model.class.name, :related_workflowable_id => model.id, 
+           :workflowable_type => (note_model ? note_model.class.name : nil), :workflowable_id => (note_model ? note_model.id : nil)}
        else
-         {:workflowable_type => model.class.to_s, :workflowable_id => model.id}
+         {:workflowable_type => model.class.name, :workflowable_id => model.id}
        end
        
         wfe = WorkflowEvent.create workflowable_hash.merge(:comment => model.workflow_note, :change_type => change_type, :ip_address => model.workflow_ip_address.to_s, :old_state => (model.send(:changed_attributes)['state']) || '', :new_state => model.state || '', :created_by => model.updated_by, :updated_by => model.updated_by)
