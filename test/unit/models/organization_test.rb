@@ -40,12 +40,16 @@ class OrganizationTest < ActiveSupport::TestCase
     assert_equal @organization, sub_sub_org.find_parent_or_self
     
   end
-  test "full_address removes empty and nil strings" do
+  test "address_for_geocoding removes empty and nil strings" do
     @organization.street_address = 'street_address'
-    @organization.street_address2 = 'street_address2'
     @organization.city = '  '
     @organization.postal_code = nil
-    assert_equal @organization.full_address, "street_address, street_address2"
+    assert_equal @organization.address_for_geocoding, "street_address"
+  end
+  test "address_for_geocoding does not include street_address2" do
+    @organization.street_address = 'street_address'
+    @organization.street_address2 = 'street_address2'
+    assert !@organization.address_for_geocoding.include?(@organization.street_address2)
   end
 
   test "not geocodable if we dont have postal code or city and state" do
@@ -75,12 +79,24 @@ class OrganizationTest < ActiveSupport::TestCase
   end
 
   test "geocoding sets latitude and longitude post validation" do
-    @organization.postal_code = '96734'
+    @organization.postal_code = '96734' # to force changed with blueprint
     assert_nil @organization.latitude
     assert_nil @organization.longitude
     @organization.valid?
-    assert_equal @organization.latitude, 1.0
-    assert_equal @organization.longitude, 2.0
+    assert_not_nil @organization.latitude
+    assert_not_nil @organization.longitude
+  end
+  test "geocoding sets state and country post validation" do
+    @organization.postal_code = '96734' # to force changed with blueprint
+    assert_nil @organization.state_str
+    assert_nil @organization.state_code
+    assert_nil @organization.country_str
+    assert_nil @organization.country_code
+    @organization.valid?  # this also grabs data from the geocoder stub, which we check against below
+    assert_equal "California", @organization.state_str
+    assert_equal "CA", @organization.state_code
+    assert_equal "United States", @organization.country_str
+    assert_equal "US", @organization.country_code
   end
   
   test "merge remove duplicated organization" do

@@ -24,8 +24,20 @@ module FluxxOrganization
     
     base.acts_as_audited({:full_model_enabled => false, :except => [:created_by_id, :updated_by_id, :delta, :updated_by, :created_by, :audits]})
 
-    base.geocoded_by :full_address
-    base.after_validation :geocode, :if => lambda{ |obj| obj.full_address_changed? && obj.geocodable? }
+    base.geocoded_by :address_for_geocoding do |obj,results|
+      # use geocoded result data, replacing user entered data
+      if geo = results.first
+        obj.latitude = geo.latitude
+        obj.longitude = geo.longitude
+        obj.city = geo.city
+        obj.state_str = geo.state
+        obj.state_code = geo.state_code
+        obj.country_str = geo.country
+        obj.country_code = geo.country_code
+        obj.postal_code = geo.postal_code
+      end
+    end
+    base.after_validation :geocode, :if => lambda{ |obj| obj.geocodable? && obj.address_for_geocoding_changed? }
 
     base.insta_search do |insta|
       insta.filter_fields = SEARCH_ATTRIBUTES
@@ -87,10 +99,10 @@ module FluxxOrganization
     def geocode_all
       Organization.not_geocoded.each do |org|
         unless org.geocodable?
-          puts "skipping:  #{org.name} | #{org.full_address}"
+          puts "skipping:  #{org.name} | #{org.address_for_geocoding}"
           next
         end
-        puts "geocoding:  #{org.name} | #{org.full_address}"
+        puts "geocoding:  #{org.name} | #{org.address_for_geocoding}"
         org.geocode; org.save
       end
     end
@@ -187,15 +199,15 @@ module FluxxOrganization
     end
   
     def state_name
-      geo_state.name if geo_state
+      state_str || geo_state.name if geo_state
     end
     
     def state_abbreviation
-      geo_state.abbreviation if geo_state
+      state_code || geo_state.abbreviation if geo_state
     end
   
     def country_name
-      geo_country.name if geo_country
+      country_str || geo_country.name if geo_country
     end
 
     def tax_class_name
@@ -267,12 +279,13 @@ module FluxxOrganization
     end
   end
   
-  def full_address
-    [street_address, street_address2, city, state_name, postal_code, country_name].delete_if{|x| x.blank?}.compact.join(', ')
+  # dont include street_address2 when geocoding - could introduce bad data if street_address1 is PO Boxes, and 
+  def address_for_geocoding
+    [street_address, city, state_name, postal_code, country_name].delete_if{|x| x.blank?}.compact.join(', ')
   end
 
-  def full_address_changed?
-    street_address_changed? || street_address2_changed? || city_changed? || geo_state_id_changed? || postal_code_changed? || geo_country_id_changed?
+  def address_for_geocoding_changed?
+    street_address_changed? || city_changed? || state_str_changed? || country_str_changed? || geo_state_id_changed? || postal_code_changed? || geo_country_id_changed?
   end
 
   # geocodable if we have either a postal_code, or city and state.
@@ -280,5 +293,5 @@ module FluxxOrganization
   def geocodable?
     postal_code.present? || (city.present? && state_name.present?)
   end
-
+  
 end

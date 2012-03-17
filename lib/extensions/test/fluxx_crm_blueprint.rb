@@ -32,9 +32,9 @@ module FluxxCrmBlueprint
 
     Organization.blueprint do
       name Sham.company_name
-      city random_words
-      street_address random_words
-      street_address2 random_words
+      city Faker::Address.city
+      street_address Faker::Address.street_address
+      street_address2 Faker::Address.secondary_address
       url Sham.url
     end
 
@@ -45,22 +45,20 @@ module FluxxCrmBlueprint
     end
 
     GeoCountry.blueprint do
-      name do
-        random_word
-      end
+      name Faker::Address.country
       iso3 random_word
       fips104 random_word
     end
 
     GeoState.blueprint do
-      name random_word
+      name Faker::Address.state
       abbreviation random_word
       fips_10_4 random_word
       geo_country_id GeoCountry.make.id
     end
 
     GeoCity.blueprint do
-      name random_word
+      name  Faker::Address.city
       geo_state_id GeoState.make.id
       geo_country_id GeoCountry.make.id
       original_id 1
@@ -185,10 +183,10 @@ module FluxxCrmBlueprint
       account_name random_word
       account_number random_word
       special_instructions random_sentence
-      street_address random_words
-      street_address2 random_words
-      city random_words
-      postal_code random_word
+      street_address  Faker::Address.street_address
+      street_address2  Faker::Address.secondary_address
+      city  Faker::Address.city
+      postal_code Faker::Address.zip
       phone  random_word
       fax random_word
       bank_code random_word
