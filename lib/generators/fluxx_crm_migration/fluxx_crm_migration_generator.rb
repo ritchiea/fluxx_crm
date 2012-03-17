@@ -100,6 +100,7 @@ class FluxxCrmMigrationGenerator < Rails::Generators::Base
     handle_migration 'correct_model_doc_template_field_names.rb', 'db/migrate/fluxx_crm_correct_model_doc_template_field_names.rb'
     handle_migration 'add_model_document_permission_type.rb', 'db/migrate/fluxx_grant_add_model_document_permission_type.rb'
     handle_migration 'add_latitude_and_longitude_to_organizations.rb', 'db/migrate/fluxx_crm_add_latitude_and_longitude_to_organizations.rb'
+    handle_migration 'add_state_and_country_fields_to_organization.rb', 'db/migrate/fluxx_crm_add_state_and_country_fields_to_organization.rb'
   end
   
   private

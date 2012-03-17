@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120227220841) do
+ActiveRecord::Schema.define(:version => 20120317001104) do
 
   create_table "alert_emails", :force => true do |t|
     t.string   "mailer_method"
@@ -430,6 +430,10 @@ ActiveRecord::Schema.define(:version => 20120227220841) do
     t.string   "name_foreign_language", :limit => 1500
     t.float    "latitude"
     t.float    "longitude"
+    t.string   "state_str"
+    t.string   "state_code"
+    t.string   "country_str"
+    t.string   "country_code"
   end
 
   add_index "organizations", ["created_by_id"], :name => "organizations_created_by_id"
