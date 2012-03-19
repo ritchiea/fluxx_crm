@@ -61,7 +61,7 @@ module FluxxProject
     end
     
     def related_users
-      project_users.map{|pu| pu.user unless pu.user.deleted_at}.compact.sort_by{|u| [u.last_name || '', u.first_name || '']}
+      project_users.map{|pu| pu.user if pu.user && !pu.user.deleted_at}.compact.sort_by{|u| [u.last_name || '', u.first_name || '']}
     end
     
     def related_organizations
