@@ -98,7 +98,20 @@ class OrganizationTest < ActiveSupport::TestCase
     assert_equal "United States", @organization.country_str
     assert_equal "US", @organization.country_code
   end
-  
+
+  test "state_name with state_str and geo_state" do
+    @organization.geo_state = nil
+    @organization.state_str = nil
+    assert_nil @organization.state_name
+    @organization.state_str = "foo"
+    assert_equal  "foo", @organization.state_name
+    geo_state = GeoState.make
+    @organization.geo_state = geo_state
+    assert_equal  "foo", @organization.state_name
+    @organization.state_str = nil
+    assert_equal geo_state.name, @organization.state_name
+  end
+
   test "merge remove duplicated organization" do
     # build organizations
     org1 = Organization.make

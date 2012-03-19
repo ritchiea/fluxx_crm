@@ -199,15 +199,15 @@ module FluxxOrganization
     end
   
     def state_name
-      state_str || geo_state.name if geo_state
+      state_str || (geo_state.name if geo_state)
     end
     
     def state_abbreviation
-      state_code || geo_state.abbreviation if geo_state
+      state_code || (geo_state.abbreviation if geo_state)
     end
   
     def country_name
-      country_str || geo_country.name if geo_country
+      country_str || (geo_country.name if geo_country)
     end
 
     def tax_class_name
